@@ -1,0 +1,75 @@
+﻿@model LEAP.Models.NotesxConsumerModel
+@{
+    ViewBag.Title = "Details - NotesXConsumer";
+}
+<style>
+    .expandable-textarea {
+        width: 100%;
+        min-height: 300px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        padding: 8px;
+    }
+
+        .expandable-textarea:focus {
+            outline: none;
+            border-color: #ccc;
+            box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+        }
+</style>
+<a href="@Url.Action("Index","NotesxConsumer")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    @if (Model != null)
+    {
+        <form asp-action="Update" asp-controller="NotesxConsumer" asp-route-id="@Model.IDNotesxConsumer" method="post">
+            <h5 class="card-header bg-dark text-white">Details NotesxConsumer</h5>
+            <div class="card-body">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    @if (ViewBag.VB_error != null)
+                    {
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <br />
+                                <label class="text-danger">@ViewBag.VB_error</label>
+                                <br /><br />
+                            </div>
+                        </div>
+                    }
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label asp-for="UCI">UCI</label>
+                            @Html.TextBoxFor(m => m.ConsumerName, new { @class = "form-control", placeholder = "ConsumerName input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label asp-for="Active">Active</label>
+                            @Html.TextBoxFor(m => m.Active, new { @class = "form-control", placeholder = "Active input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label asp-for="Notes">Notes</label>
+                            @Html.TextAreaFor(m => m.Notes, new { @class = "expandable-textarea", placeholder = "Notes input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index","NotesxConsumer")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+            </div>
+        </form>
+    }
+    else
+    {
+        <h3 class="text-danger">¡ERROR!</h3>
+    }
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+

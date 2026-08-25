@@ -1,0 +1,90 @@
+﻿@model List<LEAP.Models.CitiesModel>
+@{
+    ViewBag.Title = "Cities";
+}
+<div class="card">
+    <h5 class="card-header bg-dark text-white">Cities</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <a href="@Url.Action("Add","Cities")" class="btn btn-success text-white">
+                    <i class="bi bi-database-fill-add"></i> New
+                </a>
+                <hr />
+                <table id="table_city" class="table table-hover" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null || Model.Count > 0)
+                        {
+                            foreach (var City in Model)
+                            {
+                                <tr>
+                                    <td>@City.City</td>
+                                    <td>@City.State</td>
+                                    <td>
+                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","Cities", new { id = City.IDCity })"><i class="bi bi-pencil-square"></i> Update</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","Cities", new { id = City.IDCity })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No data available
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_city').DataTable({
+                "dom": 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>',
+                        title: 'Cities',
+                        filename: 'rpt_cities',
+                        exportOptions: { columns: [0, 1] },
+                        className: 'btn_excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-pdf-fill fs-5"></i>',
+                        title: 'Cities',
+                        filename: 'rpt_cities',
+                        exportOptions: { columns: [0, 1] },
+                        className: 'btn_pdf'
+                    }, {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer-fill fs-5"></i>',
+                        title: 'Cities',
+                        filename: 'rpt_cities',
+                        exportOptions: { columns: [0, 1] },
+                        className: 'btn_print'
+                    }
+                ]
+            });
+        });
+    </script>
+}

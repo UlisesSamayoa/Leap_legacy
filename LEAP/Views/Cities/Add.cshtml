@@ -1,0 +1,29 @@
+﻿@model LEAP.Models.CitiesModel
+@{
+    ViewBag.Title = "Add - Cities";
+}
+<a href="@Url.Action("Index","Cities")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Add" asp-controller="Languajes" method="post">
+        <h5 class="card-header bg-dark text-white">Add a City</h5>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="City">City name</label>
+                @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City input", required = "true" })
+            </div>
+            <div class="form-group">
+                <label asp-for="State">State name</label>
+                @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State input", required = "true" })
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success text-white" type="submit"><i class="bi bi-database-fill-add"></i> Create</button>
+            <a href="@Url.Action("Index","Cities")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+

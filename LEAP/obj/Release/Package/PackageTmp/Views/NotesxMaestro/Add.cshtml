@@ -1,0 +1,224 @@
+﻿@model LEAP.Models.NotesxMaestroModel
+@{
+    ViewBag.Title = "Add - NotesxMaestro";
+}
+<style>
+    .expandable-textarea {
+        width: 100%;
+        min-height: 300px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        padding: 8px;
+    }
+
+        .expandable-textarea:focus {
+            outline: none;
+            border-color: #ccc;
+            box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+        }
+
+    .s_box {
+        margin: 2px;
+        background: #D5DBDB;
+        border-radius: 5px;
+        padding: 2px;
+    }
+
+    .btn_search:hover {
+        /*background: #B2BABB;*/
+        font-size: 17px;
+        color: blue;
+        font-weight: bold;
+        width: 100%;
+        margin: 3px;
+    }
+
+    .btn_search {
+        font-size: 16px;
+        width: 100%;
+        height: 100%;
+        background: #D5DBDB;
+        border: none;
+        margin: 3px;
+        border-radius: 5px;
+    }
+
+    #btn_clear {
+        display: none;
+    }
+</style>
+<a href="@Url.Action("Index","NotesxMaestro")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Add" asp-controller="NotesxMaestro" method="post">
+        <h5 class="card-header bg-dark text-white">Add a NotesxMaestro</h5>
+
+        @Html.AntiForgeryToken()
+
+        @if (ViewBag.VB_error != null)
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <br />
+                    <label class="text-danger">@ViewBag.VB_error</label>
+                    <br /><br />
+                </div>
+            </div>
+        }
+        <div class="card-body">
+            <div class="row">
+                <div class="row">
+                    <div class="col-12 input-group">
+                        <input type="text" id="searchBox" class="form-control" placeholder="Buscar por Nombre o UCI" autocomplete="off">
+                        <button class="btn btn-warning" id="btn_clear">Clear</button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <ul id="resultList" class="list-group mt-2"></ul>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="UCI">Consumer: <b><label id="UCI_N"></label></b></label>
+                        @*@Html.DropDownListFor(m => m.UCI, ViewBag.VB_Consumer as List<SelectListItem>, " -- Select Consumer --", new { @class = "form-control", required = "true" })*@
+                        @Html.TextBoxFor(m => m.UCI, new { @class = "form-control", placeholder = "Consumer details", required = "true" })
+                    </div>
+                </div>
+
+                @*<div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="UCI">Comsumer</label>
+                            @Html.DropDownListFor(m => m.UCI, ViewBag.VB_Consumer as List<SelectListItem>, " -- Select Consumer --", new { @class = "form-control", required = "true" })
+                        </div>
+                    </div>*@
+                @*<div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="RegionalID">Regional Center</label>
+                            @Html.DropDownListFor(m => m.RegionalID, ViewBag.VB_RegionalCenter as List<SelectListItem>, " -- Select Center --", new { @class = "form-control", required = "true" })
+                        </div>
+                    </div>*@
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="SpecialitID">Specialist</label>
+                        @Html.DropDownListFor(m => m.SpecialitID, ViewBag.VB_Specialist as List<SelectListItem>, " -- Select Specialist --", new { @class = "form-control", required = "true" })
+                    </div>
+                </div>
+                @*Posible 2 o 3 en times, duration y total*@
+                @*<div class="col-2">
+                        <div class="form-group">
+                            <label asp-for="TimesxWeek">TimesxWeek</label>
+                            @Html.TextBoxFor(m => m.TimesxWeek, new { @type = "text", @class = "form-control", placeholder = "TimesxWeek", required = "true" })
+                        </div>
+                    </div>*@
+
+                @*<div class="col-2">
+                        <div class="form-group">
+                            <label asp-for="TotalHours">TotalHours</label>
+                            @Html.TextBoxFor(m => m.TotalHours, new { @type = "text", @class = "form-control", placeholder = "TotalHours", required = "true" })
+                        </div>
+                    </div>*@
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Date">Date</label>
+                        @Html.TextBoxFor(m => m.Date, new { @type = "datetime-local", @class = "form-control", placeholder = "Date input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label asp-for="Duration">Duration</label>
+                        @Html.TextBoxFor(m => m.Duration, new { @type = "text", @class = "form-control", placeholder = "Duration", required = "true" })
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="PresentInSession">PresentInSession</label>
+                        @Html.TextBoxFor(m => m.PresentInSession, new { @class = "form-control", placeholder = "PresentInSession input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Notes">Notes</label>
+                        @Html.TextAreaFor(m => m.Notes, new { @class = "expandable-textarea", placeholder = "Notes input", required = "true" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success text-white" type="submit"><i class="bi bi-database-fill-add"></i> Create</button>
+            <a href="@Url.Action("Index","NotesxMaestro")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#btn_clear').hide();
+            $('#searchBox').on('keyup', function() {
+                var query = $('#searchBox').val();
+                if (query.length > 0) {
+                    $('#btn_clear').show();
+                } else {
+                    $('#btn_clear').hide();
+                }
+                var baseUrl = '@Url.Action("Consumer_Report", "Reportes", new { _uci = "__REPLACE__" })';
+                if (query.length >= 3) {
+                    $.ajax({
+                        url: '@Url.Action("Get_Customer_Search", "Reports")',
+                        data: { term: query },
+                        success: function(data) {
+                            $('#resultList').empty();
+                            if (data.length > 0) {
+                                $.each(data, function (index, item) {
+                                    var url = baseUrl.replace("__REPLACE__", item.UCI);
+                                    var string_append = '<div class="s_box"><button type="button" onclick="AsignarUCI(\'UCI\',' + item.UCI + ',\''+item.Name+' '+item.LastName+'\')" class="btn_search"><div class="row"><div class="col-3"><i class="bi bi-person-lines-fill s_icon"></i></div><div class="col-9">' + item.Name + ' ' + item.LastName+'</div></div></button></div>';
+                                    $('#resultList').append(string_append);
+
+                                });
+                            } else {
+                                $('#resultList').append('<li class="list-group-item">No results found</li>');
+                            }
+                        }
+                    });
+                } else {
+                    $('#resultList').empty();
+                }
+            });
+
+        $("#UCI").on("change", function () {
+                    var _uci = $('#UCI').val();
+                    $.ajax({
+                        url: '@Url.Action("Get_NameByUCI", "Authorization")',
+                        data: { uci: _uci },
+                        success: function(data) {
+                            if (data.length > 0) {
+                                $.each(data, function (index, item) {
+                                    $("#UCI").val(item.UCI)
+                                    $("#UCI_N" ).text(item.Name + ' ' + item.LastName)
+                                });
+                            } else {
+                                $('#resultList').append('<li class="list-group-item">No results found</li>');
+                            }
+                        }
+                    });
+        });
+
+
+
+        });
+
+    function AsignarUCI(input, valor,nombre) {
+        $("#" + input).val(valor)
+        $("#"+input+"_N").text(nombre)
+    };
+
+    $('#btn_clear').click(function () {
+        $('#searchBox').val('');
+        $('#resultList').empty();
+        $('#btn_clear').hide();
+    });
+</script>

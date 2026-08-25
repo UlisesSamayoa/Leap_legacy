@@ -1,0 +1,24 @@
+﻿@model LEAP.Models.CitiesModel
+@{
+    ViewBag.Title = "Delete - Cities";
+}
+<a href="@Url.Action("Index","Cities")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Delete" asp-controller="Cities" asp-route-id="@Model.IDCity" method="post">
+        @Html.AntiForgeryToken()
+        <h5 class="card-header bg-dark text-white">Delete a City</h5>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 text-center alert alert-danger">
+                    Are you sure you want to delete the City: @Model.City?
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-warning " type="submit"><i class="bi bi-trash-fill"></i> Delete</button>
+            <a href="@Url.Action("Index","Cities")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+</div>

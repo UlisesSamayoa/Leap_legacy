@@ -1,0 +1,119 @@
+﻿@model List<LEAP.Models.AuthorizationModel>
+@{
+    ViewBag.Title = "Authorization";
+}
+<div class="card">
+    <h5 class="card-header bg-dark text-white">Authorization</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <a href="@Url.Action("Add","Authorization")" class="btn btn-success text-white">
+                    <i class="bi bi-database-fill-add"></i> New
+                </a>
+                <hr />
+                <table id="table_Authorization" class="table table-hover" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>UCI</th>
+                            <th>ConsumerName</th>
+                            <th>Authorization</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>RC</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null || Model.Count > 0)
+                        {
+                            foreach (var Languaje in Model)
+                            {
+                                <tr>
+
+                                    <td>@Languaje.UCI</td>
+                                    <td>@Languaje.ConsumerName</td>
+                                    <td>@Languaje.auth</td>
+                                    @if ((!string.IsNullOrEmpty(Languaje._From_s) ? DateTime.Parse(Languaje._From_s).ToString("MM/dd/yyyy") : "") == "01/01/1900")
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@(!string.IsNullOrEmpty(Languaje._From_s) ? DateTime.Parse(Languaje._From_s).ToString("MM/dd/yyyy") : "")</td>
+                                    }
+
+                                    @if ((!string.IsNullOrEmpty(Languaje._To_s) ? DateTime.Parse(Languaje._To_s).ToString("MM/dd/yyyy") : "") == "01/01/1900")
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@(!string.IsNullOrEmpty(Languaje._To_s) ? DateTime.Parse(Languaje._To_s).ToString("MM/dd/yyyy") : "")</td>
+                                    }
+                                    <td>@Languaje.regionalC</td>
+                                    <td>@(Languaje.estado == 0 ? "Disabled" : "Enabled")</td>
+                                    <td>
+                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","Authorization", new { id = Languaje.IDAuth })"><i class="bi bi-pencil-square"></i> Update</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","Authorization", new { id = Languaje.IDAuth })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No data available
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_Authorization').DataTable({
+                "dom": 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>',
+                        title: 'Authorizations',
+                        filename: 'rpt_authorization',
+                        exportOptions: { columns: [0, 1, 2, 3, 4] },
+                        className: 'btn_excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-pdf-fill fs-5"></i>',
+                        title: 'Authorizations',
+                        filename: 'rpt_authorization',
+                        exportOptions: { columns: [0, 1, 2, 3, 4] },
+                        className: 'btn_pdf'
+                    }, {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer-fill fs-5"></i>',
+                        title: 'Authorizations',
+                        filename: 'rpt_authorization',
+                        exportOptions: { columns: [0, 1, 2, 3, 4] },
+                        className: 'btn_print'
+                    }
+                ]
+            });
+        });
+    </script>
+}

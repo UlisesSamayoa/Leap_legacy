@@ -1,0 +1,118 @@
+﻿@model List<LEAP.Models.EventsModel>
+@{
+    ViewBag.Title = "Events";
+}
+@*<script src="https://cdn.datatables.net/v/dt/dt-2.0.7/b-3.0.2/datatables.min.js"></script>*@
+
+<div class="card">
+    <h5 class="card-header bg-dark text-white">Events </h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <a href="@Url.Action("Add","Events")" class="btn btn-success text-white">
+                    <i class="bi bi-database-fill-add"></i> New
+                </a>
+                <hr />
+                <table id="table_Events" class="table table-hover" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>EventDate</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var Event in Model)
+                            {
+                                <tr>
+                                    <td>@Event.Title</td>
+                                    <td>@Event.DateEvent</td>
+                                    <td>@Event.Description</td>
+                                    <td>@Event.TypeName</td>
+                                    @*<td>
+                                        <a class="btn btn-outline-success" href="@Url.Action("Details","Events", new { id = Events.IDEvents })"><i class="bi bi-eye-fill"></i> See_more</a>
+                                    </td>*@
+                                    <td>
+                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","Events", new { id = Event.IDEvent })"><i class="bi bi-pencil-square"></i> Update</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","Events", new { id = Event.IDEvent })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                    <tr>
+                        <td>
+                            No data available
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                        }
+                    </tbody>
+                    <!--<tfoot class="table-dark">
+                        <tr>
+                            <th>Events</th>-->
+                    @*<th>Coordinator</th>*@
+                    <!--<th>Phone</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>ZipCode</th>
+                            <th>Ext</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>-->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_Events').DataTable({
+                "dom": 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>',
+                        title: '',
+                        filename: 'nombre archivo',
+                        exportOptions: { columms: [0] },
+                        className: 'btn_excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-pdf-fill fs-5"></i>',
+                        title: 'Nombre reporte',
+                        filename: 'nombre archivo',
+                        exportOptions: { columms: [0] },
+                        className: 'btn_pdf'
+                    }, {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer-fill fs-5"></i>',
+                        title: 'Nombre reporte',
+                        filename: 'nombre archivo',
+                        exportOptions: { columms: [0] },
+                        className: 'btn_print'
+                    }
+                ]
+            });
+        });
+    </script>
+}

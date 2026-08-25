@@ -1,0 +1,154 @@
+﻿
+@{
+    ViewBag.Title = "Birthdays";
+}
+@*<script src="https://cdn.datatables.net/v/dt/dt-2.0.7/b-3.0.2/datatables.min.js"></script>*@
+
+<div>
+    <a href="@Url.Action("Index","RegionalCenter")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+    <br />
+    <br />
+    <div class="card">
+        <form asp-action="Add" asp-controller="RegionalCenter" method="post">
+            <h5 class="card-header bg-dark text-white">Birthdays</h5>
+            <div class="card-body">
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label asp-for="Phone">Phone</label>
+                            <select id="month" class="form-control">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label asp-for="Phone">Type</label>
+                            <select id="type" class="form-control">
+                                <option value="1">Leap</option>
+                                <option value="2">Center Base</option>
+                                <option value="3">ALL</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <br />
+                            <button class="btn btn-success text-white" type="button" onclick="birthdays();"><i class="bi bi-search"></i> Search</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <br /> <br /> <br /> <br />
+    <table id="table_birth" class="table table-hover" style="width:100%">
+        <thead class="thead-dark">
+            <tr>
+                <th>UCI</th>
+                <th>Full Name</th>
+                <th>Month</th>
+                <th>Date Of Birth</th>
+                <th>Program</th>
+              
+              
+            
+            </tr>
+        </thead>
+        <tbody id="cuerpo">
+          
+        </tbody>
+
+    </table>
+</div>
+            
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_birth').DataTable({
+                "dom": 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>',
+                        title: 'Regional Center',
+                        filename: 'Rpt_RegionalCenter',
+                        exportOptions: {
+                            columns: [0, 1, 2, 5]
+                        },
+                        className: 'btn_excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-pdf-fill fs-5"></i>',
+                        title: 'Regional Center',
+                        filename: 'Rpt_RegionalCenter',
+                        exportOptions: { columms: [0, 1, 2, 3, 4, 5, 6] },
+                        className: 'btn_pdf'
+                    }, {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer-fill fs-5"></i>',
+                        title: 'Regional Center',
+                        filename: 'Rpt_RegionalCenter',
+                        exportOptions: { columms: [0, 1, 2, 3, 4, 5] },
+                        className: 'btn_print'
+                    }
+                ]
+            });
+        });
+    </script>
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+   function birthdays() {
+       var html = "";
+        var Month = $("#month option:selected").val();
+       $('#cuerpo').html("");
+        $.ajax({
+           url: '@Url.Action("GetConsumerBirthdays", "Consumer")',
+            type: "GET",
+            data: { Month: Month },
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                //$('#cuerpo').html(destroy);
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+
+
+                  
+                    html += '<tr><td>' + datos[0] + '</td><td>' + datos[1] + ' ' + datos[2] + '</td><td>' + datos[3] + '</td><td>' + datos[4] + '</td><td>' + datos[5] +'</td></tr>';
+                    
+
+                }
+             
+                $('#cuerpo').html(html);
+            },
+            error: function (response) {
+                alert("error");
+            }
+        });
+    }
+
+
+</script>

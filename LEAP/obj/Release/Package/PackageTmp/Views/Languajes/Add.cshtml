@@ -1,0 +1,52 @@
+﻿@model LEAP.Models.LanguajesModel
+@{
+    ViewBag.Title = "Add - Languajes";
+}
+<style>
+    .expandable-textarea {
+        width: 100%;
+        min-height: 50px;
+        max-height: 300px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius:7px;
+        padding:8px;
+    }
+
+        .expandable-textarea:focus {
+            outline: none;
+            border-color: #ccc;
+            box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+        }
+</style>
+<a href="@Url.Action("Index","Languajes")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Add" asp-controller="Languajes" method="post">
+        <h5 class="card-header bg-dark text-white">Add a Languaje</h5>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="Languaje">Languajes name</label>
+                @Html.TextBoxFor(m => m.Languaje, new { @class = "form-control", placeholder = "Name input", required = "true" })
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Notes">Notes</label>
+                        @Html.TextAreaFor(m => m.Notes, new { @class = "expandable-textarea", placeholder = "Notes input", required = "true" })
+                    </div>
+                </div>            
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success text-white" type="submit"><i class="bi bi-database-fill-add"></i> Create</button>
+            <a href="@Url.Action("Index","Languajes")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+

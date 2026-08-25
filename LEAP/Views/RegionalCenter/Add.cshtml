@@ -1,0 +1,63 @@
+﻿@model LEAP.Models.RegionalCenterModel
+@{
+    ViewBag.Title = "Add - RegionaCenter";
+}
+<a href="@Url.Action("Index","RegionalCenter")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br /><br />
+      <div class="card">
+          <form asp-action="Add" asp-controller="RegionalCenter" method="post">
+              <h5 class="card-header bg-dark text-white">Add a Regional Center</h5>
+              <div class="card-body">
+                  @Html.AntiForgeryToken()
+                  <div class="form-group">
+                      <label asp-for="RegionalCenter">Regional Center Name</label>
+                      @Html.TextBoxFor(m => m.RegionalCenter, new { @class = "form-control", placeholder = "Name input", required = "true" })
+                  </div>
+                  <div class="row">
+                      <div class="col-4">
+                          <div class="form-group">
+                              <label asp-for="Phone">Phone</label>
+                              @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Phone input", required = "true" })
+                          </div>
+                      </div>
+                      <div class="col-2">
+                          <div class="form-group">
+                              <label asp-for="Ext">Ext</label>
+                              @Html.TextBoxFor(m => m.Ext, new { @class = "form-control", placeholder = "Ext input", required = "false" })
+                          </div>
+                      </div>
+                      <div class="col-3">
+                          <div class="form-group">
+                              <label asp-for="City">City</label>
+                              @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City input", required = "true" })
+                          </div>
+                      </div>
+                      <div class="col-3">
+                          <div class="form-group">
+                              <label asp-for="State">State</label>
+                              @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State input", required = "true" })
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-10">
+                          <div class="form-group">
+                              <label asp-for="Address">Address</label>
+                              @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Address input", required = "true" })
+                          </div>
+                      </div>
+                      <div class="col-2">
+                          <div class="form-group">
+                              <label asp-for="ZipCode">ZipCode</label>
+                              @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control", placeholder = "Address input", required = "false" })
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="card-footer">
+                  <button class="btn btn-success text-white" type="submit"><i class="bi bi-database-fill-add"></i> Create</button>
+                  <a href="@Url.Action("Index","RegionalCenter")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+              </div>
+          </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>

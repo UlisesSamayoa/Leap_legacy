@@ -1,0 +1,415 @@
+﻿@model LEAP.Models.ReportsModel
+@{
+    ViewBag.Title = "Index";
+    DateTime fechaActual = DateTime.Now;
+    DateTime primerDiaDelMes = new DateTime(fechaActual.Year, fechaActual.Month, 1);
+    string primerDia = primerDiaDelMes.ToString("yyyy-MM-dd");
+    int startYear = 1990;
+    int currentYear = DateTime.Now.Year;
+    int CountCiclo1 = 1;
+    int CountCiclo2 = 1;
+    int CountCiclo3 = 1;
+}
+<div class="row">
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                Consumer Report
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Consumer Report</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <hr />
+                <a href="@Url.Action("Rpt_consumer","Reports")" class="btn btn-primary">Create</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                NotesXConsumer Report
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">NotesXConsumer Report</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <hr />
+                <a href="@Url.Action("Rpt_Notesconsumer","Reports")" class="btn btn-primary">Create</a>
+            </div>
+        </div>
+    </div>
+    <!--<div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                Birthdays Report
+            </div>
+            <div class="card-body">
+                <form action="@Url.Action("BirthDayReport","Reports")" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label asp-label-for="_From">From</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" value="@primerDia" name="_From" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-3">
+                                    <label asp-label-for="_From">To</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" name="_To" />
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>-->
+    @*<a href="@Url.Action("Rpt_Notesconsumer","Reports")" class="btn btn-primary">Create</a>*@
+    <!--<hr />
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>-->
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                Birthdays Report
+            </div>
+            <div class="card-body">
+                <form action="@Url.Action("BirthDayReport_XMes","Reports")" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            @*<div class="row">
+                                <div class="col-4">
+                                    <label asp-label-for="regional">Regional Center</label>
+                                </div>
+                                <div class="col-8">
+                                    <select id="regional" name="regional" class="form-control">
+                                        <option>Choose an option...</option>
+                                    </select>
+                                </div>
+                            </div>*@
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>Select a month and a year</p>
+                                </div>
+                                <div class="col-6">
+                                    <select name="month" id="month" class="form-control">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select name="year" id="year" class="form-control">
+
+                                        @for (int i = startYear; i <= currentYear; i++)
+                                        {
+
+                                            int year = startYear + CountCiclo1;
+                                            <option value="@year" @(year == currentYear ? "selected" : "")>@year</option>
+                                            CountCiclo1++;
+                                        }
+
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                Center Report
+            </div>
+            <div class="card-body">
+                <form action="@Url.Action("CenterReport","Reports")" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-label-for="regional">Regional Center</label>
+                                </div>
+                                <div class="col-8">
+                                    <select id="regional" name="regional" class="form-control">
+                                        <option>Choose an option...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>Select a month and a year</p>
+                                </div>
+                                <div class="col-6">
+                                    <select name="month" id="month" class="form-control">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select name="year" id="year" class="form-control">
+
+                                        @for (int i = startYear; i <= currentYear; i++)
+                                        {
+
+                                            int year = startYear + CountCiclo3;
+                                            <option value="@year" @(year == currentYear ? "selected" : "")>@year</option>
+                                            CountCiclo3++;
+                                        }
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                CDS progress Report
+            </div>
+            <div class="card-body">
+                <form action="@Url.Action("CdsReport","Reports")" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-label-for="regional">CDS</label>
+                                </div>
+                                <div class="col-8">
+                                    <select id="cds" name="cds" class="form-control">
+                                        <option value="999">Choose an option...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>Select a month and a year</p>
+                                </div>
+                                <div class="col-6">
+                                    <select name="month" id="month" class="form-control">
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select name="year" id="year" class="form-control">
+                                        @for (int i = startYear; i <= currentYear; i++)
+                                        {
+
+                                            int year = startYear + CountCiclo2;
+                                            <option value="@year" @(year == currentYear ? "selected" : "")>@year</option>
+                                            CountCiclo2++;
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                CDS and its consumers Report
+            </div>
+            <div class="card-body">
+                <form action="@Url.Action("CdsConsumerReport","Reports")" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-label-for="regional">CDS</label>
+                                </div>
+                                <div class="col-8">
+                                    <select id="cdsconsumer" name="cdsconsumer" class="form-control">
+                                        <option value="999">Choose an option...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @*<div class="row">
+                                    <div class="col-12 text-center">
+                                        <p>Select a month and a year</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <select name="month" id="month" class="form-control">
+                                            <option value="1">January</option>
+                                            <option value="2">February</option>
+                                            <option value="3">March</option>
+                                            <option value="4">April</option>
+                                            <option value="5">May</option>
+                                            <option value="6">June</option>
+                                            <option value="7">July</option>
+                                            <option value="8">August</option>
+                                            <option value="9">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select name="year" id="year" class="form-control">
+                                            @for (int i = startYear; i <= currentYear; i++)
+                                            {
+
+                                                int year = startYear + CountCiclo3;
+                                                <option value="@year" @(year == currentYear ? "selected" : "")>@year</option>
+                                                CountCiclo3++;
+                                            }
+                                        </select>
+                                    </div>
+                                </div>*@
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                New Consumer / Per Date
+            </div>
+            <div class="card-body">
+                <form action="@Url.Action("NewConsumerXDate","Reports")" method="post">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label asp-label-for="_From">From</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" value="@primerDia" name="_From" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-3">
+                                    <label asp-label-for="_From">To</label>
+                                </div>
+                                <div class="col-8">
+                                    <input type="date" class="form-control" name="_To" />
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    @*<a href="@Url.Action("Rpt_Notesconsumer","Reports")" class="btn btn-primary">Create</a>*@
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        GetRegional();
+        Getspecialist();
+        function GetRegional() {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetRegionals", "Consumer")",
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (response) {
+
+                    var data = response.split(";");
+                    var haa = data.length - 1;
+                    for (var i = 0; i < haa; i++) {
+                        var datos = data[i].split(",");
+                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+
+                    }
+
+                }
+            });
+        }
+
+        function Getspecialist() {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Getspecialist", "Consumer")",
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (response) {
+                    var data = response.split(";");
+                    var haa = data.length - 1;
+                    for (var i = 0; i < haa; i++) {
+                        var datos = data[i].split(",");
+                        document.getElementById("cds").innerHTML += "<option value='" + datos[0].trim() + "'>" + datos[1] + " " + datos[2] + "</option>";
+                        document.getElementById("cdsconsumer").innerHTML += "<option value='" + datos[0].trim() + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+                }
+            });
+        }
+
+    });
+</script>

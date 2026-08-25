@@ -1,0 +1,115 @@
+﻿@model LEAP.Models.NotesxMaestroModel
+@{
+    ViewBag.Title = "Details - NotesxMaestro";
+}
+<style>
+    .expandable-textarea {
+        width: 100%;
+        min-height: 300px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        padding: 8px;
+    }
+
+        .expandable-textarea:focus {
+            outline: none;
+            border-color: #ccc;
+            box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+        }
+</style>
+<a href="@Url.Action("Index","NotesxMaestro")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+@if (Model != null)
+{
+    <div class="card">
+        <form asp-action="Add" asp-controller="NotesxMaestro" method="post">
+            <h5 class="card-header bg-dark text-white">Details NotesxMaestro</h5>
+
+            @Html.AntiForgeryToken()
+
+            @if (ViewBag.VB_error != null)
+            {
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <br />
+                        <label class="text-danger">@ViewBag.VB_error</label>
+                        <br /><br />
+                    </div>
+                </div>
+            }
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="UCI">Comsumer</label>
+                            @Html.TextBoxFor(m => m.ConsumerName, new { @class = "form-control", placeholder = "UCI input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    @*<div class="col-4">
+                            <div class="form-group">
+                                <label asp-for="RegionalID">Regional Center</label>
+                                @Html.TextBoxFor(m => m.RegionalName, new { @class = "form-control", placeholder = "RegionalName input", required = "true", @readonly = "readonly" })
+                            </div>
+                        </div>*@
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="SpecialitID">Specialist</label>
+                            @Html.TextBoxFor(m => m.SpecialitName, new { @class = "form-control", placeholder = "SpecialitName input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    @*Posible 2 o 3 en times, duration y total*@
+                    @*<div class="col-2">
+                            <div class="form-group">
+                                <label asp-for="TimesxWeek">TimesxWeek</label>
+                                @Html.TextBoxFor(m => m.TimesxWeek, new { @type = "text", @class = "form-control", placeholder = "TimesxWeek", required = "true", @readonly = "readonly" })
+                            </div>
+                        </div>*@
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label asp-for="Duration">Duration</label>
+                            @Html.TextBoxFor(m => m.Duration, new { @type = "text", @class = "form-control", placeholder = "Duration", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    @*<div class="col-2">
+                            <div class="form-group">
+                                <label asp-for="TotalHours">TotalHours</label>
+                                @Html.TextBoxFor(m => m.TotalHours, new { @type = "text", @class = "form-control", placeholder = "TotalHours", required = "true", @readonly = "readonly" })
+                            </div>
+                        </div>*@
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="Date">Date</label>
+                            @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd HH:mm}", new { @type = "datetime-local", @class = "form-control", placeholder = "Date input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label asp-for="PresentInSession">PresentInSession</label>
+                            @Html.TextBoxFor(m => m.PresentInSession, new { @class = "form-control", placeholder = "PresentInSession input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label asp-for="Notes">Notes</label>
+                            @Html.TextAreaFor(m => m.Notes, new { @class = "expandable-textarea", placeholder = "Notes input", required = "true", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index","NotesxMaestro")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+            </div>
+
+        </form>
+    </div>
+}
+else
+{
+    <h3 class="text-danger">¡ERROR!</h3>
+}
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+

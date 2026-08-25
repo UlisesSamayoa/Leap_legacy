@@ -1,0 +1,168 @@
+﻿@model LEAP.Models.UsersModel
+@{
+    ViewBag.Title = "Update User";
+}
+<div class="card">
+
+    @if (Model != null)
+    {
+        <form action="@Url.Action("UpdateUser","Users", new { id = Model.IDUsers })" method="post">
+            <h5 class="card-header bg-dark text-white">Add a User</h5>
+            <div class="card-body">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Name">Name</label>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Name", required = "true" })
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label asp-for="Notes">Last name</label>
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "LastMame", required = "true" })
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="Notes">DOB</label>
+                            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "Date input", required = "true" })
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="Name">User</label>
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "User", required = "true" })
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="Notes">Email</label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email", required = "true", type = "email" })
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="Name">Phone</label>
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Phone", required = "true", id = "phone" })
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="Type_User" name="Type_User">Type</label>
+                            @*@Html.DropDownListFor(
+                                    model => model.Type_User,
+                                    new SelectList(
+                                        new[] {
+                                            new { Value = 1, Text = "Administrator"},
+                                            new { Value = 2, Text = "Operator" }
+                                        },
+                                        "Value",
+                                        "Text",
+                                        Model.Type_User
+                                    ),
+                                    new { @class = "form-control" }
+                                )*@
+                        <select class="form-control" asp-for="Type_User" name="Type_User">
+                            @if (Model.Type_User == "1")
+                            {
+                                <option value="1" selected>Administrator</option>
+                                <option value="2">Operator</option>
+                            }
+                            else if (Model.Type_User == "2")
+                            {
+                            <option value="1">Administrator</option>
+                            <option value="2" selected>Operator</option>
+                            }
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary text-white" type="submit"><i class="bi bi-pencil-square"></i> Update</button>
+                <a href="@Url.Action("Index","Users")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+            </div>
+        </form>
+    }
+    else
+    {
+        <h3 class="text-danger">¡ERROR!</h3>
+    }
+
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        function applyPhoneMask(event) {
+            let input = event.target;
+            let value = input.value.replace(/\D/g, '');
+            if (value.length <= 3) {
+                input.value = `(${value}`;
+            } else if (value.length <= 6) {
+                input.value = `(${value.substring(0, 3)})-${value.substring(3)}`;
+            } else {
+                input.value = `(${value.substring(0, 3)})-${value.substring(3, 6)}-${value.substring(6, 10)}`;
+            }
+        }
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', applyPhoneMask);
+
+
+
+        $('#togglePassword').click(function () {
+            let passwordField = $('#password');
+            let icon = $(this).find('i');
+            if (passwordField.attr('type') === 'password') {
+                passwordField.attr('type', 'text');
+                icon.removeClass('bi-eye-fill').addClass('bi-eye-slash');
+            } else {
+                passwordField.attr('type', 'password');
+                icon.removeClass('bi-eye-slash').addClass('bi-eye-fill');
+            }
+        });
+
+        $('#toggleConfirmPassword').click(function () {
+            let confirmPasswordField = $('#confirmPassword');
+            let icon = $(this).find('i');
+            if (confirmPasswordField.attr('type') === 'password') {
+                confirmPasswordField.attr('type', 'text');
+                icon.removeClass('bi-eye-fill').addClass('bi-eye-slash');
+            } else {
+                confirmPasswordField.attr('type', 'password');
+                icon.removeClass('bi-eye-slash').addClass('bi-eye-fill');
+            }
+        });
+
+        $('#password, #confirmPassword').on('input', function () {
+            let password = $('#password').val();
+            let confirmPassword = $('#confirmPassword').val();
+            let error = $('#passwordError');
+            let submitButton = $('#Send');
+            let passwordField = $('#password');
+            let confirmPasswordField = $('#confirmPassword');
+            if (password === '' && confirmPassword === '') {
+                error.hide();
+                passwordField.css('border', '');
+                confirmPasswordField.css('border', '');
+                submitButton.prop('disabled', true);
+            }
+            else if (password === confirmPassword && password !== '') {
+                error.hide();
+                submitButton.prop('disabled', false);
+                passwordField.css('border', '2px solid green');
+                confirmPasswordField.css('border', '2px solid green');
+            } else {
+                error.show();
+                submitButton.prop('disabled', true);
+                passwordField.css('border', '2px solid red');
+                confirmPasswordField.css('border', '2px solid red');
+            }
+        });
+
+
+
+    });
+</script>

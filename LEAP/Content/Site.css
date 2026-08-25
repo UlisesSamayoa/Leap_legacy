@@ -1,0 +1,60 @@
+﻿:root {
+    --bg-nav-color: #0409A9;
+    /*--bg-nav-color: #292828 !important;*/
+    --secondary-color: #2ecc71;
+    --accent-color: #e74c3c;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+}
+
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.nav_bg_color{
+    background:var(--bg-nav-color);
+}
+
+.card_bg_color {
+    background: var(--bg-nav-color);
+    color:white ;
+}
+
+/*.nav_link:hover {
+    color: #040889 !important;
+    background: #fff !important;
+}*/
+
+.btn_excel {
+    background: #06783E !important;
+    color: white !important;
+    border-radius: 7px !important;
+}
+
+.btn_pdf {
+    background: #C70039 !important;
+    color: white !important;
+    border-radius: 7px !important;
+}
+
+.btn_print {
+    background: #0B54AB !important;
+    color: white !important;
+    border-radius: 7px !important;
+}
+
+div.dt-buttons {
+    float: left;
+}
+div.dt-search {
+    float: right;
+}

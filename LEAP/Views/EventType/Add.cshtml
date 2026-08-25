@@ -1,0 +1,48 @@
+﻿@model LEAP.Models.EventTypeModel
+@{
+    ViewBag.Title = "Add - EventType";
+}
+<a href="@Url.Action("Index","EventType")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Add" asp-controller="EventType" method="post">
+        <h5 class="card-header bg-dark text-white">Add a EventType</h5>
+
+        @Html.AntiForgeryToken()
+
+        @if (ViewBag.VB_error != null)
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <br />
+                    <label class="text-danger">@ViewBag.VB_error</label>
+                    <br /><br />
+                </div>
+            </div>
+        }
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Title">Title</label>
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Title input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Color">Select Color</label>
+                        @Html.TextBoxFor(m => m.Color, new { @type = "color", @class = "form-control", required = "true" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success text-white" type="submit"><i class="bi bi-database-fill-add"></i> Create</button>
+            <a href="@Url.Action("Index","EventType")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+

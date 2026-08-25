@@ -1,0 +1,1852 @@
+﻿@model LEAP.Models.ConsumerModel
+@{
+    ViewBag.Title = "Update";
+    string[] states = new string[]
+   {
+        "AL", "AK", "AZ", "AR", "CA", "NC", "SC", "CO", "CT", "ND",
+        "SD", "DE", "DC", "FL", "AA", "AE", "AP", "GA", "HI", "ID",
+        "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI",
+        "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NY", "NM",
+        "OH", "OK", "OR", "PA", "RI", "TN", "TX", "UT", "VT", "VA",
+        "WV", "WA", "WI", "WY"
+                   };
+}
+
+<style>
+
+    .equal-height {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-body {
+        flex-grow: 1;
+    }
+
+    #back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: none; /* Ocultar por defecto */
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+        #back-to-top:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<a href="@Url.Action("Index","Consumer")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<hr />
+<br />
+@if (Model != null)
+{
+    <p>
+        <div class="row">
+            <div class="col-9">
+                <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#Div_Consumer" aria-expanded="false" aria-bs-controls="Div_Consumer" id="Div_ConsumerClick">
+                    <i class="bi bi-journal-bookmark-fill"></i> Consumer Notes
+                </button>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#Div_Teacher" aria-expanded="false" aria-bs-controls="Div_Teacher" id="Div_TeacherClick">
+                    <i class="bi bi-journal-bookmark-fill"></i> Teacher Notes
+                </button>
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#Div_Authorization" aria-expanded="false" aria-bs-controls="Div_Authorization" id="Div_AuthorizationClick">
+                    <i class="bi bi-check2-circle"></i> Authorization
+                </button>
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Div_Image">
+                    <i class="bi bi-file-earmark-image-fill"></i> Image
+                </button>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Div_Ready4Archive">
+                    <i class="bi bi-archive-fill"></i> Ready for archive
+                </button>
+            </div>
+        </div>
+    </p>
+
+
+    <div class="modal fade" id="Div_Ready4Archive" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Div_Ready4ArchiveLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="Div_Ready4ArchiveLabel">Change consumer status</h5>
+                    <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <br />
+                            <h5>Are you sure to change the status of the consumer to ready to archive?</h5>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="ChangeR4A()">
+                        <i class="bi bi-database-fill-add"></i> Change
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="Div_Image" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Div_ImageLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="Div_ImageLabel">Change Consumer Image</h5>
+                    <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-check-label" for="consumer_image">Image</label>
+                                <input type="file" class="form-control" id="consumer_image" accept="image/png, image/jpeg, image/webp" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <img class="form-control" id="consumer_image_ex" alt="Consumer image" style="height:250px !important; width:100%;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" onclick="ChangeImage()">
+                        <i class="bi bi-database-fill-add"></i> Add
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row" style="background:#ccc;">
+        @*<div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">*@
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="collapse collapse-horizontal" id="Div_Consumer">
+                <div class="card card-body equal-height">
+                    <div class="row">
+                        <div class="col-12 bg-success text-white" style="margin:0 !important; padding-top: 10px !important; padding-bottom: 10px !important; background: #198754; border-radius:5px;">
+                            <div class="row">
+                                <div class="col-6 text-start">
+                                    Consumer notes
+                                </div>
+                                <div class="col-6 text-end">
+                                    @*<button type="button" id="abrirModal" class="btn btn-outline-light">Add</button>*@
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalConsumerNotes">
+                                        <i class="bi bi-database-fill-add"></i> Add
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="CerrarConsumer()">
+                                        <i class="bi bi-x-circle"></i> Close
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12">
+                            <div class="row" style="margin-top:10px;" id="DivAddConsumer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            @*<div class="col-sm-12 col-md-12 col-lg-12 col-xl-6">*@
+            <div class="collapse collapse-horizontal" id="Div_Teacher">
+                <div class="card card-body equal-height">
+                    <div class="row">
+                        <div class="col-12 bg-primary text-white" style="margin:0 !important; padding-top: 10px !important; padding-bottom: 10px !important; background: #198754; border-radius:5px;">
+                            <div class="row">
+                                <div class="col-6 text-start">
+                                    Teacher notes
+                                </div>
+                                <div class="col-6 text-end">
+                                    @*<button type="button" id="abrirModal2" class="btn btn-outline-light">Add</button>*@
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalTeacherNotes">
+                                        <i class="bi bi-database-fill-add"></i> Add
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="CerrarTeacher()">
+                                        <i class="bi bi-x-circle"></i> Close
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row" style="margin-top:10px;" id="DivAddTeacher">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="collapse collapse-horizontal" id="Div_Authorization">
+                <div class="card card-body">
+                    <div class="row">
+                        <div class="col-12 bg-secondary text-white" style="margin:0 !important; padding-top: 10px !important; padding-bottom: 10px !important; background: #198754; border-radius:5px;">
+                            <div class="row">
+                                <div class="col-6 text-start">
+                                    Authorization
+                                </div>
+                                <div class="col-6 text-end">
+                                    @*<button type="button" id="abrirModal2" class="btn btn-outline-light">Add</button>*@
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ModalAuthorization">
+                                        <i class="bi bi-database-fill-add"></i> Add
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="CerrarAuth()">
+                                        <i class="bi bi-x-circle"></i> Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row" style="margin-top:10px;" id="DivAddAuth">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <hr />
+    <div class="row">
+        <div class="col-12 text-center">
+            @if (Model.c_image == "")
+            {
+                <img src="~/Content/Template/user_base.png" width="150px" alt="No image" />
+            }
+            else
+            {
+                <img src="data:image/png;base64,@Model.c_image" width="150px" alt="No image" />
+            }
+
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-label-for="Phone">Inf. Taken By.</label>
+                <input type="text" class="form-control" id="inf" value="@Model.UserC" asp-for="UserC" placeholder="Inf. Taken By" required>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Phone">Action</label>
+                <select id="action" asp-for="Action" class="form-control">
+                    @if (@Model.Action == 1)
+                    {
+                        <option value="1" selected>Eval</option>
+                    }
+                    else
+                    {
+                        <option value="1">Eval</option>
+                    }
+                    @if (@Model.Action == 2)
+                    {
+                        <option value="2" selected>New Consumer Referral</option>
+                    }
+                    else
+                    {
+                        <option value="2">New Consumer Referral</option>
+                    }
+                    @if (@Model.Action == 3)
+                    {
+                        <option value="3" selected>Reauthorized Consumer</option>
+                    }
+                    else
+                    {
+                        <option value="3">Reauthorized Consumer</option>
+                    }
+                    @if (@Model.Action == 4)
+                    {
+                        <option value="4" selected>Consumer Terminated</option>
+                    }
+                    else
+                    {
+                        <option value="4">Consumer Terminated</option>
+                    }
+                </select>
+            </div>
+        </div>
+        @*<div class="col-3">
+                <div class="form-group">
+                    <label asp-for="Ext">Active</label>
+                    <br />
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="ActiveY" value="Yes" name="Active" class="custom-control-input" required>
+                        <label class="custom-control-label" for="ActiveY">Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="ActiveN" value="female" name="Active" class="custom-control-input" required>
+                        <label class="custom-control-label" for="ActiveN">No</label>
+                    </div>
+                </div>
+            </div>*@
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="Type">Type</label>
+                <select id="type" class="form-control">
+                    @if (@Model.Type == "Leap")
+                    {
+                        <option value="Leap" selected>Leap</option>
+                    }
+                    else
+                    {
+                        <option value="Leap">Leap</option>
+                    }
+                    @if (@Model.Type == "Center")
+                    {
+                        <option value="Center" selected>Center Base</option>
+                    }
+                    else
+                    {
+                        <option value="Center">Center Base</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <div class="form-group">
+                <label asp-for="Ext">UCI</label>
+                <input type="text" class="form-control" id="uci" placeholder="Exa:110421" value="@Model.UCI" readonly>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="form-group">
+                <label asp-for="RegionalCenter">Consumer's Name</label>
+                <input type="text" class="form-control" id="consumer" placeholder="Enter Name" value="@Model.Name" required>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="form-group">
+                <label asp-for="RegionalCenter">Consumer's last Name</label>
+                <input type="text" class="form-control" id="lastname" placeholder="Enter last Name" value="@Model.LastName" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="DOB">Date Of Birth</label>
+                <input type="date" class="form-control" asp-for="DOB" id="dob" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Gender">Sex</label>
+                <br />
+                @if (@Model.Gender == "m")
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="male" value="m" name="sex" class="custom-control-input" checked required>
+                        <label class="custom-control-label" for="male">Male</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="male" value="m" name="sex" class="custom-control-input" required>
+                        <label class="custom-control-label" for="male">Male</label>
+                    </div>
+                }
+                @if (@Model.Gender == "f")
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="female" value="f" name="sex" class="custom-control-input" checked required>
+                        <label class="custom-control-label" for="female">Female</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="female" value="f" name="sex" class="custom-control-input" required>
+                        <label class="custom-control-label" for="female">Female</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">Telephone</label>
+                <input type="text" class="form-control" asp-for="Phone" id="phone" placeholder="(xxx)-xxx-xxxx" value="@Model.Phone" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">Emergency Tel.</label>
+                <input type="text" class="form-control" asp-for="Phone" id="emphone" placeholder="(xxx)-xxx-xxxx" value="@Model.EmergencyPhone" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5">
+            <div class="form-group">
+                <label asp-for="City">Address</label>
+                <input type="text" class="form-control" asp-for="City" id="address" placeholder="Enter address" value="@Model.Address" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="State">City</label>
+                <select id="city" class="form-control" value="@Model.CityID">
+                    <option>Choose an option...</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label asp-for="State">State</label>
+                <select name="states" id="states" class="form-control">
+                    @foreach (var estado in states)
+                    {
+                        @*<option value="@estado" @(estado == Model.State ? "selected" : "")>@estado</option>*@
+                        <option value="@estado">@estado</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label asp-for="State">Zip Code</label>
+                <input type="text" class="form-control" id="zipcode" asp-for="State" placeholder="Zip Code" value="@Model.ZipCode" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label asp-for="Ext">Parent's Name</label>
+                <input type="text" class="form-control" id="parent" asp-for="Ext" placeholder="Enter Name" value="@Model.ParentName" required>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <label asp-for="Ext">Email</label>
+                <input type="text" class="form-control" id="parentln" asp-for="Ext" placeholder="Enter last Name" value="@Model.ParentLastName" required>
+            </div>
+        </div>
+        @*<div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Ext">Parent's last Name'</label>
+                    <input type="text" class="form-control" id="parentln" asp-for="Ext" placeholder="Enter last Name" value="@Model.ParentLastName" required>
+                </div>
+            </div>*@
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Ext">Primary Language</label>
+                <select id="lang" class="form-control" value="@Model.LanguajeID">
+                    <option>----- Select a option ------</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <label asp-for="Ext">Termination #</label>
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="termination" asp-for="Ext" placeholder="Ex: 12345" value="@Model.TerminationNumber">
+            </div>
+        </div>
+        <div class="col-7">
+            <label asp-for="Ext">Reason for Referral</label>
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="reason" asp-for="Ext" placeholder="Reason for referral" value="@Model.Reasonforreferral" required>
+            </div>
+        </div>
+    </div>
+    @*<div class="row">
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Phone">Authorization #</label>
+                    <input type="text" class="form-control" id="auth" asp-for="Phone" placeholder="Authorization" value="@Model.AuthID" required>
+                </div>
+            </div>
+        </div>*@
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="HoursxWeek">Hours per Week</label>
+                <input type="number" id="hours" class="form-control" min="1" step="1" asp-for="HoursxWeek" value="@Model.HoursxWeek" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="MaxHours">Max. Hours per Month</label>
+                <input type="number" id="maxhours" class="form-control" asp-for="MaxHours" min="1" step="1" value="@Model.MaxHours" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="TerminationDateEffective">Termination date Effective</label>
+                <input type="date" class="form-control" id="terminationdate" asp-for="TerminationDateEffective" value="@Model.TerminationDateEffective.ToString("yyyy-MM-dd")"  required>
+                @*@Model.DateOfBirth.ToString("yyyy-MM-dd")*@
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">Additional Eval.</label>
+
+                <select id="addeval" class="form-control">
+                    @if (Model.AdditionalEval == "Y")
+                    {
+                        <option value="Y" selected>Yes</option>
+                    }
+                    else
+                    {
+                        <option value="Y">Yes</option>
+                    }
+                    @if (Model.AdditionalEval == "N")
+                    {
+                        <option value="N" selected>No</option>
+                    }
+                    else
+                    {
+                        <option value="N">No</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label" for="inlineCheckbox1">In-Home E.I</label>
+                    @if (Model.InHome == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="check1" value="option1" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="check1" value="option1">
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label" for="inlineCheckbox1">CB</label>
+                    @if (Model.CB == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="check2" value="option1" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="check2" value="option1">
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label" for="inlineCheckbox1">PEP</label>
+                    @if (Model.PEP == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="check3" value="option1" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="check3" value="option1">
+                    }
+                </div>
+            </div>
+        </div>
+        @*<div class="col-4">
+                <div class="form-group">
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label" for="inlineCheckbox1">E.I with OT/PT/SLP Consultation</label>
+                        @if (Model.EIWITH == true)
+                        {
+                            <input class="form-check-input" type="checkbox" id="check2" value="option1" checked>
+                        }
+                        else
+                        {
+                            <input class="form-check-input" type="checkbox" id="check2" value="option1">
+                        }
+                    </div>
+                </div>
+            </div>*@
+        <div class="col-3">
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label" for="inlineCheckbox1">OT/PT/SLP</label>
+                    @if (Model.OTPT == true)
+                    {
+                        <input class="form-check-input" type="checkbox" id="check4" value="option1" checked>
+                    }
+                    else
+                    {
+                        <input class="form-check-input" type="checkbox" id="check4" value="option1">
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">CDS</label>
+                <select id="cds" class="form-control">
+                    <option value="1">--------N/A-----------</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">Specialty</label>
+                <select id="specialist" class="form-control">
+                    <option value="1">--------N/A-----------</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">Therapist</label>
+                <select id="therapist" class="form-control">
+                    <option value="1">--------N/A-----------</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label asp-for="Phone">Program Presenter</label>
+                <select id="presenter" class="form-control">
+                    <option value="1">--------N/A-----------</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group">
+                <label asp-for="Ext">Regional</label>
+                <select id="regional" class="form-control" onchange="AddressChange();">
+                    <option>Choose an option...</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label asp-for="RegionalCenter">Phone</label>
+                <input type="text" class="form-control" id="phoneReg" placeholder="Tel input" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="Ext">Address</label>
+                <input type="text" class="form-control" id="addressReg" disabled>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <div class="form-group">
+                <label asp-for="Ext">Service Coordinator</label>
+                @*<input type="text" class="form-control" id="serviceC" value="@Model.ServiceCoordinator" placeholder="State input" required>*@
+                <select id="serviceC" class="form-control" onchange="servc();">
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label asp-for="RegionalCenter">Telephone</label>
+                <input type="text" class="form-control" id="tel" placeholder="Tel input" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1"> Evaluation</label>
+                <select id="evaluation" class="form-control">
+                    @if (Model.evaluation == "Y")
+                    {
+                        <option value="Y" selected>Yes</option>
+                    }
+                    else
+                    {
+                        <option value="Y"> Yes </option>
+                    }
+                    @if (Model.evaluation == "N")
+                    {
+                        <option value="N" selected>No</option>
+                    }
+                    else
+                    {
+                        <option value="N">No</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">Initial Eval.</label>
+                <input type="date" class="form-control" id="initial" asp-for="Phone" placeholder="Phone input" value="@Model.initEval.ToString("yyyy-MM-dd")" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">Initial Eval. Due By</label>
+                <input type="date" class="form-control" asp-for="Phone" id="initdue" placeholder="Phone input" value="@Model.evaldueby.ToString("yyyy-MM-dd")" required>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">Closing Report</label>
+                <input type="date" class="form-control" id="closing" asp-for="Phone" placeholder="Phone input" value="@Model.ReportClose.ToString("yyyy-MM-dd")" required>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col-1">
+            <div class="form-group">
+
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">1st Progress Report</label>
+                <input type="date" class="form-control" id="1st" value="@Model.Report1.ToString("yyyy-MM-dd")" asp-for="Phone">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">2nd Progress Report</label>
+                <input type="date" class="form-control" id="2nd" value="@Model.Report2.ToString("yyyy-MM-dd")" asp-for="Phone">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">3rd Progress Report</label>
+                <input type="date" class="form-control" id="3rd" value="@Model.Report3.ToString("yyyy-MM-dd")" asp-for="Phone">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">4th Progress Report</label>
+                <input type="date" class="form-control" id="4th" value="@Model.Report4.ToString("yyyy-MM-dd")" asp-for="Phone">
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label class="form-check-label" for="inlineCheckbox1">5th Progress Report</label>
+                <input type="date" class="form-control" id="5th" value="@Model.Report5.ToString("yyyy-MM-dd")" asp-for="Phone">
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="submit" name="Update" value="Update" id="update" class="btn btn-success" onclick="InsertDatos();" ><i class="bi bi-database-fill-add"></i> Update</button>
+        <a href="@Url.Action("Index","Consumer")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+    </div>
+
+
+    <div class="modal fade" id="ModalConsumerNotes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalConsumerNotesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="ModalConsumerNotesLabel">Add Consumer Note</h5>
+                    <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12" style="margin-bottom:3px;">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <label class="text-danger" id="ErrorConsumerNote"></label>
+                                    <label class="text-danger" id="NotesErrorc"></label>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <br />
+                                        <label class="form-check-label" for="ConsumerActive">Active</label>
+                                        <select asp-for="ConsumerActive" id="ConsumerActive" class="form-control">
+                                            <option value="true" selected>Active</option>
+                                            <option value="false">Deactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-check-label" for="ConsumerNote">Consumer Note</label>
+                                        <textarea class="form-control" id="ConsumerNote" asp-for="ConsumerNote" placeholder="Consumer Notes" style="max-height:280px; min-height:250px;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="ConsumerNotesAdd"><i class="bi bi-database-fill-add"></i> Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalTeacherNotes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalTeacherNotesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="ModalTeacherNotesLabel">Add Teacher Note</h5>
+                    <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <label class="text-danger" id="ErrorTeacherNote"></label>
+                            <label class="text-danger" id="NotesError"></label>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <br />
+                                <label class="form-check-label" for="TeacherSpecialist">Specialist</label>
+                                <select id="TeacherSpecialist" class="form-control">
+                                    <option value="1">--------N/A-----------</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <br />
+                                <label class="form-check-label" for="TeacherDate">Date</label>
+                                <input type="date" class="form-control" id="TeacherDate" placeholder="Date" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <br />
+                                <label class="form-check-label" for="TeacherDuration">Duration</label>
+                                <input type="text" class="form-control" id="TeacherDuration" placeholder="Duration" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-check-label" for="TeacherPresentInSession">PresentInSession</label>
+                                <input type="text" class="form-control" id="TeacherPresentInSession" placeholder="PresentInSession" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-check-label" for="TeacherNote">Consumer Note</label>
+                                <textarea class="form-control" id="TeacherNote" asp-for="TeacherNote" placeholder="Teacher Notes" style="max-height:280px; min-height:200px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="TeacherNotesAdd"><i class="bi bi-database-fill-add"></i> Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalAuthorization" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalAuthorizationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title" id="ModalAuthorizationLabel">Authorization</h5>
+                    <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <label class="text-danger" id="ErrorAuthNote"></label>
+                            <label class="text-danger" id="NotesErrorA"></label>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <br />
+                                <label class="form-check-label" label-for="AuthNumber">Authorization #</label>
+                                <input type="number" class="form-control" id="AuthNumber" placeholder="From" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <br />
+                                <label class="form-check-label" label-for="AuthFrom">From:</label>
+                                <input type="date" class="form-control" id="AuthFrom" placeholder="From" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <br />
+                                <label class="form-check-label" label-for="AuthTo">To:</label>
+                                <input type="date" class="form-control" id="AuthTo" placeholder="From" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="AuthAdd"><i class="bi bi-database-fill-add"></i> Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="back-to-top">Back to Top <i class="bi bi-caret-up"></i></button>
+}
+else
+{
+    <h3 class="text-danger">¡ERROR!</h3>
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/Scripts/moment/moment.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+
+        function applyPhoneMask(event) {
+            let input = event.target;
+            let value = input.value.replace(/\D/g, '');
+            if (value.length <= 3) {
+                input.value = `(${value}`;
+            } else if (value.length <= 6) {
+                input.value = `(${value.substring(0, 3)})-${value.substring(3)}`;
+            } else {
+                input.value = `(${value.substring(0, 3)})-${value.substring(3, 6)}-${value.substring(6, 10)}`;
+            }
+        }
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', applyPhoneMask);
+        const emphoneInput = document.getElementById('emphone');
+        emphoneInput.addEventListener('input', applyPhoneMask);
+
+
+        GetRegional();
+
+        GetCity();
+        Getspecialist();
+
+        GetLang()
+        $.ajax({
+            type: "GET",
+            url: '/Consumer/Getspecialist',
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+                    document.getElementById("TeacherSpecialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+
+                }
+
+            }
+        });
+
+        $('#consumer_image').on('change', function (event) {
+            const file = event.target.files[0];
+            const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
+
+            if (file && validTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#consumer_image_ex').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert('Por favor, selecciona una imagen válida (png, jpg, jpeg, webp).');
+                $('#consumer_image_ex').hide();
+            }
+        });
+
+    })
+    //ConsumerModal
+    //var modal = document.getElementById("ventanaModal");
+    //var boton = document.getElementById("abrirModal");
+    //var span = document.getElementsByClassName("cerrar")[0];
+    //boton.addEventListener("click", function () {
+    //    modal.style.display = "block";
+    //});
+    //span.addEventListener("click", function () {
+    //    modal.style.display = "none";
+    //});
+    //window.addEventListener("click", function (event) {
+    //    if (event.target == modal) {
+    //        modal.style.display = "none";
+    //    }
+    //});
+    ////ConsumerModal
+
+    ////TeacherModal
+    //var modal2 = document.getElementById("ventanaModal2");
+    //var boton2 = document.getElementById("abrirModal2");
+    //var span2 = document.getElementsByClassName("cerrar2")[0];
+    //boton2.addEventListener("click", function () {
+    //    modal2.style.display = "block";
+    //});
+    //span2.addEventListener("click", function () {
+    //    modal2.style.display = "none";
+    //});
+    //window.addEventListener("click", function (event) {
+    //    if (event.target == modal2) {
+    //        modal2.style.display = "none";
+    //    }
+    //});
+    //TeacherModal
+
+    function ChangeR4A() {
+            var _uci = @Model.UCI;
+            if (_uci == "") {
+                return false;
+            }
+                $.ajax({
+                type: "POST",
+                url: '@Url.Action("ChangeStatusR4A", "Consumer")',
+                data: { _uci: _uci },
+                success: function (response) {
+                if (response == true || response == "True") {
+                    window.location.href = "/Consumer/Index"
+                } else {
+                    console.error("Error", err);
+                }
+                },
+                error: function (err) {
+                console.error("Error", err);
+            }
+        });
+    }
+
+
+    function ChangeImage() {
+         var formData = new FormData();
+                    formData.append('_UCI', @Model.UCI);
+                    var file = $('#consumer_image')[0].files[0];
+                    if (file) {
+                        formData.append('C_image', file);
+                    }
+
+                    $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("UpdateImagenXConsumer", "Consumer")',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response2) {
+                        if (response2 == true || response2 == "True") {
+                            window.location.reload();
+                        } else {
+
+                        }
+                    },
+                    error: function (err) {
+                        console.error("Error", err);
+                    }
+                 });
+    }
+
+    $("#Div_ConsumerClick").on("click", function () {
+        var _uci = "@Model.IDConsumer";
+        if (_uci == "") {
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Notes_byConsumer", "NotesxConsumer")',
+            data: { id: _uci },
+            success: function (response) {
+                $('#DivAddConsumer').empty();
+                if (response.length > 0) {
+                    $.each(response, function (index, item) {
+                        var NoteState = ""
+                        if (item.Active == true) {
+                            NoteState = "Enable - "
+                        } else {
+                            NoteState = "Disabled - "
+                        }
+                        var NoteExample = item.Notes
+                        var NotesFinal =  NoteExample.substring(0, 40);
+                        var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-8">' +NoteState + NotesFinal + '</div><div class="col-4"> <a class="btn btn-outline-success" target="_blank" href="~/NotesxConsumer/Update?id=' + item.IDNotesxConsumer + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/NotesxConsumer/Delete?id=' + item.IDNotesxConsumer + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        $('#DivAddConsumer').append(string_append);
+
+                    });
+                } else {
+                    $('#DivAddConsumer').append('<li class="list-group-item">No results found</li>');
+                }
+
+            }
+        });
+    });
+    function LoadConsumerNotes() {
+         var _uci = "@Model.IDConsumer";
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Notes_byConsumer", "NotesxConsumer")',
+            data: { id: _uci },
+            success: function (response) {
+                $('#DivAddConsumer').empty();
+                if (response.length > 0) {
+                    $.each(response, function (index, item) {
+                        var NoteState = ""
+                        if (item.Active == true) {
+                            NoteState = "Enable - "
+                        } else {
+                            NoteState = "Disabled - "
+                        }
+                        var NoteExample = item.Notes
+                        var NotesFinal = NoteExample.substring(0, 40);
+                        var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-8">' + NoteState + NotesFinal + '</div><div class="col-4"> <a class="btn btn-outline-success" target="_blank" href="~/NotesxConsumer/Update?id=' + item.IDNotesxConsumer + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/NotesxConsumer/Delete?id=' + item.IDNotesxConsumer + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        $('#DivAddConsumer').append(string_append);
+
+                    });
+                } else {
+                    $('#DivAddConsumer').append('<li class="list-group-item">No results found</li>');
+                }
+
+            }
+        });
+    }
+    $("#Div_TeacherClick").on("click", function () {
+       var _uci = "@Model.IDConsumer";
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Notes_byConsumer", "NotesxMaestro")',
+            data: { id: _uci },
+            success: function (response) {
+                $('#DivAddTeacher').empty();
+                if (response.length > 0) {
+                    $.each(response, function (index, item) {
+                        var NoteExampleTeacher = item.Notes
+                        var NotesFinalTeacher = NoteExampleTeacher.substring(0, 30);
+                        var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-10">' + moment(item.Date).format('MM/DD/YY') + '-' + item.SpecialitName + ' - ' + NotesFinalTeacher + ' </div><div class="col-2"> <a class="btn btn-outline-success" target="_blank" href="~/NotesxMaestro/Update?id=' + item.IDNotesxMaestro + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/NotesxMaestro/Delete?id=' + item.IDNotesxMaestro +'&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        $('#DivAddTeacher').append(string_append);
+
+                    });
+                } else {
+                    $('#DivAddTeacher').append('<li class="list-group-item">No results found</li>');
+                }
+
+            }
+        });
+    });
+    function LoadTeacherNotes() {
+        var _uci = "@Model.IDConsumer";
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Notes_byConsumer", "NotesxMaestro")',
+            data: { id: _uci },
+            success: function (response) {
+                $('#DivAddTeacher').empty();
+                if (response.length > 0) {
+                    $.each(response, function (index, item) {
+                        var NoteExampleTeacher = item.Notes
+                        var NotesFinalTeacher = NoteExampleTeacher.substring(0, 30);
+                        var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-10">' + moment(item.Date).format('MM/DD/YY') + '-' + item.SpecialitName + ' - ' + NotesFinalTeacher + ' </div><div class="col-2"> <a class="btn btn-outline-success" target="_blank" href="~/NotesxMaestro/Update?id=' + item.IDNotesxMaestro + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/NotesxMaestro/Delete?id=' + item.IDNotesxMaestro + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        $('#DivAddTeacher').append(string_append);
+
+                    });
+                } else {
+                    $('#DivAddTeacher').append('<li class="list-group-item">No results found</li>');
+                }
+
+            }
+        });
+    }
+
+     $("#Div_AuthorizationClick").on("click", function () {
+       var _uci = "@Model.UCI";
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Auth_byConsumer", "Authorization")',
+            data: { id: _uci },
+            success: function (response) {
+                $('#DivAddAuth').empty();
+                if (response.length > 0) {
+                    $.each(response, function (index, item) {
+                        var _ToBase = moment(item._To).format('MM/DD/YYYY')
+                        var _FromBase = moment(item._From).format('MM/DD/YYYY')
+                        var _ToCast = ""
+                        var _FromCast = ""
+                        if (_ToBase.toString() !== "01/01/1900" && _ToBase.toString() !== "01/01/0001") {
+                            _ToCast = moment(item._To).format('MM/DD/YYYY')
+                        } else {
+                            _ToCast = "--/--/--"
+                        }
+                        if (_FromBase.toString() !== "01/01/1900" && _FromBase.toString() !== "01/01/0001") {
+                            _FromCast = moment(item._From).format('MM/DD/YYYY')
+                        } else {
+                            _FromCast = "--/--/--"
+                        }
+                        var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-9">Authorization #: ' + item.auth + '   From: ' + _FromCast + " To: " + _ToCast + ' </div><div class="col-3"> <a class="btn btn-outline-success" target="_blank" href="~/Authorization/Update?id=' + item.IDAuth + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/Authorization/Delete?id=' + item.IDAuth +'&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        $('#DivAddAuth').append(string_append);
+                    });
+                } else {
+                    $('#DivAddAuth').append('<li class="list-group-item">No results found</li>');
+                }
+
+            }
+        });
+    });
+    function LoadAuthorization() {
+        var _uci = "@Model.UCI";
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Auth_byConsumer", "Authorization")',
+            data: { id: _uci },
+            success: function (response) {
+                $('#DivAddAuth').empty();
+                if (response.length > 0) {
+                    $.each(response, function (index, item) {
+                        var _ToBase = moment(item._To).format('MM/DD/YYYY')
+                        var _FromBase = moment(item._From).format('MM/DD/YYYY')
+                        var _ToCast = ""
+                        var _FromCast = ""
+                        if (_ToBase.toString() !== "01/01/1900" && _ToBase.toString() !== "01/01/0001") {
+                            _ToCast = moment(item._To).format('MM/DD/YYYY')
+                        } else {
+                            _ToCast = "--/--/--"
+                        }
+                        if (_FromBase.toString() !== "01/01/1900" && _FromBase.toString() !== "01/01/0001") {
+                            _FromCast = moment(item._From).format('MM/DD/YYYY')
+                        } else {
+                            _FromCast = "--/--/--"
+                        }
+                        var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-9">Authorization #: ' + item.auth + '   From: ' + _FromCast + " To: " + _ToCast + ' </div><div class="col-3"> <a class="btn btn-outline-success" target="_blank" href="~/Authorization/Update?id=' + item.IDAuth + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/Authorization/Delete?id=' + item.IDAuth + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        $('#DivAddAuth').append(string_append);
+                        //var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-9">Authorization #: ' + item.auth + '   From: ' + moment(item._From).format('MM/DD/YY') + " To:" + moment(item._To).format('MM/DD/YY') + ' </div><div class="col-3"> <a class="btn btn-outline-success" target="_blank" href="/Authorization/Update?id=' + item.IDAuth + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/Authorization/Delete?id=' + item.IDAuth + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        //$('#DivAddAuth').append(string_append);
+
+                    });
+                } else {
+                    $('#DivAddAuth').append('<li class="list-group-item">No results found</li>');
+                }
+
+            }
+        });
+    }
+
+
+    $("#ConsumerNotesAdd").on("click", function () {
+        var _uci = "@Model.UCI";
+        var _ConsumerActive = $('#ConsumerActive').val();
+        var _ConsumerNotes = $('#ConsumerNote').val();
+        if (_ConsumerNotes != "") {
+        } else {
+            $('#NotesErrorc').text("")
+            $('#NotesErrorc').text("Use a notes input in Consumer Notes")
+            return false
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddFromConsumer", "NotesxConsumer")',
+            data: { _uci: _uci, _ConsumerActive: _ConsumerActive, _ConsumerNotes: _ConsumerNotes},
+            success: function (response) {
+                if (response == 1) {
+                    LoadConsumerNotes();
+                    /*$('#ModalConsumerNotes').modal('hide');*/
+                    $('#ModalConsumerNotes .btn-close').click();
+                    $('#ConsumerNote').val("");
+                } else if (response == 2) {
+                    $('#NotesErrorc').text("")
+                    $("#ErrorConsumerNote").text('¡Error, this Consumer already has an active note!')
+                }
+            }
+        });
+    });
+    $('#ModalConsumerNotes').on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    });
+    $("#TeacherNotesAdd").on("click", function () {
+        var _uci = "@Model.UCI";
+        var _TeacherSpecialist = $('#TeacherSpecialist').val();
+        var _TeacherDate = $('#TeacherDate').val();
+        var _TeacherDuration = $('#TeacherDuration').val();
+        var _TeacherPresentInSession = $('#TeacherPresentInSession').val();
+        var _TeacherNote = $('#TeacherNote').val();
+        if (_TeacherNote != "") {
+            if (_TeacherSpecialist == 1) {
+                $('#NotesError').text("")
+                $('#NotesError').text("Select a Specialist in Teacher Notes")
+                return false;
+            } else {
+                if (_TeacherDate == "") {
+                    $('#NotesError').text("")
+                    $('#NotesError').text("Select a Date in Teacher Notes")
+                    return false
+                } else {
+                    if (_TeacherDuration == "") {
+                        $('#NotesError').text("")
+                        $('#NotesError').text("Select a Duration in Teacher Notes")
+                        return false
+                    } else {
+                        if (_TeacherPresentInSession == "") {
+                            $('#NotesError').text("")
+                            $('#NotesError').text("Select a TeacherPresentInSession in Teacher Notes")
+                            return false
+                        }
+                    }
+                }
+            }
+        } else {
+            $('#NotesError').text("")
+            $('#NotesError').text("Use a notes input in Teacher Notes")
+            return false
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddFromConsumer", "NotesxMaestro")',
+            data: { _uci: _uci, _TeacherSpecialist: _TeacherSpecialist, _TeacherDate: _TeacherDate, _TeacherDuration: _TeacherDuration, _TeacherPresentInSession: _TeacherPresentInSession, _TeacherNote: _TeacherNote },
+            success: function (response) {
+                if (response == 1) {
+                    LoadTeacherNotes();
+                    /*$('#ModalTeacherNotes').modal('hide')*/
+                    $('#ModalTeacherNotes .btn-close').click();
+                    $('#TeacherDate').val("");
+                    $('#TeacherDuration').val("");
+                    $('#TeacherPresentInSession').val("");
+                    $('#TeacherNote').val("");
+                } else if (response == 0) {
+                    $("#ErrorTeacherNote").text('¡Error!')
+                }
+            }
+        });
+    });
+
+
+      $("#AuthAdd").on("click", function () {
+        var _uci = "@Model.UCI";
+          var _AuthNumber = $('#AuthNumber').val();
+          var _AuthFrom = $('#AuthFrom').val();
+          var _AuthTo = $('#AuthTo').val();
+          if (_AuthNumber == "") {
+              _AuthNumber = "N/A"
+          }
+          if (_AuthFrom == "") {
+              _AuthFrom = "1900-01-01"
+          }
+          if (_AuthTo == "") {
+              _AuthTo = "1900-01-01"
+          }
+        //  if (_AuthNumber != "") {
+        //      if (_AuthFrom == "") {
+        //        $('#NotesErrorA').text("")
+        //          $('#NotesErrorA').text("Complete the From input in Authorization")
+        //        return false;
+        //    } else {
+        //          if (_AuthTo == "") {
+        //              $('#NotesErrorA').text("")
+        //              $('#NotesErrorA').text("Complete the To input in Authorization")
+        //            return false
+        //        }
+        //    }
+        //} else {
+        //      $('#NotesErrorA').text("")
+        //      $('#NotesErrorA').text("Use a Authorization input Authorization")
+        //    return false
+        //}
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddFromConsumer", "Authorization")',
+            //data: { _uci: _uci, _AuthNumber: _AuthNumber, _AuthFrom: _AuthFrom, _AuthTo: _AuthTo},
+            data: { UCI: _uci, auth: _AuthNumber, _From: _AuthFrom, _To: _AuthTo},
+            success: function (response) {
+                if (response == 1) {
+                    LoadAuthorization();
+                    /*$('#ModalAuthorization').modal('hide')*/
+                    $('#ModalAuthorization .btn-close').click();
+                    $('#AuthNumber').val("");
+                    $('#AuthFrom').val("");
+                    $('#AuthTo').val("");
+                } else if (response == 0) {
+                    $("#ErrorAuthNote").text('¡Error!')
+                }
+            }
+        });
+      });
+    function CerrarConsumer() {
+            var collapseElement = document.getElementById('Div_Consumer');
+            var collapseInstance = bootstrap.Collapse.getInstance(collapseElement);
+            if (!collapseInstance) {
+                collapseInstance = new bootstrap.Collapse(collapseElement);
+            }
+            collapseInstance.hide();
+    }
+
+    function CerrarTeacher() {
+            var collapseElement = document.getElementById('Div_Teacher');
+            var collapseInstance = bootstrap.Collapse.getInstance(collapseElement);
+            if (!collapseInstance) {
+                collapseInstance = new bootstrap.Collapse(collapseElement);
+            }
+            collapseInstance.hide();
+    }
+    function CerrarAuth() {
+        var collapseElement = document.getElementById('Div_Authorization');
+        var collapseInstance = bootstrap.Collapse.getInstance(collapseElement);
+        if (!collapseInstance) {
+            collapseInstance = new bootstrap.Collapse(collapseElement);
+        }
+        collapseInstance.hide();
+    }
+    function GetCity() {
+        var _base_city = @Model.CityID
+            $.ajax({
+            type: "GET",
+            url: "@Url.Action("Getcities","Consumer")",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    /*var datos = data[i].split(",");*/
+                    var datos = data[i].split(",").map(item => item.trim());
+                    if (_base_city == datos[0]) {
+                        document.getElementById("city").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
+                    } else {
+                        document.getElementById("city").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+                    }
+                        
+
+                }
+
+            }
+        });
+    }
+    function Getspecialist() {
+        var _base_cds = @Model.specialist1
+        var _base_spe = @Model.specialist2
+        var _base_the = @Model.specialist3
+        var _base_pre = @Model.PresenterName
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Getspecialist", "Consumer")",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+                    if (_base_cds == datos[0]) {
+                        document.getElementById("cds").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("cds").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+                    if (_base_spe == datos[0]) {
+                        document.getElementById("specialist").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("specialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+
+
+                    document.getElementById("TeacherSpecialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    if (_base_the == datos[0]) {
+                        document.getElementById("therapist").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("therapist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+
+                    if (_base_pre == datos[0]) {
+                        document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+
+                }
+            }
+        });
+    }
+    function GetRegional() {
+        var _base_regional = @Model.RegionalID
+            $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRegionals", "Consumer")",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+                    if (_base_regional == datos[0]) {
+                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
+                        AddressChange(datos[0])
+                    } else {
+                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+                    }
+                }
+                }
+            });
+
+    }
+    function AddressChange(idRegional) {
+        var _baseServiCoor = @Model.ServiceCoordinator;
+        var id = "";
+        if (idRegional == "") {
+            var id = idRegional
+        } else {
+            var id = $("#regional option:selected").val();
+        }
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRegionalByID", "Consumer")",
+            data: { id: id },
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split("|");
+
+                    document.getElementById("phoneReg").value = datos[6];
+                    document.getElementById("addressReg").value = datos[2] + ", " + datos[3] + ", " + datos[4] + ", " + datos[5];
+                    document.getElementById("tel").value = datos[7];
+                    /*document.getElementById("serviceC").value = datos[8];*/
+                    document.getElementById("tel").value = datos[8];
+                    if (_baseServiCoor == datos[9]) {
+                        document.getElementById("serviceC").innerHTML += "<option value='" + datos[9] + "' selected>" + datos[7] + "</option>";
+                    } else {
+                        document.getElementById("serviceC").innerHTML += "<option value='" + datos[9] + "'>" + datos[7] + "</option>";
+                    }
+                }
+
+
+            }
+        });
+    }
+    //function AddressChange() {
+
+    //    var id = $("#regional option:selected").val();
+    //    $.ajax({
+    //        type: "GET",
+    //        url: 'GetRegionalByID',
+    //        data: { id: id },
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "text",
+    //        success: function (response) {
+
+    //            var data = response.split(";");
+    //            var haa = data.length - 1;
+    //            for (var i = 0; i < haa; i++) {
+    //                var datos = data[i].split("|");
+
+    //                document.getElementById("phoneReg").value = datos[6];
+    //                document.getElementById("addressReg").value = datos[2] + ", " + datos[3] + ", " + datos[4] + ", " + datos[5];
+    //                //  document.getElementById("tel").value = datos[7];
+    //                //  document.getElementById("serviceC").value = datos[8];
+    //                document.getElementById("serviceC").innerHTML += "<option value='" + datos[7] + "' selected>" + datos[7] + "</option>";
+    //                document.getElementById("tel").value = datos[8];
+    //            }
+
+
+    //        }
+    //    });
+    //}
+
+
+
+
+
+
+    function InsertDatos() {
+
+
+        var _UCI = $('#uci').val();
+        var _specialist1 = $("#cds option:selected").val();
+        var _specialist2 = $("#specialist option:selected").val();
+        var _specialist3 = $("#therapist option:selected").val();
+        var PresenterName = $("#presenter option:selected").val();
+        //hasta aqui todo bien
+        var uci = $('#uci').val();
+        var _Name = $('#consumer').val();
+        var _LastName = $('#lastname').val();
+        var _DateOfBirth = $('#dob').val();
+        var _adjage = $('#dob').val();
+        var _Gender = $('input[name="sex"]:checked').val();
+        var _Phone = $('#phone').val();
+        var _EmergencyPhone = $('#emphone').val();
+        var _Address = $('#address').val();
+        var _CityID = $("#city option:selected").val();
+        var state = $("#states option:selected").val();
+        var _ZipCode = $('#zipcode').val();
+        var _ParentName = $('#parent').val();
+        var _ParentLastName = $('#parentln').val();
+        var _LanguajeID = $("#lang option:selected").val();
+        var _InHome = document.getElementById('check1').checked;
+        var _CB = document.getElementById('check2').checked;
+        var _PEP = document.getElementById('check3').checked;
+        //var _EIWITH = true;
+        var _EIWITH = true;
+        var _OTPT = document.getElementById('check4').checked;
+        var _Reasonforreferral = $('#reason').val();
+        var _AuthID = "1"
+        var _HoursxWeek = $('#hours').val();
+        var _MaxHours = $('#maxhours').val();
+        var _terminationdate = $('#terminationdate').val();
+
+
+        var _TerminationNumber = $('#termination').val();
+        var _AdditionalEval = $("#addeval option:selected").val();//esta es una
+        var _RegionalID = $("#regional option:selected").val();
+        var _ServiceCoordinator = $('#serviceC').val();
+        var _initEval = $('#initial').val();
+        var _evaldueby = $('#initdue').val();
+        var _ReportClose = $('#closing').val();
+        var _Report1 = $('#1st').val();
+        var _Report2 = $('#2nd').val();
+        var _Report3 = $('#3rd').val();
+        var _Report4 = $('#4th').val();
+        var _Report5 = $('#5th').val();
+        if (_initEval == "" || _initEval == null) {
+            _initEval = '1900-01-01'
+        } else {
+            _initEval = _initEval;
+        }
+        if (_evaldueby == "" || _evaldueby == null) {
+            _evaldueby = '1900-01-01'
+        } else {
+            _evaldueby = _initEval;
+        }
+        //reportclose
+        if (_ReportClose == "" || _ReportClose == null) {
+            _ReportClose = '1900-01-01'
+        } else {
+            _ReportClose = _ReportClose;
+        }
+        //report1
+        if (_Report1 == "" || _Report1 == null) {
+            _Report1 = '1900-01-01'
+        } else {
+            _Report1 = _Report1;
+        }
+        //report2
+        if (_Report2 == "" || _Report2 == null) {
+            _Report2 = '1900-01-01'
+        } else {
+            _Report2 = _Report2;
+        }
+        //report3
+        if (_Report3 == "" || _Report3 == null) {
+            _Report3 = '1900-01-01'
+        } else {
+            _Report3 = _Report3;
+        }
+
+        // report4
+        if (_Report4 == "" || _Report4 == null) {
+            _Report4 = '1900-01-01'
+        } else {
+            _Report4 = _Report4;
+        }
+        //
+        // report4
+        if (_Report5 == "" || _Report5 == null) {
+            _Report5 = '1900-01-01'
+        } else {
+            _Report5 = _Report5;
+        }
+        //
+
+
+        var _evaluation = $("#evaluation option:selected").val(); //esta es una
+        var _Date = $('#1st').val();
+        if (_Date == "" || _Date == null) {
+            _Date = '1900-01-01'
+        } else {
+            _Date = _Date;
+        }
+        //CONSUMER NOTES
+        var _ConsumerActive = $('#ConsumerActive').val();
+        var _ConsumerNotes = $('#ConsumerNote').val();
+        //TEACHER NOTES
+        var _TeacherSpecialist = $('#TeacherSpecialist').val();
+        var _TeacherDate = $('#TeacherDate').val();
+        var _TeacherDuration = $('#TeacherDuration').val();
+        var _TeacherPresentInSession = $('#TeacherPresentInSession').val();
+        var _TeacherNote = $('#TeacherNote').val();
+
+        if (_TeacherNote != "") {
+            if (_TeacherSpecialist == 1) {
+                $('#NotesError').text("Select a Specialist in Teacher Notes")
+                return false;
+            } else {
+                if (_TeacherDate == "") {
+                    $('#NotesError').text("Select a Date in Teacher Notes")
+                    return false
+                } else {
+                    if (_TeacherDuration == "") {
+                        $('#NotesError').text("Select a Duration in Teacher Notes")
+                        return false
+                    } else {
+                        if (_TeacherPresentInSession == "") {
+                            $('#NotesError').text("Select a TeacherPresentInSession in Teacher Notes")
+                            return false
+                        }
+                    }
+                }
+            }
+        }
+        // ________________________________________NUEVO
+        var _AuthNumber = $('#AuthNumber').val();
+        var _AuthFrom = $('#AuthFrom').val();
+        var _AuthTo = $('#AuthTo').val();
+
+        //if (_AuthNumber != "") {
+        //    if (_AuthNumber != "" && _AuthFrom == "") {
+        //        $('#NotesError').text("Select a Date in a From Input in Authorization")
+        //        return false;
+        //    } else {
+        //        if (_AuthNumber != "" && _AuthTo == "") {
+        //            $('#NotesError').text("Select a Date in a To in Authorization")
+        //            return false
+        //        }
+        //    }
+        //}
+
+
+        // ________________________________________NUEVO
+
+        var _Action = $("#action option:selected").val();
+        var _TypeReporte = $("#type option:selected").val();
+        var _Type = $("#type option:selected").val();
+
+        var _ReferredBy = 1;
+
+
+        //variablesque se rellenaran con el login
+        var _Archive = 1;
+
+
+
+        if (_TerminationNumber == "") {
+            _TerminationNumber = "1";
+        } else {
+            _TerminationNumber = _TerminationNumber;
+        }
+        var _UserC = $('#inf').val();
+        var _DateC = _Report4;
+        var _UserU = $('#inf').val();
+        var _DateU = _Report4;
+
+        //no lo he probado
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("datosUpdate", "Consumer")",
+            data: {
+                _UCI: _UCI, _specialist1: _specialist1, _specialist2: _specialist2, _specialist3: _specialist3, _PresenterName: PresenterName,
+                _Name: _Name, _LastName: _LastName, _DateOfBirth: _DateOfBirth, _adjage: _adjage, _Gender: _Gender, _Address: _Address, _CityID: _CityID, _ZipCode: _ZipCode, _Phone: _Phone,
+                _EmergencyPhone: _EmergencyPhone, _ParentName: _ParentName, _ParentLastName: _ParentLastName, _LanguajeID: _LanguajeID, _Reasonforreferral: _Reasonforreferral, _AuthID: _AuthID,
+                _HoursxWeek: _HoursxWeek, _MaxHours: _MaxHours, _TerminationNumber: _TerminationNumber, _AdditionalEval: _AdditionalEval, _InHome: _InHome, _EIWITH: _EIWITH, _CB: _CB,_PEP: _PEP,
+                _initEval: _initEval, _evaldueby: _evaldueby, _Report1: _Report1, _Report2: _Report2, _Report3: _Report3, _Report4: _Report4, _Report5: _Report5, _ReportClose: _ReportClose,
+                _Date: _Date, _ReferredBy: _ReferredBy, _evaluation: _evaluation, _TypeReporte: _TypeReporte, _RegionalID: _RegionalID, _ServiceCoordinator: _ServiceCoordinator,
+                _Archive: _Archive, _Type: _Type, _Action: _Action, _UserC: _UserC, _DateC: _DateC, _UserU: _UserU, _DateU: _DateU, _ConsumerActive: _ConsumerActive, _ConsumerNotes: _ConsumerNotes,
+                _TeacherSpecialist: _TeacherSpecialist, _TeacherDate: _TeacherDate, _TeacherDuration: _TeacherDuration, _TeacherPresentInSession: _TeacherPresentInSession, _TeacherNote: _TeacherNote,
+                // ________________________________________NUEVO
+                _AuthNumber: _AuthNumber, _AuthFrom: _AuthFrom, _AuthTo: _AuthTo, _OTPT: _OTPT, _terminationdate: _terminationdate
+
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+
+                if (response == 1) {
+                    Swal.fire({
+                    icon: "success",
+                    title: "¡Saved!",
+                    timer: 1900
+                }).then(() => {
+                    window.location.href = '@Url.Action("Index", "Consumer")';
+                });
+                } else {
+
+                    Swal.fire({
+                    icon: "error",
+                    title: "¡Error!",
+                     text: "¡Error!",
+                    timer: 2000
+                    }).then(() => {
+                        window.location.href = '@Url.Action("Index", "Consumer")';
+                    });
+
+                }
+            }
+        });
+
+    }
+    function GetLang() {
+         var _base_languaje = @Model.LanguajeID
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetLang", "Consumer")',
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    /*var datos = data[i].split(",");*/
+                    var datos = data[i].split(",").map(item => item.trim());
+                    if (_base_languaje == datos[0]) {
+                        document.getElementById("lang").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
+                    } else {
+                        document.getElementById("lang").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+                    }
+                }
+            }
+        });
+    }
+
+    const backToTopButton = document.getElementById("back-to-top");
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+
+
+</script>

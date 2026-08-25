@@ -1,0 +1,123 @@
+﻿@model LEAP.Models.ServiceCoordinatorModel
+@{
+    ViewBag.Title = "Add - Languajes";
+}
+<style>
+    .expandable-textarea {
+        width: 100%;
+        min-height: 50px;
+        max-height: 300px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        padding: 8px;
+    }
+
+        .expandable-textarea:focus {
+            outline: none;
+            border-color: #ccc;
+            box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+        }
+</style>
+<a href="@Url.Action("Index","serviceCoordinator")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Add" asp-controller="Languajes" method="post">
+        <h5 class="card-header bg-dark text-white">Add a Service Coordinator</h5>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Phone">Service Coordinator</label>
+                        <input type="text" class="form-control" id="sc" asp-for="Phone" placeholder="Phone input" required>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Phone">RegionL Center</label>
+                        <select id="regional" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="Ext">Telephone</label>
+                        <input type="text" class="form-control" id="tel" asp-for="Phone" placeholder="Phone input" required>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" name="create" value="Create" id="create" onclick="Create();" class="btn btn-success"><i class="bi bi-database-fill-add"></i> Create</button>
+            <a href="@Url.Action("Index","Languajes")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+
+    //TeacherModal
+
+
+    $(document).ready(function () {
+        GetRegional();
+
+
+    });
+    function GetRegional() {
+
+
+
+        $.ajax({
+            type: "GET",
+            url: 'GetRegionals',
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+                    document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+
+                }
+
+            }
+        });
+    }
+    function Create() {
+        var regional = $("#regional option:selected").val();
+        var sc = $('#sc').val();
+        var tel = $('#tel').val();
+
+        $.ajax({
+            type: "GET",
+            url: 'insertS',
+            data: {
+                regional: regional, sc: sc, tel: tel,
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+
+                 window.location.href = '@Url.Action("Index", "ServiceCoordinator")'
+
+            }
+
+        });
+    }
+
+
+
+
+
+
+</script>

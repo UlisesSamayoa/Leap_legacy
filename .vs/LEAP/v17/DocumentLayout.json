@@ -1,0 +1,630 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|c:\\users\\admin\\desktop\\publicados\\leap\\leap\\leap\\controllers\\reportscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\reportscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\reportsmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\reportsmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\update_bk_28_4.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\update_bk_28_4.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\add.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\add.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\controllers\\consumercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\consumercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\ready4archive.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\ready4archive.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\authorizationmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\authorizationmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\consumermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\consumermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\regionalcentermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\regionalcentermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\specialistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\specialistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\notesxconsumer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\notesxconsumer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\content\\template\\rpt_consumer.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\content\\template\\rpt_consumer.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\notesxconsumer\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\notesxconsumer\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\notesxconsumer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\notesxconsumer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\authorization\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\authorization\\update.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\authorization\\add.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\authorization\\add.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\archived.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\archived.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\controllers\\notesxconsumercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\notesxconsumercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\consumer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\consumer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\notesxconsumermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\notesxconsumermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\citiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\content\\template\\rpt_cdsconsumer.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\content\\template\\rpt_cdsconsumer.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\content\\template\\rpt_newconsumer.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\content\\template\\rpt_newconsumer.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\loginmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\models\\eventtypemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\models\\eventtypemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\reports\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\reports\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\servicecoordinator\\add.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\servicecoordinator\\add.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\reportes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\reportes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\controllers\\servicecoordinatorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\servicecoordinatorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\servicecoordinator\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\servicecoordinator\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\authorization\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\authorization\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\leap\\controllers\\authorizationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BAFDA516-7722-448A-B63D-FE55CFB3C94D}|LEAP\\LEAP.csproj|solutionrelative:leap\\controllers\\authorizationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ReportsModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\ReportsModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\ReportsModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\ReportsModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\ReportsModel.cs",
+              "ViewState": "AgIAAEQDAAAAAAAAAADgv1gDAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T01:45:11.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Ready4Archive.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Ready4Archive.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Ready4Archive.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Ready4Archive.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Ready4Archive.cshtml",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAmwIcAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T00:29:08.678Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "SpecialistModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\SpecialistModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\SpecialistModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\SpecialistModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\SpecialistModel.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAA2wFIAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T17:16:40.055Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Update.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Update.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Update.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Update.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Update.cshtml",
+              "ViewState": "AgIAAB8HAAAAAAAAAAAmwKIIAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-30T18:30:20.47Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Details.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Details.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Details.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Details.cshtml",
+              "ViewState": "AgIAAAwIAAAAAAAAAAAmwBcIAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T00:30:34.136Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Web.config",
+              "RelativeDocumentMoniker": "LEAP\\Web.config",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Web.config",
+              "RelativeToolTip": "LEAP\\Web.config",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACIAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-05-01T01:56:19.341Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ReportsController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\ReportsController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\ReportsController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\ReportsController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\ReportsController.cs",
+              "ViewState": "AgIAACYIAAAAAAAAAAAtwDYIAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T18:32:00.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ConsumerController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\ConsumerController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\ConsumerController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\ConsumerController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\ConsumerController.cs",
+              "ViewState": "AgIAAD8BAAAAAAAAAAAawE0BAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-05T23:39:40.771Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Update_BK_28_4.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Update_BK_28_4.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Update_BK_28_4.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Update_BK_28_4.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Update_BK_28_4.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-10T23:07:13.546Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AuthorizationModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\AuthorizationModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\AuthorizationModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\AuthorizationModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\AuthorizationModel.cs",
+              "ViewState": "AgIAAL0AAAAAAAAAAAD4v3kAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-07T18:03:09.394Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Add.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Add.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Add.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Add.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Add.cshtml",
+              "ViewState": "AgIAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-30T18:30:24.527Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ConsumerModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\ConsumerModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\ConsumerModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\ConsumerModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\ConsumerModel.cs",
+              "ViewState": "AgIAAIYDAAAAAAAAAAAtwJYDAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-07T16:08:26.403Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "RegionalCenterModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\RegionalCenterModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\RegionalCenterModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\RegionalCenterModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\RegionalCenterModel.cs",
+              "ViewState": "AgIAAFwAAAAAAAAAAAAtwGwAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T18:40:45.273Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\NotesxConsumer\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\NotesxConsumer\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\NotesxConsumer\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\NotesxConsumer\\Index.cshtml",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-02T15:38:53.808Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Index.cshtml",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAHMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-07T19:13:17.867Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "rpt_consumer.html",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Content\\Template\\rpt_consumer.html",
+              "RelativeDocumentMoniker": "LEAP\\Content\\Template\\rpt_consumer.html",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Content\\Template\\rpt_consumer.html",
+              "RelativeToolTip": "LEAP\\Content\\Template\\rpt_consumer.html",
+              "ViewState": "AgIAALQAAAAAAAAAAAAAALsAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-04-30T18:41:10.509Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "NotesxConsumerController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\NotesxConsumerController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\NotesxConsumerController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\NotesxConsumerController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\NotesxConsumerController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAWwBEAAABuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-02T16:02:19.848Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Archived.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Archived.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Consumer\\Archived.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Consumer\\Archived.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Consumer\\Archived.cshtml",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-06T20:05:55.855Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Add.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Authorization\\Add.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Authorization\\Add.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Authorization\\Add.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Authorization\\Add.cshtml",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-06T20:06:47.293Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Update.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Authorization\\Update.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Authorization\\Update.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Authorization\\Update.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Authorization\\Update.cshtml",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-06T20:07:08.492Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Update.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\NotesxConsumer\\Update.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\NotesxConsumer\\Update.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\NotesxConsumer\\Update.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\NotesxConsumer\\Update.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAGYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-06T20:08:10.966Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\NotesxConsumer\\Details.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\NotesxConsumer\\Details.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\NotesxConsumer\\Details.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\NotesxConsumer\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-06T20:08:09.702Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "NotesxConsumerModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\NotesxConsumerModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\NotesxConsumerModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\NotesxConsumerModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\NotesxConsumerModel.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAIA5wBQAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-02T16:02:14.79Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "rpt_cdsconsumer.html",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Content\\Template\\rpt_cdsconsumer.html",
+              "RelativeDocumentMoniker": "LEAP\\Content\\Template\\rpt_cdsconsumer.html",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Content\\Template\\rpt_cdsconsumer.html",
+              "RelativeToolTip": "LEAP\\Content\\Template\\rpt_cdsconsumer.html",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-06-09T17:14:43.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "rpt_newconsumer.html",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Content\\Template\\rpt_newconsumer.html",
+              "RelativeDocumentMoniker": "LEAP\\Content\\Template\\rpt_newconsumer.html",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Content\\Template\\rpt_newconsumer.html",
+              "RelativeToolTip": "LEAP\\Content\\Template\\rpt_newconsumer.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-06-09T17:14:01.206Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "CitiesController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\CitiesController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\CitiesController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\CitiesController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\CitiesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T18:08:47.674Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\LoginController.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAiwDIAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-18T18:42:38.746Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "EventTypeModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\EventTypeModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\EventTypeModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\EventTypeModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\EventTypeModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-13T22:57:54.743Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "LoginModel.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\LoginModel.cs",
+              "RelativeDocumentMoniker": "LEAP\\Models\\LoginModel.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Models\\LoginModel.cs",
+              "RelativeToolTip": "LEAP\\Models\\LoginModel.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAiwCcAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-13T22:57:58.675Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Reportes\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Reportes\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Reportes\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Reportes\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-14T22:13:35.06Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Reports\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Reports\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Reports\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Reports\\Index.cshtml",
+              "ViewState": "AgIAADgBAAAAAAAAAAAAAA4BAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-14T22:14:33.434Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Add.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\ServiceCoordinator\\Add.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\ServiceCoordinator\\Add.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\ServiceCoordinator\\Add.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\ServiceCoordinator\\Add.cshtml",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAG0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-14T23:47:33.362Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-15T19:06:04.631Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\ServiceCoordinator\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\ServiceCoordinator\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\ServiceCoordinator\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\ServiceCoordinator\\Index.cshtml",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-14T22:01:32.218Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "ServiceCoordinatorController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\ServiceCoordinatorController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\ServiceCoordinatorController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\ServiceCoordinatorController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\ServiceCoordinatorController.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-14T22:02:34.779Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Authorization\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Authorization\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Authorization\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Authorization\\Index.cshtml",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAAFUAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-07T18:10:31.232Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "LEAP\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "LEAP\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-07T19:14:42.37Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "AuthorizationController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\AuthorizationController.cs",
+              "RelativeDocumentMoniker": "LEAP\\Controllers\\AuthorizationController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Publicados\\LEAP\\LEAP\\LEAP\\Controllers\\AuthorizationController.cs",
+              "RelativeToolTip": "LEAP\\Controllers\\AuthorizationController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T03:57:06.764Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

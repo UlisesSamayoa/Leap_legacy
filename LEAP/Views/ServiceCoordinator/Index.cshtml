@@ -1,0 +1,94 @@
+﻿@model List<LEAP.Models.ServiceCoordinatorModel>
+@{
+    ViewBag.Title = "ServiceCoordinator";
+}
+<div class="card">
+    <h5 class="card-header bg-dark text-white">Service Coordinator</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <a href="@Url.Action("Add","ServiceCoordinator")" class="btn btn-success text-white">
+                    <i class="bi bi-database-fill-add"></i> New
+                </a>
+                <hr />
+                <table id="table_languajes" class="table table-hover" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID Coordinator</th>
+                            <th>Regional Center</th>
+                            <th>Name</th>
+                            <th>Telephone</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null || Model.Count > 0)
+                        {
+                            foreach (var service in Model)
+                            {
+                                <tr>
+                                    <td>@service.IDServiceC</td>
+                                    <td>@service.IDRegionalcenter</td>
+                                    <td>@service.NameC</td>
+                                    <td>@service.Tel</td>
+                                    <td>
+                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","ServiceCoordinator", new { id = service.IDServiceC })"><i class="bi bi-pencil-square"></i> Update</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","ServiceCoordinator", new { id = service.IDServiceC })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No data available
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_languajes').DataTable({
+                "dom": 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>',
+                        title: 'Languajes',
+                        filename: 'rpt_languajes',
+                        exportOptions: { columns: [0, 1,2,3,] },
+                        className: 'btn_excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-pdf-fill fs-5"></i>',
+                        title: 'Languajes',
+                        filename: 'rpt_languajes',
+                        exportOptions: { columns: [0, 1, 2, 3,] },
+                        className: 'btn_pdf'
+                    }, {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer-fill fs-5"></i>',
+                        title: 'Languajes',
+                        filename: 'rpt_languajes',
+                        exportOptions: { columns: [0, 1, 2, 3,] },
+                        className: 'btn_print'
+                    }
+                ]
+            });
+        });
+    </script>
+}

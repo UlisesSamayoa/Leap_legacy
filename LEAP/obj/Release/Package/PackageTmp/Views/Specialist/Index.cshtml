@@ -1,0 +1,117 @@
+﻿@model List<LEAP.Models.SpecialistModel>
+@{
+    ViewBag.Title = "Specialist";
+}
+@*<script src="https://cdn.datatables.net/v/dt/dt-2.0.7/b-3.0.2/datatables.min.js"></script>*@
+
+<div class="card">
+    <h5 class="card-header bg-dark text-white">Specialist </h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <a href="@Url.Action("Add","Specialist")" class="btn btn-success text-white">
+                    <i class="bi bi-database-fill-add"></i> New
+                </a>
+                <hr />
+                <table id="table_Specialist" class="table table-hover" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            @*<th>Coordinator</th>*@
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Specialty</th>
+                            <th>Preview</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null )
+                        {
+                            foreach (var Specialist in Model)
+                            {
+                        <tr>
+                            <td>@Specialist.Name @Specialist.LastName</td>
+                            <td>@Specialist.Phone</td>
+                            <td>@Specialist.Email</td>
+                            <td>@Specialist.Address</td>
+                            <td>@Specialist.Specialty</td>
+                            <td>
+                                <a class="btn btn-outline-success" href="@Url.Action("Details","Specialist", new { id = Specialist.IDSpecialist })"><i class="bi bi-eye-fill"></i> See_more</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-outline-primary" href="@Url.Action("Update","Specialist", new { id = Specialist.IDSpecialist })"><i class="bi bi-pencil-square"></i> Update</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-outline-danger" href="@Url.Action("Delete","Specialist", new { id = Specialist.IDSpecialist })"><i class="bi bi-trash-fill"></i> Delete</a>
+                            </td>
+                        </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No data available
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                    <!--<tfoot class="table-dark">
+                        <tr>
+                            <th>Specialist</th>-->
+                    @*<th>Coordinator</th>*@
+                    <!--<th>Phone</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>ZipCode</th>
+                            <th>Ext</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </tfoot>-->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#table_Specialist').DataTable({
+                "dom": 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-spreadsheet-fill fs-5"></i>',
+                        title: 'Specialist',
+                        filename: 'rpt_specialist',
+                        exportOptions: { columns: [0, 1, 2, 3, 4] },
+                        className: 'btn_excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-pdf-fill fs-5"></i>',
+                        title: 'Specialist',
+                        filename: 'rpt_specialist',
+                        exportOptions: { columns: [0, 1, 2, 3, 4] },
+                        className: 'btn_pdf'
+                    }, {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer-fill fs-5"></i>',
+                        title: 'Specialist',
+                        filename: 'rpt_specialist',
+                        exportOptions: { columns: [0, 1, 2, 3, 4] },
+                        className: 'btn_print'
+                    }
+                ]
+            });
+        });
+    </script>
+}

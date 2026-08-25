@@ -1,0 +1,338 @@
+﻿@model LEAP.Models.ReportsModel
+@if (Model != null)
+{
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="row">
+                @*<form action="Consumer_Report" target="_blank" method="post">*@
+                <form action="ConsumerReport" target="_blank" method="post">
+                    @Html.TextBoxFor(m => m.UCI, new { @type = "hidden", @class = "form-control", placeholder = "Consumer Name", required = "true",id="UCI" })
+                    <div class="col-12 text-end">
+                        <button class="btn btn-warning" id="print_rpt" type="submit"><i class="bi bi-printer-fill"></i> Print report</button>
+                        <br /><br />
+                    </div>
+                </form>
+                <div class="col-12 text-center" style="border:1px solid black;">
+                    CONSUMER INFORMATION AND REASON FOR REFERRAL
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Date">Date</label>
+                        @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "Date input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Phone">Inf. Taken By.</label>
+                        <input type="text" class="form-control" id="inf" asp-for="Phone" placeholder="Inf. Taken By" required>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Action">Action</label>
+                        @Html.TextBoxFor(m => m.Action, new { @type = "text", @class = "form-control", placeholder = "Action input", required = "true" })
+                        @*@Html.DropDownListFor(model => model.Active, new List<SelectListItem>
+                                    {
+                                        new SelectListItem { Text = "Enabled", Value = "true" },
+                                        new SelectListItem { Text = "Disabled", Value = "false" }
+                                    }, "-- Select Status --", new { @class = "form-control", required = "true" })
+                            @Html.ValidationMessageFor(model => model.Active)*@
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="ConsumerName">ConsumerName</label>
+                        @Html.TextBoxFor(m => m.ConsumerName, new { @type = "text", @class = "form-control", placeholder = "Consumer Name", required = "true" })
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="UCI">UCI</label>
+                        @Html.TextBoxFor(m => m.UCI, new { @type = "text", @class = "form-control", placeholder = "Action input", required = "true" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="DateOfBirth">DOB</label>
+                    @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "DateOfBirth", required = "true",id="dob" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="Age">Age</label>
+                    @*@Html.TextBoxFor(m => m.Age, new { @type = "number", @class = "form-control", placeholder = "Age", required = "true" })*@
+                    <input type="text" id="age" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="adjage">adjage</label>
+                    @Html.TextBoxFor(m => m.adjage, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "adjage", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="Gender">Gender</label>
+                    @Html.TextBoxFor(m => m.Gender, new { @type = "text", @class = "form-control", placeholder = "Gender input", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="Address">Address</label>
+                    @Html.TextBoxFor(m => m.Address, new { @type = "text", @class = "form-control", placeholder = "Address", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="CityID">CityID</label>
+                    @Html.TextBoxFor(m => m.CityID, new { @type = "text", @class = "form-control", placeholder = "CityID", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="State">State</label>
+                    @Html.TextBoxFor(m => m.State, new { @type = "text", @class = "form-control", placeholder = "adjage", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="ZipCode">ZipCode</label>
+                    @Html.TextBoxFor(m => m.ZipCode, new { @type = "text", @class = "form-control", placeholder = "ZipCode", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Phone">Phone</label>
+                    @Html.TextBoxFor(m => m.Phone, new { @type = "text", @class = "form-control", placeholder = "Phone", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="EmergencyPhone">EmergencyPhone</label>
+                    @Html.TextBoxFor(m => m.EmergencyPhone, new { @type = "text", @class = "form-control", placeholder = "EmergencyPhone", required = "true" })
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="ParentFullName">Parent Name</label>
+                    @Html.TextBoxFor(m => m.ParentFullName, new { @type = "text", @class = "form-control", placeholder = "ParentFullName", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="LanguajeName">Languaje</label>
+                    @Html.TextBoxFor(m => m.LanguajeName, new { @type = "text", @class = "form-control", placeholder = "LanguajeName", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Reasonforreferral">Reason for referral</label>
+                    @Html.TextBoxFor(m => m.Reasonforreferral, new { @type = "text", @class = "form-control", placeholder = "Reasonforreferral", required = "true" })
+                </div>
+            </div>
+            <div class="col-12 text-center" style="border:1px solid black;">
+                AUTHORIZATION AND HOURS PER WEEK
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="_From">From</label>
+                    @Html.TextBoxFor(m => m._From, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "_From", required = "true" })
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="_To">To</label>
+                    @Html.TextBoxFor(m => m._To, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "_To", required = "true" })
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="auth">Authorization #</label>
+                    @Html.TextBoxFor(m => m.auth, new { @type = "number", @class = "form-control", placeholder = "auth", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="HoursxWeek">HoursxWeek #</label>
+                    @Html.TextBoxFor(m => m.HoursxWeek, new { @type = "number", @class = "form-control", placeholder = "HoursxWeek", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="MaxHours">MaxHours</label>
+                    @Html.TextBoxFor(m => m.MaxHours, new { @type = "number", @class = "form-control", placeholder = "MaxHours", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="_From">From</label>
+                    @*@Html.TextBoxFor(m => m._From, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "_From", req0uired = "true" })*@
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="AdditionalEval">AdditionalEval</label>
+                    @Html.TextBoxFor(m => m.AdditionalEval, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "AdditionalEval", required = "true" })
+                </div>
+            </div>
+            <div class="col-12 text-center" style="border:1px solid black;">
+                TYPE OF SERVICES AND SPECIALIST ASSIGNED
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="InHome">In-Home E.I</label>
+                    @Html.TextBoxFor(m => m.InHome, new { @type = "number", @class = "form-control", placeholder = "InHome", required = "true" })
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="OTPT">OTPT</label>
+                    @Html.TextBoxFor(m => m.OTPT, new { @type = "number", @class = "form-control", placeholder = "OTPT", required = "true" })
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label asp-for="OTPT">OTPT</label>
+                    @*@Html.TextBoxFor(m => m.OTPT, new { @type = "number", @class = "form-control", placeholder = "OTPT", required = "true" })*@
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="specialist1">CDS</label>
+                    @Html.TextBoxFor(m => m.spe_FullName, new { @type = "text", @class = "form-control", placeholder = "specialist1", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="specialist1">specialty</label>
+                    @Html.TextBoxFor(m => m.spe_FullName, new { @type = "text", @class = "form-control", placeholder = "specialist1", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="specialist1">Therapíst</label>
+                    @Html.TextBoxFor(m => m.spe_FullName, new { @type = "text", @class = "form-control", placeholder = "specialist1", required = "true" })
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label asp-for="specialist1">Program Presenter</label>
+                    @Html.TextBoxFor(m => m.spe_FullName, new { @type = "text", @class = "form-control", placeholder = "specialist1", required = "true" })
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="NotesConsumer">Notes</label>
+                    @Html.TextBoxFor(m => m.NotesConsumer, new { @type = "text", @class = "form-control", placeholder = "NotesConsumer", required = "true" })
+                </div>
+            </div>
+            <div class="col-12 text-center" style="border:1px solid black;">
+                REGIONAL CENTER INFORMATION
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="RegionalCenter">RegionalCenter</label>
+                    @Html.TextBoxFor(m => m.RegionalCenter, new { @type = "text", @class = "form-control", placeholder = "RegionalCenter", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="rc_Phone">Phone</label>
+                    @Html.TextBoxFor(m => m.rc_Phone, new { @type = "text", @class = "form-control", placeholder = "rc_Phone", required = "true" })
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="rc_Address">Address</label>
+                    @Html.TextBoxFor(m => m.rc_Address, new { @type = "text", @class = "form-control", placeholder = "rc_Address", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="RegionalCenter">ServiceCoordinator´s name</label>
+                    @*@Html.TextBoxFor(m => m.RegionalCenter, new { @type = "text", @class = "form-control", placeholder = "RegionalCenter", required = "true" })*@
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Ext">Ext</label>
+                    @Html.TextBoxFor(m => m.Ext, new { @type = "number", @class = "form-control", placeholder = "Ext", required = "true" })
+                </div>
+            </div>
+            <div class="col-12 text-center" style="border:1px solid black;">
+                REPORT DUE DATES
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="initEval">Initial Evaluation</label>
+                    @Html.TextBoxFor(m => m.initEval, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "initEval", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="evaldueby">Initial Evaluation due by</label>
+                    @Html.TextBoxFor(m => m.evaldueby, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "evaldueby", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Report1">1st Progress Report</label>
+                    @Html.TextBoxFor(m => m.Report1, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "Report1", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Report2">2nd Progress Report</label>
+                    @Html.TextBoxFor(m => m.Report2, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "Report2", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Report3">3rd Progress Report</label>
+                    @Html.TextBoxFor(m => m.Report3, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "Report3", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Report4">4th Progress Report</label>
+                    @Html.TextBoxFor(m => m.Report4, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "Report4", required = "true" })
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="ReportClose">Closing Report</label>
+                    @Html.TextBoxFor(m => m.ReportClose, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", placeholder = "ReportClose", required = "true" })
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <button class="btn btn-warning" id="print_rpt"><i class="bi bi-printer-fill"></i> Print report</button>
+            </div>
+        </div>
+
+    </div>
+}
+else
+{
+    <div>
+        <h3 class="text-danger">¡ERROR!</h3>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        var dateOfBirth = $("#dob").val();
+        $.ajax({
+            type: "GET",
+            url: 'edad',
+            data: { dateOfBirth: dateOfBirth },
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                document.getElementById("age").value = response;
+            }
+        }); 
+    });
+</script>

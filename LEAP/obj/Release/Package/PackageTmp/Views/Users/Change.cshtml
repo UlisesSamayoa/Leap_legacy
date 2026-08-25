@@ -1,0 +1,108 @@
+﻿@model LEAP.Models.UsersModel
+@{
+    ViewBag.Title = "Delete User";
+}
+<a href="@Url.Action("Index","Users")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+@if (Model != null)
+{
+    <form action="@Url.Action("ChangeUser","Users", new { id = Model.IDUsers })" method="post">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h3>Change password for user: <b> @Model.Name @Model.LastName</b></h3>
+                <br /><br />
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label asp-for="Password" name="Password">Password</label>
+                    <div class="input-group">
+                        @*@Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter Password", required = "true", id = "password" })*@
+                        <input type="password" class="form-control" asp-for="Password" name="Password" id="password" placeholder="Enter Password" required>
+                        <button type="button" class="btn btn-secondary" id="togglePassword">
+                            <i class="bi bi-eye-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                        <button type="button" class="btn btn-secondary" id="toggleConfirmPassword"><i class="bi bi-eye-fill"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div id="passwordError" class="text-danger mt-2" style="display: none;">Passwords are different.</div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-secondary text-white" type="submit" id="Send"><i class="bi bi-arrow-repeat"></i> Change</button>
+            <a href="@Url.Action("Index","Users")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+}
+else
+{
+    <h3 class="text-danger">¡ERROR!</h3>
+}
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('#togglePassword').click(function () {
+            let passwordField = $('#password');
+            let icon = $(this).find('i');
+            if (passwordField.attr('type') === 'password') {
+                passwordField.attr('type', 'text');
+                icon.removeClass('bi-eye-fill').addClass('bi-eye-slash');
+            } else {
+                passwordField.attr('type', 'password');
+                icon.removeClass('bi-eye-slash').addClass('bi-eye-fill');
+            }
+        });
+
+        $('#toggleConfirmPassword').click(function () {
+            let confirmPasswordField = $('#confirmPassword');
+            let icon = $(this).find('i');
+            if (confirmPasswordField.attr('type') === 'password') {
+                confirmPasswordField.attr('type', 'text');
+                icon.removeClass('bi-eye-fill').addClass('bi-eye-slash');
+            } else {
+                confirmPasswordField.attr('type', 'password');
+                icon.removeClass('bi-eye-slash').addClass('bi-eye-fill');
+            }
+        });
+
+        $('#password, #confirmPassword').on('input', function () {
+            let password = $('#password').val();
+            let confirmPassword = $('#confirmPassword').val();
+            let error = $('#passwordError');
+            let submitButton = $('#Send');
+            let passwordField = $('#password');
+            let confirmPasswordField = $('#confirmPassword');
+            if (password === '' && confirmPassword === '') {
+                error.hide();
+                passwordField.css('border', '');
+                confirmPasswordField.css('border', '');
+                submitButton.prop('disabled', true);
+            }
+            else if (password === confirmPassword && password !== '') {
+                error.hide();
+                submitButton.prop('disabled', false);
+                passwordField.css('border', '2px solid green');
+                confirmPasswordField.css('border', '2px solid green');
+            } else {
+                error.show();
+                submitButton.prop('disabled', true);
+                passwordField.css('border', '2px solid red');
+                confirmPasswordField.css('border', '2px solid red');
+            }
+        });
+
+
+
+    });
+</script>

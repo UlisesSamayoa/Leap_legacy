@@ -1,0 +1,57 @@
+﻿@model LEAP.Models.ServiceCoordinatorModel
+
+<style>
+    .expandable-textarea {
+        width: 100%;
+        min-height: 50px;
+        max-height: 300px;
+        overflow: hidden;
+        resize: vertical;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        padding: 8px;
+    }
+
+        .expandable-textarea:focus {
+            outline: none;
+            border-color: #ccc;
+            box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+        }
+</style>
+<a href="@Url.Action("Index","ServiceCoordinator")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    @if (Model != null)
+    {
+        <form asp-action="Update" asp-controller="ServiceCoordinator" asp-route-id="@Model.IDServiceC" method="post">
+            <h5 class="card-header bg-dark text-white">Update a Languaje</h5>
+            <div class="card-body">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label asp-for="RegionalCenter">Languajes name</label>
+                    @Html.TextBoxFor(m => m.NameC, new { @class = "form-control", placeholder = "Name input", required = "true" })
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label asp-for="Notes">Notes</label>
+                            @Html.TextAreaFor(m => m.Tel, new { @class = "form-control", placeholder = "tel input", required = "true" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary text-white" type="submit"><i class="bi bi-pencil-square"></i> Update</button>
+                <a href="@Url.Action("Index","ServiceCoordinator")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+            </div>
+        </form>
+    }
+    else
+    {
+        <h3 class="text-danger">¡ERROR!</h3>
+    }
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+

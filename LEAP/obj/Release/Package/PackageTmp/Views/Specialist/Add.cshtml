@@ -1,0 +1,85 @@
+﻿@model LEAP.Models.SpecialistModel
+@{
+    ViewBag.Title = "Add - Specialist";
+}
+<a href="@Url.Action("Index","Specialist")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+<br />
+<br />
+<div class="card">
+    <form asp-action="Add" asp-controller="Specialist" method="post">
+        <h5 class="card-header bg-dark text-white">Add a Specialist</h5>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="RegionalCenter">Specialist Name</label>
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Name input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="RegionalCenter">Specialist LastName</label>
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "LastName input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Phone">Phone</label>
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Phone input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Email">Email</label>
+                        @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", placeholder = "Email input", required = "false" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="HourlyRate">HourlyRate</label>
+                        @*@Html.TextBoxFor(m => m.HourlyRate, new { @class = "form-control", placeholder = "HourlyRate input", required = "true" })*@
+                        @Html.TextBoxFor(m => m.HourlyRate, new { @type = "number", @class = "form-control", placeholder = "HourlyRate input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="Specialty">Specialty</label>
+                        @Html.TextBoxFor(m => m.Specialty, new { @class = "form-control", placeholder = "Specialty input", required = "true" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="City">City</label>
+                        @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City input", required = "false" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="State">State</label>
+                        @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State input", required = "false" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label asp-for="ZipCode">ZipCode</label>
+                        @Html.TextBoxFor(m => m.ZipCode, new { @class = "form-control", placeholder = "ZipCode input", required = "false" })
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Address">Address</label>
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Address input", required = "true" })
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success text-white" type="submit"><i class="bi bi-database-fill-add"></i> Create</button>
+            <a href="@Url.Action("Index","Specialist")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>

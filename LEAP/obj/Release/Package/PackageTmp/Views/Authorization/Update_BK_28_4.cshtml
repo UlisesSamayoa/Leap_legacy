@@ -1,0 +1,108 @@
+﻿@model LEAP.Models.AuthorizationModel
+@{
+    ViewBag.Title = "Update - Authorization";
+}
+@if (Model != null)
+{
+    if (Model.type == 0)
+    {
+        <a href="@Url.Action("Index", "Authorization")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>
+        <br />
+        <br />
+    }
+    else
+    {
+
+    }
+}
+
+@*<a href="@Url.Action("Index","Authorization")" class="btn btn-danger"><i class="bi bi-box-arrow-in-left"></i> Go Back</a>*@
+@*<br />
+<br />*@
+<div class="card">
+    <form asp-action="Update" asp-controller="Authorization" asp-route-id="@Model.IDAuth" method="post">
+        <h5 class="card-header bg-dark text-white">Update a Authorization</h5>
+        <div class="card-body">
+            @Html.AntiForgeryToken()
+            <div class="row">
+
+                @if (ViewBag.VB_error != null)
+                {
+                    <p class="bg-success text-white" style="padding:5px; border-radius:5px;"> Authorization update successfully, reload the list in Consumer</p>
+                    <script>
+                        setTimeout(() => {
+                            window.close()
+                        }, 2000);
+                    </script>
+                }
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="UCI">Consumer Name<b><label id="UCI_N"></label></b></label>
+                        @*@Html.DropDownListFor(m => m.UCI, ViewBag.VB_Consumer as List<SelectListItem>, " -- Select Consumer --", new { @class = "form-control", required = "true" })*@
+                        @Html.TextBoxFor(m => m.UCI, new { @type = "hidden", @class = "form-control", placeholder = "Consumer details", required = "true" })
+                        @Html.TextBoxFor(m => m.ConsumerName, new { @class = "form-control", placeholder = "Consumer details", required = "true", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Authorization">Authorization</label>
+                        @Html.TextBoxFor(m => m.auth, new { @class = "form-control", placeholder = "Authorization input" })
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>From</label>
+                        @if (@Model._From.ToString("yyyy-MM-dd") == "1900-01-01" || @Model._From.ToString("yyyy-MM-dd") == "1901-01-01")
+                        {
+                            <input type="date" class="form-control" asp-for="_From" id="_From" name="_From" />
+                            @*@Html.TextBoxFor(m => m._From, new { @type = "date", @class = "form-control", @placeholder = "From input"})*@
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m._From, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", @placeholder = "From input", @required = "true" })
+                        }
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>To</label>
+                        @if (@Model._To.ToString("yyyy-MM-dd") == "1900-01-01" || @Model._To.ToString("yyyy-MM-dd") == "1901-01-01")
+                        {
+                            <input type="date" class="form-control" asp-for="_To" id="_To" name="_To" />
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m._To, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control", @placeholder = "From input" })
+                        }
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" asp-for="estado" name="estado">
+                            @if (@Model.estado == 0)
+                            {
+
+                                <option value="1">Enabled</option>
+                                <option value="0" selected>Disabled</option>
+                            }
+                            else
+                            {
+                                <option value="1" selected>Enabled</option>
+                                <option value="0">Disabled</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary text-white" type="submit"><i class="bi bi-pencil-square"></i> Update</button>
+            <a href="@Url.Action("Index","Authorization")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+

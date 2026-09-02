@@ -1,12 +1,6 @@
-﻿using LEAP.Data;
+using LEAP.Data;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
 
 namespace LEAP.Models
 {
@@ -18,40 +12,38 @@ namespace LEAP.Models
         public string username { get; set; }
         public string Pass_word { get; set; }
 
+        // Token que devuelve leap_api al loguearse — LoginController lo guarda
+        // en el FormsAuthenticationTicket para adjuntarlo en llamadas futuras.
+        public string ApiToken { get; private set; }
+
+        private class ApiLoginResponse
+        {
+            [JsonProperty("token")]
+            public string Token { get; set; }
+        }
+
         public bool ValidateLogin(string _user, string _pwd)
         {
-            bool respose = false;
-
             try
             {
-                byte[] fraseBytes = Encoding.UTF8.GetBytes(_pwd);
-                string FraseEncript = Convert.ToBase64String(fraseBytes);
-                string _pwd_e = Convert.ToBase64String(Encoding.UTF8.GetBytes(_pwd));
-                using (var context = new ApplicationDbContext())
+                var response = ApiClient.PostWithToken<ApiLoginResponse>("login", new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Login_Validate_Login", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@user", _user);
-                        cmd.Parameters.AddWithValue("@pwd", _pwd);
-                        //cmd.Parameters.AddWithValue("@pwd", _pwd_e);
-                        context.Connection.Open();
-                        //var isvalid = cmd.ExecuteReader();
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            respose = reader.HasRows;
-                        }
-                        context.Connection.Close();
-                    }
-                }
+                    UserName = _user,
+                    password = _pwd,
+                }, token: null);
+
+                ApiToken = response?.Token;
+                return !string.IsNullOrEmpty(ApiToken);
             }
-            catch (Exception _error)
+            catch (ApiException)
             {
-                respose =  false;
+                // Credenciales invalidas (422) u otro error de leap_api.
+                return false;
             }
-
-
-            return respose;
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

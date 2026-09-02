@@ -1,11 +1,7 @@
-﻿using LEAP.Data;
+using LEAP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Web;
 
 namespace LEAP.Models
 {
@@ -27,42 +23,19 @@ namespace LEAP.Models
         public bool _Default { get; set; }
         public bool _ErrorCode { get; set; }
         LogModel _log = new LogModel();
+
         public List<UsersModel> Get_Users()
         {
-            var _Languajes_Response = new List<UsersModel>();
+            var _Users_Response = new List<UsersModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Users_AllData", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _Languajes_Response.Add(new UsersModel
-                                {
-                                    IDUsers = Convert.ToInt32(reader["IDUsers"]),
-                                    Name = reader["Name"].ToString(),
-                                    LastName = reader["LastName"].ToString(),
-                                    Phone = reader["Phone"].ToString(),
-                                    Type_User = reader["Type_User"].ToString(),
-                                    Email = reader["Email"].ToString(),
-                                    UserName = reader["UserName"].ToString(),
-                                    _Default = Convert.ToBoolean(reader["_Default"])
-                                });
-                            }
-                        }
-                    }
-                }
+                _Users_Response = ApiClient.Get<List<UsersModel>>("users");
             }
-            catch (Exception _error)
+            catch (Exception)
             {
-                _Languajes_Response.Add(new UsersModel { _ErrorCode = true });
+                _Users_Response.Add(new UsersModel { _ErrorCode = true });
             }
-            return _Languajes_Response;
+            return _Users_Response;
         }
 
         public UsersModel Get_UsersById(int _IdUser)
@@ -70,72 +43,36 @@ namespace LEAP.Models
             var _User_Response = new UsersModel();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Users_AllDataByID", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _IdUser);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _User_Response.IDUsers = Convert.ToInt32(reader["IDUsers"]);
-                                _User_Response.Name = reader["Name"].ToString();
-                                _User_Response.LastName = reader["LastName"].ToString();
-                                _User_Response.Phone = reader["Phone"].ToString();
-                                _User_Response.Type_User = reader["Type_User"].ToString();
-                                _User_Response.DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]);
-                                _User_Response.Email = reader["Email"].ToString();
-                                _User_Response.UserName = reader["UserName"].ToString();
-                                _User_Response._ErrorCode = false;
-                            }
-                        }
-                    }
-                }
+                _User_Response = ApiClient.Get<UsersModel>("users/" + _IdUser);
+                _User_Response._ErrorCode = false;
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _User_Response._ErrorCode = true;
             }
             return _User_Response;
         }
 
-        public bool AddUsers(string _Name, string _LastName, DateTime _DOB,string _UserName, string _Phone, string _Email,string _Type, string _Frase, string _User)
+        // "_Frase" era la clave en texto plano (con un Base64 sin efecto real
+        // en el original) — ahora viaja tal cual por HTTPS y leap_api la
+        // guarda hasheada con bcrypt, nunca en texto plano.
+        public bool AddUsers(string _Name, string _LastName, DateTime _DOB, string _UserName, string _Phone, string _Email, string _Type, string _Frase, string _User)
         {
             bool response = false;
             try
             {
-                byte[] fraseBytes = Encoding.UTF8.GetBytes(_Frase);
-                string FraseEncript = Convert.ToBase64String(fraseBytes);
-
-                //byte[] decodedBytes = Convert.FromBase64String(FraseEncript);
-                //string originalFrase = Encoding.UTF8.GetString(decodedBytes);
-
-
-                using (var context = new ApplicationDbContext())
+                ApiClient.Post<UsersModel>("users", new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Users_Create", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Name", _Name);
-                        cmd.Parameters.AddWithValue("@LastName", _LastName);
-                        cmd.Parameters.AddWithValue("@DOB", _DOB);
-                        cmd.Parameters.AddWithValue("@UserName", _UserName);
-                        cmd.Parameters.AddWithValue("@Phone", _Phone);
-                        cmd.Parameters.AddWithValue("@Email", _Email);
-                        cmd.Parameters.AddWithValue("@Type", _Type);
-                        cmd.Parameters.AddWithValue("@Frase", _Frase);
-                        cmd.Parameters.AddWithValue("@UserC", _User);
-                        cmd.Parameters.AddWithValue("@DateC", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    Name = _Name,
+                    LastName = _LastName,
+                    DateOfBirth = _DOB.ToString("yyyy-MM-dd"),
+                    UserName = _UserName,
+                    Phone = _Phone,
+                    Email = _Email,
+                    Type_User = _Type,
+                    password = _Frase,
+                });
+                response = true;
                 _log._logAction("Create User", "Create a new user, name:" + _Name, "AddUser", "UsersModel", _UserName);
             }
             catch (Exception _error)
@@ -146,33 +83,22 @@ namespace LEAP.Models
             return response;
         }
 
-        public bool UpdateUsers(string id,string _Name, string _LastName, DateTime _DOB,string _UserName, string _Phone, string _Email, string _Type, string _User)
+        public bool UpdateUsers(string id, string _Name, string _LastName, DateTime _DOB, string _UserName, string _Phone, string _Email, string _Type, string _User)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Put<UsersModel>("users/" + id, new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Users_Update", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", id);
-                        cmd.Parameters.AddWithValue("@Name", _Name);
-                        cmd.Parameters.AddWithValue("@LastName", _LastName);
-                        cmd.Parameters.AddWithValue("@DOB", _DOB);
-                        cmd.Parameters.AddWithValue("@UserName", _UserName);
-                        cmd.Parameters.AddWithValue("@Phone", _Phone);
-                        cmd.Parameters.AddWithValue("@Email", _Email);
-                        cmd.Parameters.AddWithValue("@Type", _Type);
-                        cmd.Parameters.AddWithValue("@UserU ", _User);
-                        cmd.Parameters.AddWithValue("@DateU", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    Name = _Name,
+                    LastName = _LastName,
+                    DateOfBirth = _DOB.ToString("yyyy-MM-dd"),
+                    UserName = _UserName,
+                    Phone = _Phone,
+                    Email = _Email,
+                    Type_User = _Type,
+                });
+                response = true;
                 _log._logAction("Create User", "Create a new user, name:" + _Name, "AddUser", "UsersModel", _UserName);
             }
             catch (Exception _error)
@@ -182,26 +108,14 @@ namespace LEAP.Models
             }
             return response;
         }
-
 
         public bool DeleteUser(string _IDUser, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_User_Delete", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _IDUser);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                ApiClient.Delete("users/" + _IDUser);
+                response = true;
                 _log._logAction("Delete User", "Delete User, id:" + _IDUser, "DeleteUser", "UserModel", _UserName);
             }
             catch (Exception _error)
@@ -212,27 +126,13 @@ namespace LEAP.Models
             return response;
         }
 
-        public bool ChangeUser(string _IDUser, string _Frase,string _UserName)
+        public bool ChangeUser(string _IDUser, string _Frase, string _UserName)
         {
             bool response = false;
             try
             {
-                byte[] fraseBytes = Encoding.UTF8.GetBytes(_Frase);
-                string FraseEncript = Convert.ToBase64String(fraseBytes);
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Users_Change", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _IDUser);
-                        cmd.Parameters.AddWithValue("@Frase", _Frase);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                ApiClient.Patch<object>("users/" + _IDUser + "/password", new { password = _Frase });
+                response = true;
                 _log._logAction("Delete User", "Delete User, id:" + _IDUser, "DeleteUser", "UserModel", _UserName);
             }
             catch (Exception _error)
@@ -242,7 +142,5 @@ namespace LEAP.Models
             }
             return response;
         }
-
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿@model LEAP.Models.ConsumerModel
+@using Newtonsoft.Json
 @{
     ViewBag.Title = "DetailsArchived";
 }
@@ -35,10 +36,38 @@
             <div class="form-group">
                 <label asp-for="Phone">Action</label>
                 <select id="action" asp-for="Action" class="form-control">
-                    <option value="1">Eval</option>
-                    <option value="2">New Consumer Referral</option>
-                    <option value="3">Reauthorized Consumer</option>
-                    <option value="4">Consumer Terminated</option>
+                    @if (Model.Action == 1)
+                    {
+                        <option value="1" selected>Eval</option>
+                    }
+                    else
+                    {
+                        <option value="1">Eval</option>
+                    }
+                    @if (Model.Action == 2)
+                    {
+                        <option value="2" selected>New Consumer Referral</option>
+                    }
+                    else
+                    {
+                        <option value="2">New Consumer Referral</option>
+                    }
+                    @if (Model.Action == 3)
+                    {
+                        <option value="3" selected>Reauthorized Consumer</option>
+                    }
+                    else
+                    {
+                        <option value="3">Reauthorized Consumer</option>
+                    }
+                    @if (Model.Action == 4)
+                    {
+                        <option value="4" selected>Consumer Terminated</option>
+                    }
+                    else
+                    {
+                        <option value="4">Consumer Terminated</option>
+                    }
                 </select>
             </div>
         </div>
@@ -59,9 +88,17 @@
         <div class="col-3">
             <div class="form-group">
                 <label asp-for="Phone">Type</label>
-                <select id="type" class="form-control" value="@Model.Type">
-                    <option value="Leap" selected>Leap</option>
-                    <option value="Center">Center Base</option>
+                <select id="type" class="form-control">
+                    @if (Model.Type == "Center")
+                    {
+                        <option value="Leap">Leap</option>
+                        <option value="Center" selected>Center Base</option>
+                    }
+                    else
+                    {
+                        <option value="Leap" selected>Leap</option>
+                        <option value="Center">Center Base</option>
+                    }
                 </select>
             </div>
         </div>
@@ -89,8 +126,8 @@
     <div class="row">
         <div class="col-3">
             <div class="form-group">
-                <label asp-for="Phone">Date Of Birth</label>
-                <input type="date" class="form-control" asp-for="Phone" id="dob" value="@Model.DateOfBirth" required>
+                <label asp-for="DOB">Date Of Birth</label>
+                <input type="date" class="form-control" asp-for="DOB" id="dob" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" required>
             </div>
         </div>
         <div class="col-3">
@@ -130,8 +167,7 @@
         <div class="col-3">
             <div class="form-group">
                 <label asp-for="State">City</label>
-                <select id="city" class="form-control" value="@Model.CityID">
-                    <option>Choose an option...</option>
+                <select id="city" class="form-control">
                 </select>
             </div>
         </div>
@@ -139,60 +175,21 @@
             <div class="form-group">
                 <label asp-for="State">State</label>
                 <select name="states" id="states" class="form-control">
-                    <option value="AL">AL</option>
-                    <option value="AK">AK</option>
-                    <option value="AZ">AZ</option>
-                    <option value="AR">AR</option>
-                    <option value="CA" selected>CA</option>
-                    <option value="NC">NC</option>
-                    <option value="SC">SC</option>
-                    <option value="CO">CO</option>
-                    <option value="CT">CT</option>
-                    <option value="ND">ND</option>
-                    <option value="SD">SD</option>
-                    <option value="DE">DE</option>
-                    <option value="DC">DC</option>
-                    <option value="FL">FL</option>
-                    <option value="AA">AA</option>
-                    <option value="AE">AE</option>
-                    <option value="AP">AP</option>
-                    <option value="GA">GA</option>
-                    <option value="HI">HI</option>
-                    <option value="ID">ID</option>
-                    <option value="IL">IL</option>
-                    <option value="IN">IN</option>
-                    <option value="IA">IA</option>
-                    <option value="KS">KS</option>
-                    <option value="KY">KY</option>
-                    <option value="LA">LA</option>
-                    <option value="ME">ME</option>
-                    <option value="MD">MD</option>
-                    <option value="MA">MA</option>
-                    <option value="MI">MI</option>
-                    <option value="MN">MN</option>
-                    <option value="MS">MS</option>
-                    <option value="MO">MO</option>
-                    <option value="MT">MT</option>
-                    <option value="NE">NE</option>
-                    <option value="NV">NV</option>
-                    <option value="NH">NH</option>
-                    <option value="NJ">NJ</option>
-                    <option value="NY">NY</option>
-                    <option value="NM">NM</option>
-                    <option value="OH">OH</option>
-                    <option value="OK">OK</option>
-                    <option value="OR">OR</option>
-                    <option value="PA">PA</option>
-                    <option value="RI">RI</option>
-                    <option value="TN">TN</option>
-                    <option value="TX">TX</option>
-                    <option value="UT">UT</option>
-                    <option value="VT">VT</option>
-                    <option value="VA">VA</option>
-                    <option value="WV">WV</option>
-                    <option value="WA">WA</option>
-                    <option value="WI">WI</option>
-                    <option value="WY">WY</option>
+                    @{
+                        string[] states = new string[]
+                        {
+                            "AL", "AK", "AZ", "AR", "CA", "NC", "SC", "CO", "CT", "ND",
+                            "SD", "DE", "DC", "FL", "AA", "AE", "AP", "GA", "HI", "ID",
+                            "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI",
+                            "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NY", "NM",
+                            "OH", "OK", "OR", "PA", "RI", "TN", "TX", "UT", "VT", "VA",
+                            "WV", "WA", "WI", "WY"
+                        };
+                    }
+                    @foreach (var estado in states)
+                    {
+                        <option value="@estado" @(estado == Model.State ? "selected" : "")>@estado</option>
+                    }
                 </select>
             </div>
         </div>
@@ -221,8 +218,8 @@
         <div class="col-3">
             <div class="form-group">
                 <label asp-for="Ext">Primary Language</label>
-                <select id="lang" class="form-control" value="@Model.LanguajeID">
-                    <option value="0" selected>----- Select a option ------</option>
+                <select id="lang" class="form-control">
+                    <option>----- Select a option ------</option>
                 </select>
             </div>
         </div>
@@ -265,17 +262,38 @@
         </div>
         <div class="col-3">
             <div class="form-group">
-                <label asp-for="Phone">Termination date Effective</label>
-                <input type="date" class="form-control" id="terminationdate" asp-for="Phone" placeholder="Phone input" required>
+                <label asp-for="TerminationDateEffective">Termination date Effective</label>
+                @if (Model.TerminationDateEffective.ToString("yyyy-MM-dd") == "1900-01-01" || Model.TerminationDateEffective.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="terminationdate" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="terminationdate" asp-for="TerminationDateEffective" value="@Model.TerminationDateEffective.ToString("yyyy-MM-dd")" required>
+                }
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label asp-for="Phone">Additional Eval.</label>
 
-                <select id="addeval" class="form-control" value="@Model.AdditionalEval">
-                    <option value="Y">Yes</option>
-                    <option value="N">No</option>
+                <select id="addeval" class="form-control">
+                    @if (Model.AdditionalEval == "Y")
+                    {
+                        <option value="Y" selected>Yes</option>
+                    }
+                    else
+                    {
+                        <option value="Y">Yes</option>
+                    }
+                    @if (Model.AdditionalEval == "N")
+                    {
+                        <option value="N" selected>No</option>
+                    }
+                    else
+                    {
+                        <option value="N">No</option>
+                    }
                 </select>
             </div>
         </div>
@@ -344,8 +362,7 @@
         <div class="col-8">
             <div class="form-group">
                 <label asp-for="Ext">Regional</label>
-                <select id="regional" class="form-control" onchange="AddressChange();" value="@Model.RegionalID">
-                    <option>Choose an option...</option>
+                <select id="regional" class="form-control" onchange="AddressChange();">
                 </select>
             </div>
         </div>
@@ -383,27 +400,62 @@
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1"> Evaluation</label>
                 <select id="evaluation" class="form-control">
-                    <option value="Y">Yes</option>
-                    <option value="N">No</option>
+                    @if (Model.evaluation == "Y")
+                    {
+                        <option value="Y" selected>Yes</option>
+                    }
+                    else
+                    {
+                        <option value="Y">Yes</option>
+                    }
+                    @if (Model.evaluation == "N")
+                    {
+                        <option value="N" selected>No</option>
+                    }
+                    else
+                    {
+                        <option value="N">No</option>
+                    }
                 </select>
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">Initial Eval.</label>
-                <input type="date" class="form-control" id="initial" asp-for="Phone" placeholder="Phone input" value="@Model.initEval" required>
+                @if (Model.initEval.ToString("yyyy-MM-dd") == "1900-01-01" || Model.initEval.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="initial" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="initial" asp-for="Phone" placeholder="Phone input" value="@Model.initEval.ToString("yyyy-MM-dd")" required>
+                }
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">Initial Eval. Due By</label>
-                <input type="date" class="form-control" asp-for="Phone" id="initdue" placeholder="Phone input" value="@Model.evaldueby" required>
+                @if (Model.evaldueby.ToString("yyyy-MM-dd") == "1900-01-01" || Model.evaldueby.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" asp-for="Phone" id="initdue">
+                }
+                else
+                {
+                    <input type="date" class="form-control" asp-for="Phone" id="initdue" placeholder="Phone input" value="@Model.evaldueby.ToString("yyyy-MM-dd")" required>
+                }
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">Closing Report</label>
-                <input type="date" class="form-control" id="closing" asp-for="Phone" placeholder="Phone input" value="@Model.ReportClose" required>
+                @if (Model.ReportClose.ToString("yyyy-MM-dd") == "1900-01-01" || Model.ReportClose.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="closing" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="closing" asp-for="Phone" placeholder="Phone input" value="@Model.ReportClose.ToString("yyyy-MM-dd")" required>
+                }
             </div>
         </div>
     </div>
@@ -411,25 +463,53 @@
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">1st Progress Report</label>
-                <input type="date" class="form-control" id="1st" asp-for="Phone" placeholder="Phone input" required>
+                @if (Model.Report1.ToString("yyyy-MM-dd") == "1900-01-01" || Model.Report1.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="1st" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="1st" value="@Model.Report1.ToString("yyyy-MM-dd")" asp-for="Phone">
+                }
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">2nd Progress Report</label>
-                <input type="date" class="form-control" id="2nd" asp-for="Phone" placeholder="Phone input" required>
+                @if (Model.Report2.ToString("yyyy-MM-dd") == "1900-01-01" || Model.Report2.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="2nd" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="2nd" value="@Model.Report2.ToString("yyyy-MM-dd")" asp-for="Phone">
+                }
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">3rd Progress Report</label>
-                <input type="date" class="form-control" id="3rd" asp-for="Phone" placeholder="Phone input" required>
+                @if (Model.Report3.ToString("yyyy-MM-dd") == "1900-01-01" || Model.Report3.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="3rd" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="3rd" value="@Model.Report3.ToString("yyyy-MM-dd")" asp-for="Phone">
+                }
             </div>
         </div>
         <div class="col-3">
             <div class="form-group">
                 <label class="form-check-label" for="inlineCheckbox1">4th Progress Report</label>
-                <input type="date" class="form-control" id="4th" asp-for="Phone" placeholder="Phone input" required>
+                @if (Model.Report4.ToString("yyyy-MM-dd") == "1900-01-01" || Model.Report4.ToString("yyyy-MM-dd") == "1901-01-01")
+                {
+                    <input type="date" class="form-control" id="4th" asp-for="Phone">
+                }
+                else
+                {
+                    <input type="date" class="form-control" id="4th" value="@Model.Report4.ToString("yyyy-MM-dd")" asp-for="Phone">
+                }
             </div>
         </div>
     </div>
@@ -587,6 +667,150 @@ else
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        GetRegional();
+        GetCity();
+        Getspecialist();
+        GetLang();
+    });
+
+    function GetCity() {
+        var _base_city = @Html.Raw(JsonConvert.SerializeObject(Model.CityID));
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Getcities","Consumer")",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",").map(item => item.trim());
+                    if (_base_city == datos[0]) {
+                        document.getElementById("city").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
+                    } else {
+                        document.getElementById("city").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+                    }
+                }
+            }
+        });
+    }
+
+    function Getspecialist() {
+        var _base_cds = @Html.Raw(JsonConvert.SerializeObject(Model.specialist1));
+        var _base_spe = @Html.Raw(JsonConvert.SerializeObject(Model.specialist2));
+        var _base_the = @Html.Raw(JsonConvert.SerializeObject(Model.specialist3));
+        var _base_pre = @Html.Raw(JsonConvert.SerializeObject(Model.PresenterName));
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("Getspecialist", "Consumer")",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+                    if (_base_cds == datos[0]) {
+                        document.getElementById("cds").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("cds").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+                    if (_base_spe == datos[0]) {
+                        document.getElementById("specialist").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("specialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+                    if (_base_the == datos[0]) {
+                        document.getElementById("therapist").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("therapist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+                    if (_base_pre == datos[0]) {
+                        document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
+                    } else {
+                        document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
+                    }
+                }
+            }
+        });
+    }
+
+    function GetRegional() {
+        var _base_regional = @Html.Raw(JsonConvert.SerializeObject(Model.RegionalID));
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRegionals", "Consumer")",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",");
+                    if (_base_regional == datos[0]) {
+                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
+                        AddressChange(datos[0]);
+                    } else {
+                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+                    }
+                }
+            }
+        });
+    }
+
+    function AddressChange(idRegional) {
+        var id = "";
+        if (idRegional == "") {
+            id = idRegional;
+        } else {
+            id = $("#regional option:selected").val();
+        }
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetRegionalByID", "Consumer")",
+            data: { id: id },
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split("|");
+                    document.getElementById("phoneReg").value = datos[6];
+                    document.getElementById("addressReg").value = datos[2] + ", " + datos[3] + ", " + datos[4] + ", " + datos[5];
+                    document.getElementById("service").value = datos[7];
+                }
+            }
+        });
+    }
+
+    function GetLang() {
+        var _base_languaje = @Html.Raw(JsonConvert.SerializeObject(Model.LanguajeID));
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetLang", "Consumer")',
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            success: function (response) {
+                var data = response.split(";");
+                var haa = data.length - 1;
+                for (var i = 0; i < haa; i++) {
+                    var datos = data[i].split(",").map(item => item.trim());
+                    if (_base_languaje == datos[0]) {
+                        document.getElementById("lang").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
+                    } else {
+                        document.getElementById("lang").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
+                    }
+                }
+            }
+        });
+    }
+
      function ChangeReactiveConsumer() {
             var _uci = '@Model.UCI';
             if (_uci == "") {

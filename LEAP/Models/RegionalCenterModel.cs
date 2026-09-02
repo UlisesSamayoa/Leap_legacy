@@ -1,10 +1,8 @@
-﻿using LEAP.Data;
+using LEAP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace LEAP.Models
 {
@@ -27,84 +25,52 @@ namespace LEAP.Models
         public bool _ErrorCode { get; set; }
         public int IDServiceC { get; set; }
 
-        //METODOS
         LogModel _log = new LogModel();
+
         public List<RegionalCenterModel> Get_RegionalCenter()
         {
             var _RCenter_Response = new List<RegionalCenterModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("Get_RegionalCenter_allData", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _RCenter_Response.Add(new RegionalCenterModel
-                                {
-                                    IDRegionalCenter = Convert.ToInt32(reader["IDRegionalCenter"]),
-                                    RegionalCenter = reader["RegionalCenter"].ToString(),
-                                    Phone = reader["Phone"].ToString(),
-                                    Address = reader["Address"].ToString(),
-                                    City = reader["City"].ToString(),
-                                    State = reader["State"].ToString(),
-                                    ZipCode = reader["ZipCode"].ToString(),
-                                    Ext = reader["Ext"].ToString(),
-                                    //serviceC = reader["NameC"].ToString(),
-                                    //telephone = reader["tel"].ToString(),
-                                    _ErrorCode = false
-                                });
-                            }
-                        }
-                    }
-                }
+                _RCenter_Response = ApiClient.Get<List<RegionalCenterModel>>("regional-centers");
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _RCenter_Response.Add(new RegionalCenterModel { _ErrorCode = true });
             }
             return _RCenter_Response;
         }
+
+        // Combina RegionalCenter + sus ServiceCoordinator (antes era un JOIN en
+        // Get_ConsumerByID, un nombre de SP heredado y confuso pero real: por
+        // cada coordinador del centro regional se arma una fila).
         public List<RegionalCenterModel> Get_RegionalByID(int _IDRegionalCenter)
         {
             var productos = new List<RegionalCenterModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
+                var center = ApiClient.Get<RegionalCenterModel>("regional-centers/" + _IDRegionalCenter);
+                var coordinators = ApiClient.Get<List<ServiceCoordinatorModel>>("service-coordinators?regional_center_id=" + _IDRegionalCenter);
+
+                foreach (var coord in coordinators)
                 {
-                    using (SqlCommand cmd = new SqlCommand("Get_ConsumerByID", context.Connection))
+                    productos.Add(new RegionalCenterModel
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDRegionalCenter", _IDRegionalCenter);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                productos.Add(new RegionalCenterModel
-                                {
-                                    IDRegionalCenter = Convert.ToInt32(reader["IDRegionalCenter"]),
-                                    RegionalCenter = reader["RegionalCenter"].ToString(),
-                                    Phone = reader["Phone"].ToString(),
-                                    Address = reader["Address"].ToString(),
-                                    City = reader["City"].ToString(),
-                                    State = reader["State"].ToString(),
-                                    ZipCode = reader["ZipCode"].ToString(),
-                                    Ext = reader["Ext"].ToString(),
-                                   serviceC = reader["NameC"].ToString(),
-                                    telephone = reader["tel"].ToString(),
-                                     IDServiceC = Convert.ToInt32(reader["IDServiceC"])
-                                });
-                            }
-                        }
-                    }
+                        IDRegionalCenter = center.IDRegionalCenter,
+                        RegionalCenter = center.RegionalCenter,
+                        Phone = center.Phone,
+                        Address = center.Address,
+                        City = center.City,
+                        State = center.State,
+                        ZipCode = center.ZipCode,
+                        Ext = center.Ext,
+                        serviceC = coord.NameC,
+                        telephone = coord.Tel,
+                        IDServiceC = coord.IDServiceC ?? 0,
+                    });
                 }
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 throw;
             }
@@ -116,66 +82,32 @@ namespace LEAP.Models
             var _RCenter_Response = new RegionalCenterModel();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_RegionalCenter_allDataByID", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _RCenterID);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _RCenter_Response.IDRegionalCenter = Convert.ToInt32(reader["IDRegionalCenter"]);
-                                _RCenter_Response.RegionalCenter = reader["RegionalCenter"].ToString();
-                                _RCenter_Response.Phone = reader["Phone"].ToString();
-                                _RCenter_Response.Address = reader["Address"].ToString();
-                                _RCenter_Response.City = reader["City"].ToString();
-                                _RCenter_Response.State = reader["State"].ToString();
-                                _RCenter_Response.ZipCode = reader["ZipCode"].ToString();
-                                _RCenter_Response.Ext = reader["Ext"].ToString();
-                                _RCenter_Response._ErrorCode = false;
-                            }
-                        }
-                    }
-                }
+                _RCenter_Response = ApiClient.Get<RegionalCenterModel>("regional-centers/" + _RCenterID);
+                _RCenter_Response._ErrorCode = false;
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _RCenter_Response._ErrorCode = true;
             }
             return _RCenter_Response;
         }
 
-        //Agregar
-        public bool AddRegionalCenter(string _RegionalCenter, string _Phone, string _Address, string _City,string _State,string _ZipCode,string _Ext, string _UserName)
+        public bool AddRegionalCenter(string _RegionalCenter, string _Phone, string _Address, string _City, string _State, string _ZipCode, string _Ext, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Post<RegionalCenterModel>("regional-centers", new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_RegionalCenter_Create", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@RegionalCenter", _RegionalCenter);
-                        cmd.Parameters.AddWithValue("@Phone", _Phone);
-                        cmd.Parameters.AddWithValue("@Address", _Address);
-//                        cmd.Parameters.AddWithValue("@Address", _notesdate.HasValue ? (object)_notesdate.Value : DBNull.Value);
-                        cmd.Parameters.AddWithValue("@City", _City);
-                        cmd.Parameters.AddWithValue("@State", _State);
-                        cmd.Parameters.AddWithValue("@ZipCode", _ZipCode);
-                        cmd.Parameters.AddWithValue("@Ext", _Ext);
-                        cmd.Parameters.AddWithValue("@UserC", _UserName);
-                        cmd.Parameters.AddWithValue("@DateC", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    RegionalCenter = _RegionalCenter,
+                    Phone = _Phone,
+                    Address = _Address,
+                    City = _City,
+                    State = _State,
+                    ZipCode = _ZipCode,
+                    Ext = _Ext,
+                });
+                response = true;
                 _log._logAction("Create RegionalCenter", "Create a new Regional Center, name:" + _RegionalCenter, "AddRegionalCenter", "RegionalCenterModel", _UserName);
             }
             catch (Exception _error)
@@ -191,28 +123,17 @@ namespace LEAP.Models
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Put<RegionalCenterModel>("regional-centers/" + _IDRegionalCenter, new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_RegionalCenter_Update", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDRegionalCenter", _IDRegionalCenter);
-                        cmd.Parameters.AddWithValue("@RegionalCenter", _RegionalCenter);
-                        cmd.Parameters.AddWithValue("@Phone", _Phone);
-                        cmd.Parameters.AddWithValue("@Address", _Address);
-                        cmd.Parameters.AddWithValue("@City", _City);
-                        cmd.Parameters.AddWithValue("@State", _State);
-                        cmd.Parameters.AddWithValue("@ZipCode", _ZipCode);
-                        cmd.Parameters.AddWithValue("@Ext", _Ext);
-                        cmd.Parameters.AddWithValue("@UserU", _UserName);
-                        cmd.Parameters.AddWithValue("@DateU", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    RegionalCenter = _RegionalCenter,
+                    Phone = _Phone,
+                    Address = _Address,
+                    City = _City,
+                    State = _State,
+                    ZipCode = _ZipCode,
+                    Ext = _Ext,
+                });
+                response = true;
                 _log._logAction("Update RegionalCenter", "Update Regional Center, name:" + _RegionalCenter, "UpdateRegionalCenter", "RegionalCenterModel", _UserName);
             }
             catch (Exception _error)
@@ -222,24 +143,14 @@ namespace LEAP.Models
             }
             return response;
         }
+
         public bool DeleteRegionalCenter(string _IDRegionalCenter, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_RegionalCenter_Delete", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDRegionalCenter", _IDRegionalCenter);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                ApiClient.Delete("regional-centers/" + _IDRegionalCenter);
+                response = true;
                 _log._logAction("Delete RegionalCenter", "Delete Regional Center, id:" + IDRegionalCenter, "DeleteRegionalCenter", "RegionalCenterModel", _UserName);
             }
             catch (Exception _error)
@@ -249,7 +160,5 @@ namespace LEAP.Models
             }
             return response;
         }
-
-        //End=======>>>>>>> Stashed changes
     }
 }

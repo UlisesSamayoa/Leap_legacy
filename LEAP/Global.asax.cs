@@ -20,10 +20,10 @@ namespace LEAP
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-             
-            
+
+
         }
-        
+
         //public class Startup
         //{
         //    public void Configuration(IAppBuilder app)

@@ -1,10 +1,8 @@
-﻿using LEAP.Data;
+using LEAP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace LEAP.Models
 {
@@ -27,158 +25,107 @@ namespace LEAP.Models
         public int estado { get; set; }
         LogModel _log = new LogModel();
         public string regionalC { get; set; }
+
+        // Replica SP_Authorization_AllData: join con Consumer (+ RegionalCenter)
+        // resuelto client-side, ordenado por ConsumerName igual que el original.
         public List<AuthorizationModel> Get_Authorizations()
         {
             var _Auth_Response = new List<AuthorizationModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Authorization_AllData", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _Auth_Response.Add(new AuthorizationModel
-                                {
-                                    IDAuth = Convert.ToInt32(reader["IDAuth"]),
-                                    auth = reader["auth"].ToString(),
-                                    //_From = Convert.ToDateTime(reader["_From"].ToString()),
-                                    //_To = Convert.ToDateTime(reader["_To"].ToString()),
-                                    _From_s = reader["_From"].ToString().Replace(" 00:00:00",""),
-                                    _To_s = reader["_To"].ToString().Replace(" 00:00:00", ""),
-                                    UCI = reader["UCI"].ToString(),
-                                    ConsumerName = reader["ConsumerName"].ToString(),
-                                    estado = Convert.ToInt32(reader["estado"]),
-                                    regionalC = reader["regionalC"].ToString()
+                _Auth_Response = ApiClient.Get<List<AuthorizationModel>>("authorizations");
+                var consumers = ApiClient.Get<List<ConsumerModel>>("consumers");
+                var centers = ApiClient.Get<List<RegionalCenterModel>>("regional-centers");
+                var byUci = consumers.Where(c => c.UCI != null).ToDictionary(c => c.UCI, c => c);
+                var centerNames = centers.ToDictionary(c => c.IDRegionalCenter, c => c.RegionalCenter);
 
-                                });
-                            }
-                        }
+                foreach (var a in _Auth_Response)
+                {
+                    if (byUci.TryGetValue(a.UCI, out var c))
+                    {
+                        a.ConsumerName = c.LastName + " ," + c.Name;
+                        centerNames.TryGetValue(c.RegionalID, out var rc);
+                        a.regionalC = rc;
                     }
+                    a._From_s = a._From == default(DateTime) ? "" : a._From.ToString("yyyy-MM-dd");
+                    a._To_s = a._To == default(DateTime) ? "" : a._To.ToString("yyyy-MM-dd");
                 }
+                _Auth_Response = _Auth_Response.OrderBy(a => a.ConsumerName).ToList();
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _Auth_Response.Add(new AuthorizationModel { _ErrorCode = true });
             }
             return _Auth_Response;
         }
+
         public AuthorizationModel Get_Authorizations_ByID(int _auth)
         {
             var _Auth_Response = new AuthorizationModel();
             try
             {
-                using (var context = new ApplicationDbContext())
+                _Auth_Response = ApiClient.Get<AuthorizationModel>("authorizations/" + _auth);
+                var match = ApiClient.Get<List<ConsumerModel>>("consumers?uci=" + Uri.EscapeDataString(_Auth_Response.UCI ?? "")).FirstOrDefault();
+                if (match != null)
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Authorization_AllDataByID", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _auth);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _Auth_Response.IDAuth = Convert.ToInt32(reader["IDAuth"]);
-                                _Auth_Response.auth = reader["auth"].ToString();
-                                //_Auth_Response._From = reader["_From"].ToString().Replace(" 00:00:00", "");
-                                _Auth_Response._From = Convert.ToDateTime(reader["_From"].ToString());
-                                _Auth_Response._To = Convert.ToDateTime(reader["_To"].ToString());
-                                _Auth_Response._From_s = reader["_From"].ToString().Replace(" 00:00:00", "");
-                                _Auth_Response._To_s = reader["_To"].ToString().Replace(" 00:00:00", "");
-                                _Auth_Response.UCI = reader["UCI"].ToString();
-                                _Auth_Response.ConsumerName = reader["ConsumerName"].ToString();
-                                _Auth_Response.estado = Convert.ToInt32(reader["estado"]);
-                                //_Auth_Response._To = reader["_To"].ToString().Replace(" 00:00:00", "");
-                                _Auth_Response._ErrorCode = false;
-                            }
-                        }
-                    }
+                    _Auth_Response.ConsumerName = match.Name + " " + match.LastName;
                 }
+                _Auth_Response._From_s = _Auth_Response._From.ToString("yyyy-MM-dd");
+                _Auth_Response._To_s = _Auth_Response._To.ToString("yyyy-MM-dd");
+                _Auth_Response._ErrorCode = false;
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _Auth_Response._ErrorCode = true;
             }
             return _Auth_Response;
         }
+
+        // SP_Authorization_AllDataByConsumer en realidad filtra por UCI (el
+        // parametro se llama @ID pero es varchar) — se preserva ese contrato.
         public List<AuthorizationModel> Get_Authorizations_ByConsumer(int _auth)
         {
             var _Auth_Response = new List<AuthorizationModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
+                _Auth_Response = ApiClient.Get<List<AuthorizationModel>>("authorizations?uci=" + _auth);
+                var match = ApiClient.Get<List<ConsumerModel>>("consumers?uci=" + _auth).FirstOrDefault();
+                foreach (var a in _Auth_Response)
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Authorization_AllDataByConsumer", context.Connection))
+                    if (match != null)
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _auth);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _Auth_Response.Add(new AuthorizationModel
-                                {
-                                    IDAuth = Convert.ToInt32(reader["IDAuth"]),
-                                auth = reader["auth"].ToString(),
-                                //_Auth_Response._From = reader["_From"].ToString().Replace(" 00:00:00", "");
-                                _From = Convert.ToDateTime(reader["_From"].ToString()),
-                                _To = Convert.ToDateTime(reader["_To"].ToString()),
-                                _From_s = reader["_From"].ToString().Replace(" 00:00:00", ""),
-                                _To_s = reader["_To"].ToString().Replace(" 00:00:00", ""),
-                                UCI = reader["UCI"].ToString(),
-                                ConsumerName = reader["ConsumerName"].ToString(),
-                                    estado = Convert.ToInt32(reader["estado"]),
-                                    //_Auth_Response._To = reader["_To"].ToString().Replace(" 00:00:00", "");
-                                    _ErrorCode = false
-                            });
-                            }
-                        }
+                        a.ConsumerName = match.Name + " " + match.LastName;
                     }
+                    a._From_s = a._From.ToString("yyyy-MM-dd");
+                    a._To_s = a._To.ToString("yyyy-MM-dd");
+                    a._ErrorCode = false;
                 }
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _Auth_Response.Add(new AuthorizationModel { _ErrorCode = true });
             }
             return _Auth_Response;
         }
-        //Agregar
-        //public bool AddAuthorization(string _UCI, string _Authorization, DateTime? _From, DateTime? _To, string _UserName)
+
         public bool AddAuthorization(string _UCI, string _Authorization, DateTime? _From, DateTime? _To, int estado, string _UserName)
         {
             bool response = false;
-            if (_Authorization==null)
+            if (_Authorization == null)
             {
                 _Authorization = "";
             }
-            
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Post<AuthorizationModel>("authorizations", new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Authorization_Create", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@UCI", _UCI);
-                        cmd.Parameters.AddWithValue("@Auth", _Authorization);
-                        cmd.Parameters.AddWithValue("@From", _From);
-                        cmd.Parameters.AddWithValue("@To", _To);
-                        cmd.Parameters.AddWithValue("@estado", estado);
-                        cmd.Parameters.AddWithValue("@UserC", _UserName);
-                        cmd.Parameters.AddWithValue("@DateC", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    UCI = _UCI,
+                    auth = _Authorization,
+                    _From = _From?.ToString("yyyy-MM-dd"),
+                    _To = _To?.ToString("yyyy-MM-dd"),
+                    estado = estado.ToString(),
+                });
+                response = true;
                 _log._logAction("Create Authorization", "Create a new Authorization, name:" + _Authorization, "AddAuthorization", "AuthorizationModel", _UserName);
             }
             catch (Exception _error)
@@ -188,32 +135,21 @@ namespace LEAP.Models
             }
             return response;
         }
-       //public bool UpdateAuthorization(string _IDAuthorization, string _UCI, string _Auth, DateTime? _From, DateTime? _To, string _UserName)
-            public bool UpdateAuthorization(string _IDAuthorization, string _UCI, string _Auth, DateTime? _From, DateTime? _To, int estado, string _UserName)
+
+        public bool UpdateAuthorization(string _IDAuthorization, string _UCI, string _Auth, DateTime? _From, DateTime? _To, int estado, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Put<AuthorizationModel>("authorizations/" + _IDAuthorization, new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Authorization_Update", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDAuthorization", _IDAuthorization);
-                        cmd.Parameters.AddWithValue("@UCI", _UCI);
-                        cmd.Parameters.AddWithValue("@Auth", _Auth);
-                        cmd.Parameters.AddWithValue("@From", _From);
-                        cmd.Parameters.AddWithValue("@To", _To);
-                        cmd.Parameters.AddWithValue("@estado", estado);
-                        cmd.Parameters.AddWithValue("@UserU", _UserName);
-                        cmd.Parameters.AddWithValue("@DateU", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    UCI = _UCI,
+                    auth = _Auth,
+                    _From = _From?.ToString("yyyy-MM-dd"),
+                    _To = _To?.ToString("yyyy-MM-dd"),
+                    estado = estado.ToString(),
+                });
+                response = true;
                 _log._logAction("Update Authorization", "Update Authorization, name:" + _Auth, "UpdateAuthorization", "AuthorizationModel", _UserName);
             }
             catch (Exception _error)
@@ -223,24 +159,14 @@ namespace LEAP.Models
             }
             return response;
         }
+
         public bool DeleteAuthorization(string _IDAuthorization, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Authorization_Delete", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDAuthorization", _IDAuthorization);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                ApiClient.Delete("authorizations/" + _IDAuthorization);
+                response = true;
                 _log._logAction("Delete Authorization", "Delete Authorizations, id:" + _IDAuthorization, "DeleteAuthorization", "AuthorizationModel", _UserName);
             }
             catch (Exception _error)

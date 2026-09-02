@@ -22,7 +22,7 @@
                             <th>Email</th>
                             <th>Address</th>
                             <th>Specialty</th>
-                            <th>Preview</th>
+                            @*<th>Preview</th>*@
                             <th>Update</th>
                             <th>Delete</th>
                         </tr>
@@ -38,9 +38,9 @@
                             <td>@Specialist.Email</td>
                             <td>@Specialist.Address</td>
                             <td>@Specialist.Specialty</td>
-                            <td>
+                            @*<td>
                                 <a class="btn btn-outline-success" href="@Url.Action("Details","Specialist", new { id = Specialist.IDSpecialist })"><i class="bi bi-eye-fill"></i> See_more</a>
-                            </td>
+                            </td>*@
                             <td>
                                 <a class="btn btn-outline-primary" href="@Url.Action("Update","Specialist", new { id = Specialist.IDSpecialist })"><i class="bi bi-pencil-square"></i> Update</a>
                             </td>

@@ -9,7 +9,6 @@ namespace LEAP.Controllers
 {
     public class EventTypeController : Controller
     {
-        EventsModel _EventModel = new EventsModel();
         EventTypeModel _EventTypeModel = new EventTypeModel();
         private List<SelectListItem> _EventTypeList;
         public ActionResult Index()
@@ -83,24 +82,22 @@ namespace LEAP.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id)
         {
-            bool validDelete = _EventModel.DeleteEventxEvenType(id, User.Identity.Name);
-            if (validDelete)
+            // Antes esto primero borraba "events/" + id (un Event cuyo ID
+            // coincidiera con el del EventType, sin relacion real entre ambos —
+            // podia borrar un Event de otro registro por pura coincidencia de
+            // IDs) antes de intentar borrar el EventType. No existe FK entre
+            // events.IDType y event_types.IDEventType en la BD (es un int suelto,
+            // ver database/migrations en leap_api), asi que ese paso no era
+            // necesario para poder borrar el EventType.
+            var valid = _EventTypeModel.DeleteEventType(id, User.Identity.Name);
+            if (valid)
             {
-                var valid = _EventTypeModel.DeleteEventType(id, User.Identity.Name);
-                if (valid)
-                {
-                    return RedirectToAction("Index", "EventType");
-                }
-                else
-                {
-                    return View();
-                }
+                return RedirectToAction("Index", "EventType");
             }
             else
             {
                 return View();
             }
-            
         }
     }
 }

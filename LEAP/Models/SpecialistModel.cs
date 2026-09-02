@@ -1,10 +1,7 @@
-﻿using LEAP.Data;
+using LEAP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace LEAP.Models
 {
@@ -27,119 +24,56 @@ namespace LEAP.Models
         public DateTime? DateU { get; set; }
         public bool _ErrorCode { get; set; }
 
-        //METODOS
         LogModel _log = new LogModel();
+
         public List<SpecialistModel> Get_Specialist()
         {
             var _RCenter_Response = new List<SpecialistModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Specialist_allData", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _RCenter_Response.Add(new SpecialistModel
-                                {
-                                    IDSpecialist = Convert.ToInt32(reader["IDSpecialist"]),
-                                    Name = reader["Name"].ToString(),
-                                    LastName = reader["LastName"].ToString(),
-                                    Phone = reader["Phone"].ToString(),
-                                    Email = reader["Email"].ToString(),
-                                    Address = reader["Address"].ToString(),
-                                    City = reader["City"].ToString(),
-                                    State = reader["State"].ToString(),
-                                    ZipCode = reader["ZipCode"].ToString(),
-                                    HourlyRate = reader["HourlyRate"].ToString(),
-                                    Specialty = reader["Specialty"].ToString(),
-                                    _ErrorCode = false
-                                });
-                            }
-                        }
-                    }
-                }
+                _RCenter_Response = ApiClient.Get<List<SpecialistModel>>("specialists");
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _RCenter_Response.Add(new SpecialistModel { _ErrorCode = true });
             }
             return _RCenter_Response;
         }
+
         public SpecialistModel Get_Specialist_ByID(int _Specialist)
         {
             var _specialist_Response = new SpecialistModel();
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Specialist_AllDataByID", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@ID", _Specialist);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _specialist_Response.IDSpecialist = Convert.ToInt32(reader["IDSpecialist"]);
-                                _specialist_Response.Name = reader["Name"].ToString();
-                                _specialist_Response.LastName = reader["LastName"].ToString();
-                                _specialist_Response.Phone = reader["Phone"].ToString();
-                                _specialist_Response.Email = reader["Email"].ToString();
-                                _specialist_Response.Address = reader["Address"].ToString();
-                                _specialist_Response.City = reader["City"].ToString();
-                                _specialist_Response.State = reader["State"].ToString();
-                                _specialist_Response.ZipCode = reader["ZipCode"].ToString();
-                                _specialist_Response.HourlyRate = reader["HourlyRate"].ToString();
-                                _specialist_Response.Specialty = reader["Specialty"].ToString();
-                                _specialist_Response._ErrorCode = false;
-                            }
-                        }
-                    }
-                }
+                _specialist_Response = ApiClient.Get<SpecialistModel>("specialists/" + _Specialist);
+                _specialist_Response._ErrorCode = false;
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _specialist_Response._ErrorCode = true;
             }
             return _specialist_Response;
         }
 
-        //Agregar
         public bool AddSpecialist(string _Name, string _LastName, string _Phone, string _Email, string _Address, string _City, string _State, string _ZipCode, string _HourlyRate, string Specialty, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Post<SpecialistModel>("specialists", new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Specialist_Create", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Name", _Name);
-                        cmd.Parameters.AddWithValue("@LastName", _LastName);
-                        cmd.Parameters.AddWithValue("@Phone", _Phone);
-                        cmd.Parameters.AddWithValue("@Email", _Email);
-                        cmd.Parameters.AddWithValue("@Address", _Address);
-                        cmd.Parameters.AddWithValue("@City", _City);
-                        cmd.Parameters.AddWithValue("@State", _State);
-                        cmd.Parameters.AddWithValue("@ZipCode", _ZipCode);
-                        cmd.Parameters.AddWithValue("@HourlyRate", _HourlyRate);
-                        cmd.Parameters.AddWithValue("@Specialty", Specialty);
-                        cmd.Parameters.AddWithValue("@UserC", _UserName);
-                        cmd.Parameters.AddWithValue("@DateC", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    Name = _Name,
+                    LastName = _LastName,
+                    Phone = _Phone,
+                    Email = _Email,
+                    Address = _Address,
+                    City = _City,
+                    State = _State,
+                    ZipCode = _ZipCode,
+                    HourlyRate = _HourlyRate,
+                    Specialty = Specialty,
+                });
+                response = true;
                 _log._logAction("Create Specialist", "Create a new Specialist, name:" + _Name + " " + _LastName, "AddSpecialist", "SpecialistModel", _UserName);
             }
             catch (Exception _error)
@@ -155,31 +89,20 @@ namespace LEAP.Models
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
+                ApiClient.Put<SpecialistModel>("specialists/" + _IDSpecialist, new
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Specialist_Update", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDSpecialist", _IDSpecialist);
-                        cmd.Parameters.AddWithValue("@Name", _Name);
-                        cmd.Parameters.AddWithValue("@LastName", _LastName);
-                        cmd.Parameters.AddWithValue("@Phone", _Phone);
-                        cmd.Parameters.AddWithValue("@Email", _Email);
-                        cmd.Parameters.AddWithValue("@Address", _Address);
-                        cmd.Parameters.AddWithValue("@City", _City);
-                        cmd.Parameters.AddWithValue("@State", _State);
-                        cmd.Parameters.AddWithValue("@ZipCode", _ZipCode);
-                        cmd.Parameters.AddWithValue("@HourlyRate", _HourlyRate);
-                        cmd.Parameters.AddWithValue("@Specialty", Specialty);
-                        cmd.Parameters.AddWithValue("@UserU", _UserName);
-                        cmd.Parameters.AddWithValue("@DateU", DateTime.Today);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                    Name = _Name,
+                    LastName = _LastName,
+                    Phone = _Phone,
+                    Email = _Email,
+                    Address = _Address,
+                    City = _City,
+                    State = _State,
+                    ZipCode = _ZipCode,
+                    HourlyRate = _HourlyRate,
+                    Specialty = Specialty,
+                });
+                response = true;
                 _log._logAction("Update Specialist", "Update Specialist, name:" + Name + " " + LastName, "UpdateSpecialist", "SpecialistModel", _UserName);
             }
             catch (Exception _error)
@@ -189,24 +112,14 @@ namespace LEAP.Models
             }
             return response;
         }
+
         public bool DeleteSpecialist(string _IDSpecialist, string _UserName)
         {
             bool response = false;
             try
             {
-                using (var context = new ApplicationDbContext())
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_Specialist_Delete", context.Connection))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@IDSpecialist", _IDSpecialist);
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                        }
-                        response = true;
-                    }
-                }
+                ApiClient.Delete("specialists/" + _IDSpecialist);
+                response = true;
                 _log._logAction("Delete Specialist", "Delete Specialist, id:" + IDSpecialist, "DeleteSpecialist", "SpecialistModel", _UserName);
             }
             catch (Exception _error)

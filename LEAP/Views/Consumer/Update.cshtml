@@ -1,4 +1,5 @@
 ﻿@model LEAP.Models.ConsumerModel
+@using Newtonsoft.Json
 @{
         ViewBag.Title = "Update";
         string[] states = new string[]
@@ -490,7 +491,7 @@
         <div class="form-group">
             <label asp-for="Ext">Primary Language</label>
             <select id="lang" class="form-control" value="@Model.LanguajeID">
-                <option>----- Select a option ------</option>
+                <option value="0">----- Select a option ------</option>
             </select>
         </div>
     </div>
@@ -1188,7 +1189,7 @@ else
     //TeacherModal
 
     function ChangeR4A() {
-            var _uci = @Model.UCI;
+            var _uci = @Html.Raw(JsonConvert.SerializeObject(Model.UCI));
             if (_uci == "") {
                 return false;
             }
@@ -1676,7 +1677,7 @@ else
         collapseInstance.hide();
     }
     function GetCity() {
-        var _base_city = @Model.CityID
+        var _base_city = @Html.Raw(JsonConvert.SerializeObject(Model.CityID));
             $.ajax({
             type: "GET",
             url: "@Url.Action("Getcities","Consumer")",
@@ -1703,10 +1704,10 @@ else
         });
     }
     function Getspecialist() {
-        var _base_cds = @Model.specialist1
-        var _base_spe = @Model.specialist2
-        var _base_the = @Model.specialist3
-        var _base_pre = @Model.PresenterName
+        var _base_cds = @Html.Raw(JsonConvert.SerializeObject(Model.specialist1));
+        var _base_spe = @Html.Raw(JsonConvert.SerializeObject(Model.specialist2));
+        var _base_the = @Html.Raw(JsonConvert.SerializeObject(Model.specialist3));
+        var _base_pre = @Html.Raw(JsonConvert.SerializeObject(Model.PresenterName));
         $.ajax({
             type: "GET",
             url: "@Url.Action("Getspecialist", "Consumer")",
@@ -1748,7 +1749,7 @@ else
         });
     }
     function GetRegional() {
-        var _base_regional = @Model.RegionalID
+        var _base_regional = @Html.Raw(JsonConvert.SerializeObject(Model.RegionalID));
             $.ajax({
             type: "GET",
             url: "@Url.Action("GetRegionals", "Consumer")",
@@ -1772,7 +1773,7 @@ else
 
     }
     function AddressChange(idRegional) {
-        var _baseServiCoor = @Model.ServiceCoordinator;
+        var _baseServiCoor = @Html.Raw(JsonConvert.SerializeObject(Model.ServiceCoordinator));
         var id = "";
         if (idRegional == "") {
             var id = idRegional
@@ -2006,8 +2007,8 @@ else
         // ________________________________________NUEVO
 
         var _Action = $("#action option:selected").val();
-        var _TypeReporte = $("#type option:selected").val();
         var _Type = $("#type option:selected").val();
+        var _TypeReporte = _Type.charAt(0);
 
         var _ReferredBy = 1;
 
@@ -2076,7 +2077,7 @@ else
 
     }
     function GetLang() {
-         var _base_languaje = @Model.LanguajeID
+         var _base_languaje = @Html.Raw(JsonConvert.SerializeObject(Model.LanguajeID));
         $.ajax({
             type: "GET",
             url: '@Url.Action("GetLang", "Consumer")',

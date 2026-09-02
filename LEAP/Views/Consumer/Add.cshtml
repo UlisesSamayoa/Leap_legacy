@@ -127,7 +127,7 @@
                     <div class="form-group">
                         <label asp-for="State">City</label>
                         <select id="city" class="form-control">
-                            <option>Choose an option...</option>
+                            <option value="">Choose an option...</option>
                         </select>
                     </div>
                 </div>
@@ -342,7 +342,7 @@
                     <div class="form-group">
                         <label asp-for="Ext">Regional</label>
                         <select id="regional" class="form-control" onchange="AddressChange();">
-                            <option>Choose an option...</option>
+                            <option value="">Choose an option...</option>
                         </select>
                     </div>
                 </div>
@@ -968,8 +968,8 @@
         // ________________________________________NUEVO
 
         var _Action = $("#action option:selected").val();
-        var _TypeReporte = $("#type option:selected").val();
         var _Type = $("#type option:selected").val();
+        var _TypeReporte = _Type.charAt(0);
 
         var _ReferredBy = 1;
 

@@ -45,9 +45,9 @@ namespace LEAP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update(int id, string NameC, string Tel)
+        public ActionResult Update(int id, string NameC, string Tel, int Regional)
         {
-            var valid = _ServiceCModel.UpdateS(id, NameC, Tel);
+            var valid = _ServiceCModel.UpdateS(id, NameC, Tel, Regional, User.Identity.Name);
             if (valid)
             {
                 return RedirectToAction("Index", "ServiceCoordinator");
@@ -61,6 +61,27 @@ namespace LEAP.Controllers
         public ActionResult insertS(int regional, string sc, string tel)
         {
             var valid = _ServiceCModel.Create(regional, sc, tel);
+            if (valid)
+            {
+                return RedirectToAction("Index", "ServiceCoordinator");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var List_service = _ServiceCModel.Get_Services_ByID(id);
+            return View(List_service);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string id)
+        {
+            var valid = _ServiceCModel.DeleteServiceC(Convert.ToInt32(id), User.Identity.Name);
             if (valid)
             {
                 return RedirectToAction("Index", "ServiceCoordinator");

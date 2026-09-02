@@ -1,10 +1,6 @@
-﻿using LEAP.Data;
+using LEAP.Data;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace LEAP.Models
 {
@@ -18,40 +14,39 @@ namespace LEAP.Models
         public string description { get; set; }
         public string color { get; set; }
         public bool _ErrorCode { get; set; }
+
+        private class ApiEvent
+        {
+            public int IDEvent;
+            public string Title;
+            public DateTime? DateEvent;
+            public string Description;
+            public EventTypeModel eventType;
+        }
+
         public List<CalendarModel> Get_Events()
         {
             var _RCenter_Response = new List<CalendarModel>();
             try
             {
-                using (var context = new ApplicationDbContext())
+                var raw = ApiClient.Get<List<ApiEvent>>("events");
+                foreach (var e in raw)
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_Events_allData", context.Connection))
+                    var when = e.DateEvent ?? default(DateTime);
+                    _RCenter_Response.Add(new CalendarModel
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        context.Connection.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                _RCenter_Response.Add(new CalendarModel
-                                {
-                                    EventoId = Convert.ToInt32(reader["IDEvent"]),
-                                    title = reader["Title"].ToString(),
-                                    start = Convert.ToDateTime(reader["DateEvent"]).ToString("yyyy-MM-ddTHH:mm:ss"),
-                                    start_o = Convert.ToDateTime(reader["DateEvent"]).ToString("yyyy-MM-dd"),
-                                    end = Convert.ToDateTime(reader["DateEvent"]).ToString("yyyy-MM-ddTHH:mm:ss"),
-                                    //start = e.FechaInicio.ToString("yyyy-MM-ddTHH:mm:ss"),
-                                    //end = e.FechaFin.ToString("yyyy-MM-ddTHH:mm:ss"),
-                                    description = reader["Description"].ToString(),
-                                    color = reader["Color"].ToString(),
-                                    _ErrorCode = false
-                                });
-                            }
-                        }
-                    }
+                        EventoId = e.IDEvent,
+                        title = e.Title,
+                        start = when.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        start_o = when.ToString("yyyy-MM-dd"),
+                        end = when.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        description = e.Description,
+                        color = e.eventType?.Color,
+                        _ErrorCode = false,
+                    });
                 }
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 _RCenter_Response.Add(new CalendarModel { _ErrorCode = true });
             }

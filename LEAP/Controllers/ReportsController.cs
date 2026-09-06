@@ -21,6 +21,7 @@ namespace LEAP.Controllers
         ConsumerModel _ConsumerModel = new ConsumerModel();
         ReportsModel _ReportsModel = new ReportsModel();
         NotesxConsumerModel _NotesConsumerModel = new NotesxConsumerModel();
+        CitiesModel _CitiesModel = new CitiesModel();
 
         private List<SelectListItem> _NotesList;
         public ActionResult Index()
@@ -778,10 +779,11 @@ namespace LEAP.Controllers
                     cb1.ShowTextAligned(Element.ALIGN_LEFT, "TIMES/WK: ", timesWKPositionX, textPositionY, 0);
                     cb1.EndText();
                     float timesPositionX = timesWKPositionX + bf.GetWidthPoint("TIMES/WK: ", 12);
+                    string timesxWeek = consumer_temps.TimesxWeek ?? "";
                     cb1.BeginText();
-                    cb1.ShowTextAligned(Element.ALIGN_LEFT, consumer_temps.TimesxWeek.ToString(), timesPositionX, textPositionY, 0); // Cambia "3" por el valor dinámico
+                    cb1.ShowTextAligned(Element.ALIGN_LEFT, timesxWeek, timesPositionX, textPositionY, 0); // Cambia "3" por el valor dinámico
                     cb1.EndText();
-                    float underlineWidthTimes = bf.GetWidthPoint(consumer_temps.TimesxWeek.ToString(), 12);
+                    float underlineWidthTimes = bf.GetWidthPoint(timesxWeek, 12);
                     cb1.MoveTo(timesPositionX, textPositionY - 2);
                     cb1.LineTo(timesPositionX + underlineWidthTimes, textPositionY - 2);
                     cb1.Stroke();
@@ -1086,14 +1088,10 @@ namespace LEAP.Controllers
                         _htmlString = _htmlString.Replace("[[Female]]", true_image);
                     }
 
-                    var ciudad = _ReportsModel.get_CityStringr(Convert.ToInt32(_Consumer.CityID));
+                    var ciudad = _CitiesModel.Get_Cities_ByID(Convert.ToInt32(_Consumer.CityID));
                     _htmlString = _htmlString.Replace("[[Teleserv]]", _Consumer.tel.ToString());
                     _htmlString = _htmlString.Replace("[[CAddres]]", _Consumer.Address.ToString());
-                    var getCity = "";
-                    foreach (var cit in ciudad)
-                    {
-                        getCity = cit.ciudad;
-                    }
+                    var getCity = ciudad._ErrorCode ? "" : ciudad.City;
 
                     _htmlString = _htmlString.Replace("[[CCity]]", getCity.ToString());
                     _htmlString = _htmlString.Replace("[[CSt]]", _Consumer.State.ToString());
@@ -1963,7 +1961,7 @@ namespace LEAP.Controllers
 
         public async Task<FileStreamResult> CenterReport(string regional, int month, int year)
         {
-            var data = _ReportsModel._Rpt_Data_CentersByMonth(DateTime.Today, DateTime.Today,regional);
+            var data = _ReportsModel._Rpt_Data_CentersByMonth(month, year, regional);
             string numeroMes = month.ToString();
 
             string nombreMes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(numeroMes));

@@ -332,7 +332,7 @@ namespace LEAP.Models
             return productos;
         }
 
-        public string Update_Consumer(string _UCI, int _specialist1, int _specialist2, int _specialist3, string _PresenterName, string _Name,
+        public string Update_Consumer(string _UCI, int? _specialist1, int? _specialist2, int? _specialist3, string _PresenterName, string _Name,
            string _LastName, DateTime _DateOfBirth, DateTime _adjage, string _Gender, string _Address, string _CityID, string _ZipCode, string _Phone,
            string _EmergencyPhone, string _ParentName, string _ParentLastName, int _LanguajeID, string _Reasonforreferral, int _AuthID,
            int _HoursxWeek, int _MaxHours, int _TerminationNumber, string _AdditionalEval, bool _InHome, bool _EIWITH, bool _CB, bool _PEP,
@@ -403,7 +403,7 @@ namespace LEAP.Models
                 Type = _Type,
                 Action = _Action,
                 TerminationDateEffective = _terminationdate.ToString("yyyy-MM-dd"),
-            });
+            }, includeNulls: true);
             return mensaje;
         }
 

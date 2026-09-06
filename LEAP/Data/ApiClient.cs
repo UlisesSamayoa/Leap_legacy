@@ -58,9 +58,9 @@ namespace LEAP.Data
             return SendAsync<T>(HttpMethod.Post, path, body).GetAwaiter().GetResult();
         }
 
-        public static T Put<T>(string path, object body)
+        public static T Put<T>(string path, object body, bool includeNulls = false)
         {
-            return SendAsync<T>(HttpMethod.Put, path, body).GetAwaiter().GetResult();
+            return SendAsync<T>(HttpMethod.Put, path, body, includeNulls: includeNulls).GetAwaiter().GetResult();
         }
 
         public static T Patch<T>(string path, object body)
@@ -80,7 +80,7 @@ namespace LEAP.Data
             return SendAsync<T>(HttpMethod.Post, path, body, token).GetAwaiter().GetResult();
         }
 
-        private static async Task<T> SendAsync<T>(HttpMethod method, string path, object body, string tokenOverride = null)
+        private static async Task<T> SendAsync<T>(HttpMethod method, string path, object body, string tokenOverride = null, bool includeNulls = false)
         {
             using (var request = new HttpRequestMessage(method, path))
             {
@@ -95,7 +95,7 @@ namespace LEAP.Data
                 {
                     var json = JsonConvert.SerializeObject(body, new JsonSerializerSettings
                     {
-                        NullValueHandling = NullValueHandling.Ignore,
+                        NullValueHandling = includeNulls ? NullValueHandling.Include : NullValueHandling.Ignore,
                     });
                     request.Content = new StringContent(json, Encoding.UTF8, "application/json");
                 }

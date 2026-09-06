@@ -1,4 +1,5 @@
 ﻿@model LEAP.Models.ReportsModel
+@using Newtonsoft.Json
 @{
     ViewBag.Title = "Update";
     string[] states = new string[]
@@ -778,9 +779,7 @@ else
         GetRegional();
 
         GetCity();
-        Getspecialist();
 
-        
         $.ajax({
             type: "GET",
             url: '/Consumer/Getspecialist',
@@ -887,12 +886,9 @@ else
                 var data = response.split(";");
                 var haa = data.length - 1;
                 for (var i = 0; i < haa; i++) {
-                    var datos = data[i].split(",");
+                    var datos = data[i].split(",").map(item => item.trim());
                     if (_base_regional == datos[0]) {
-                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + "</option>";
                         AddressChange(datos[0])
-                    } else {
-                        document.getElementById("regional").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + "</option>";
                     }
                 }
                 }
@@ -900,7 +896,7 @@ else
 
     }
     function AddressChange(idRegional) {
-        var _baseServiCoor = @Model.ServiceCoordinator
+        var _baseServiCoor = @Html.Raw(JsonConvert.SerializeObject(Model.ServiceCoordinator))
         var id = ""
         if (idRegional == "") {
             var id = idRegional

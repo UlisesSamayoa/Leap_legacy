@@ -681,7 +681,7 @@
         <div class="form-group">
             <label asp-for="Phone">CDS</label>
             <select id="cds" class="form-control">
-                <option value="1">--------N/A-----------</option>
+                <option value="">--------N/A-----------</option>
             </select>
         </div>
     </div>
@@ -689,7 +689,7 @@
         <div class="form-group">
             <label asp-for="Phone">Specialty</label>
             <select id="specialist" class="form-control">
-                <option value="1">--------N/A-----------</option>
+                <option value="">--------N/A-----------</option>
             </select>
         </div>
     </div>
@@ -697,7 +697,7 @@
         <div class="form-group">
             <label asp-for="Phone">Therapist</label>
             <select id="therapist" class="form-control">
-                <option value="1">--------N/A-----------</option>
+                <option value="">--------N/A-----------</option>
             </select>
         </div>
     </div>
@@ -705,7 +705,7 @@
         <div class="form-group">
             <label asp-for="Phone">Program Presenter</label>
             <select id="presenter" class="form-control">
-                <option value="1">--------N/A-----------</option>
+                <option value="">--------N/A-----------</option>
             </select>
         </div>
     </div>
@@ -1718,7 +1718,7 @@ else
                 var data = response.split(";");
                 var haa = data.length - 1;
                 for (var i = 0; i < haa; i++) {
-                    var datos = data[i].split(",");
+                    var datos = data[i].split(",").map(item => item.trim());
                     if (_base_cds == datos[0]) {
                         document.getElementById("cds").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
                     } else {

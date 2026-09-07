@@ -100,6 +100,11 @@ namespace LEAP.Models
 
         public string ciudad { get; set; }
 
+        // CenterReport: horas brindadas por dia del mes (clave = dia del mes, 1-31),
+        // solo trae los dias que tuvieron alguna visita registrada - viene de
+        // leap_api ReportController::centersByMonth.
+        public Dictionary<int, int> DayHours { get; set; }
+
         LogModel _log = new LogModel();
 
         // Trae el shape completo desde el endpoint colapsado de leap_api (ver
@@ -247,12 +252,14 @@ namespace LEAP.Models
         }
 
 
-        // El bug original (Inicio/Fin nunca se usaban en la SP, y el controller
-        // siempre llamaba con DateTime.Today) se arreglo migrando: ahora filtra de
-        // verdad por mes/anio contra el campo Date del consumer - decision
-        // confirmada con el usuario. La firma cambia de (DateTime?,DateTime?,string)
-        // a (int month, int year, string _center); el unico caller (CenterReport
-        // en ReportsController.cs) tambien se actualiza para pasar el mes/anio real.
+        // Reporte de customers ACTIVOS HOY (Archive=1) de un centro, con las horas
+        // brindadas cada dia del mes/anio pedido (leap_api ReportController::
+        // centersByMonth). Un intento anterior de filtrar tambien por consumers.Date
+        // dentro del mes se revirtio (dejaba el reporte vacio en meses sin altas
+        // nuevas) - decision confirmada con el usuario: el mes/anio solo se usa para
+        // ubicar las visitas en la grilla de dias, no para filtrar que consumers
+        // aparecen. La firma quedo (int month, int year, string _center) de una
+        // migracion anterior; el unico caller es CenterReport en ReportsController.cs.
         public List<ReportsModel> _Rpt_Data_CentersByMonth(int month, int year, string _center)
         {
             List<ReportsModel> list = new List<ReportsModel>();

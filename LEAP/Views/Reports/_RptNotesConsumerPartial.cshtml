@@ -4,31 +4,16 @@
     <div class="card-body">
 
         <div class="row">
-            @if (Model != null)
-            {
-                int cant = 0;
-                foreach (var NotesConsumer in Model)
-                {
-                    cant++;
-                    if (cant == 1)
-                    {
-                        <div class="col-12 text-end">
-                            <input type="hidden" value="@NotesConsumer.UCI" asp-for="UCI" id="UCI" />
-                            <button class="btn btn-warning" onclick="abrirArchivoEnNuevaPestana()"><i class="bi bi-printer-fill"></i> Print report</button>
-                        </div>
-                        <br />
-                    }
-                }
-
-            }
-
             <table id="table_NotesC" class="table table-hover" style="width:100%">
                 <thead class="thead-dark">
                     <tr>
                         <th>UCI</th>
                         <th>ConsumerName</th>
+                        <th>Date</th>
+                        <th>Length of Session</th>
                         <th>Notes</th>
                         <th>Active</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,6 +24,8 @@
                             <tr>
                                 <td>@NotesConsumer.UCI</td>
                                 <td>@NotesConsumer.ConsumerName</td>
+                                <td>@NotesConsumer.Date.ToString("MM/dd/yyyy")</td>
+                                <td>@NotesConsumer.Duration</td>
                                 @if (NotesConsumer.NotesConsumer.Length >= 100)
                                 {
                                     <td>@NotesConsumer.NotesConsumer.Substring(0, 100)...</td>
@@ -48,13 +35,16 @@
                                     <td>@NotesConsumer.NotesConsumer</td>
                                 }
                                 <td>@NotesConsumer.Active</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="abrirArchivoEnNuevaPestana('@NotesConsumer.UCI', '@NotesConsumer.Date.ToString("o")')"><i class="bi bi-printer-fill"></i> Print</button>
+                                </td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="2">
+                            <td colspan="7">
                                 No data available
                             </td>
                         </tr>
@@ -72,29 +62,10 @@ else
     </div>
 }
 <script>
-    $(document).ready(function () {
-        $("#print_rpt").on("click", function () {
-             var uci = $('#UCI').val();
-                    $.ajax({
-                        url: "@Url.Action("NotesConsumer_Report", "Reports")",
-                        data: { _uci: uci },
-                        type: "POST",
-                        success: function(data) {
-                            $('#resultList').empty();
-                            if (data.length > 0) {
-
-                            } else {
-
-                            }
-                        }
-                    });
-        });
-    });
-    function abrirArchivoEnNuevaPestana() {
-        var uci = $('#UCI').val();
-        // Genera la URL hacia el método en el controlador con el parámetro id
-        const url = '/Reports/NotesConsumerReport?_uci=' + uci;
-        //const url = '/Reports/NotesConsumer_Report?_uci=' + uci;
+    function abrirArchivoEnNuevaPestana(uci, visitDate) {
+        // Genera la URL hacia el método en el controlador con el UCI y la fecha de la visita,
+        // para que el PDF solo incluya esa visita en vez de todas las del consumer.
+        const url = '/Reports/NotesConsumerReport?_uci=' + encodeURIComponent(uci) + '&_date=' + encodeURIComponent(visitDate);
 
         // Abre una nueva pestaña con la URL generada
         window.open(url, '_blank');

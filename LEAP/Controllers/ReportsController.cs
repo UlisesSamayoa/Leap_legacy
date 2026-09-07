@@ -708,7 +708,16 @@ namespace LEAP.Controllers
             {
                 foreach (var consumer_temps in consumerList)
                 {
-
+                    // TimesxWeek/PresentInSession/TotalHours vienen de las visitas
+                    // reales (Get_NotesXConsumer -> leap_api ReportController::notesByConsumer),
+                    // no de consumerList (Get_Reports_RPTConsumer, que no trae esos
+                    // datos) - antes TIMES/WK y PARENT/GUARDIAN salian siempre en
+                    // blanco y TOTAL OF HOURS estaba hardcodeado a "Total Hours".
+                    // LastOrDefault, no FirstOrDefault: Get_NotesXConsumer viene
+                    // ordenado por session_started_at ascendente, y para
+                    // TimesxWeek/PresentInSession queremos el dato mas reciente
+                    // que anoto el CDS, no el de la primera visita historica.
+                    var latestNote = NotesconsumerList.LastOrDefault();
 
                     string logo_image = Server.MapPath("~/Content/Images/logo.png");
                     string true_image = Server.MapPath("~/Content/Images/true.png");
@@ -779,7 +788,7 @@ namespace LEAP.Controllers
                     cb1.ShowTextAligned(Element.ALIGN_LEFT, "TIMES/WK: ", timesWKPositionX, textPositionY, 0);
                     cb1.EndText();
                     float timesPositionX = timesWKPositionX + bf.GetWidthPoint("TIMES/WK: ", 12);
-                    string timesxWeek = consumer_temps.TimesxWeek ?? "";
+                    string timesxWeek = latestNote?.TimesxWeek ?? "";
                     cb1.BeginText();
                     cb1.ShowTextAligned(Element.ALIGN_LEFT, timesxWeek, timesPositionX, textPositionY, 0); // Cambia "3" por el valor dinámico
                     cb1.EndText();
@@ -921,14 +930,15 @@ namespace LEAP.Controllers
 
                     textPositionY_2 -= 20;
 
+                    string guardianName = latestNote?.PresentInSession ?? "";
                     cb1.BeginText();
                     cb1.ShowTextAligned(Element.ALIGN_LEFT, "PARENT/GUARDIAN NAME: ", 50, textPositionY_2, 0);
                     cb1.EndText();
                     float title3PositionX = 75 + bf.GetWidthPoint("PARENT/GUARDIAN NAME: ", 10);
                     cb1.BeginText();
-                    cb1.ShowTextAligned(Element.ALIGN_LEFT, consumer_temps.ParentFullName, title3PositionX, textPositionY_2, 0); // Cambia "Valor 3" por el valor dinámico
+                    cb1.ShowTextAligned(Element.ALIGN_LEFT, guardianName, title3PositionX, textPositionY_2, 0);
                     cb1.EndText();
-                    float underlineWidth3 = bf.GetWidthPoint(consumer_temps.ParentFullName, 10);
+                    float underlineWidth3 = bf.GetWidthPoint(guardianName, 10);
                     cb1.MoveTo(title3PositionX, textPositionY_2 - 2);
                     cb1.LineTo(title3PositionX + underlineWidth3, textPositionY_2 - 2);
                     cb1.Stroke();
@@ -936,17 +946,16 @@ namespace LEAP.Controllers
                     // Agregar espacio para el cuarto título y valor (TITLE 4)
                     float title4PositionX = title3PositionX + underlineWidth3 + 50; // Ajusta este valor según el espacio deseado
 
+                    string totalHours = latestNote?.TotalHours ?? "";
                     // Cuarta línea: "TITLE 4: " y subrayar el valor
                     cb1.BeginText();
                     cb1.ShowTextAligned(Element.ALIGN_LEFT, "TOTAL OF HOURS: ", title4PositionX, textPositionY_2, 0);
                     cb1.EndText();
                     float title4ValuePositionX = title4PositionX + 35 + bf.GetWidthPoint("TOTAL OF HOURS: ", 8);
                     cb1.BeginText();
-                    cb1.ShowTextAligned(Element.ALIGN_LEFT, "Total Hours", title4ValuePositionX, textPositionY_2, 0); // Cambia "Valor 4" por el valor dinámico
-                    //cb1.ShowTextAligned(Element.ALIGN_LEFT, consumer_temps.TotalHours.ToString(), title4ValuePositionX, textPositionY_2, 0); // Cambia "Valor 4" por el valor dinámico
+                    cb1.ShowTextAligned(Element.ALIGN_LEFT, totalHours, title4ValuePositionX, textPositionY_2, 0);
                     cb1.EndText();
-                    //float underlineWidth4 = bf.GetWidthPoint(consumer_temps.TotalHours.ToString(), 12);
-                    float underlineWidth4 = bf.GetWidthPoint("Total Hours", 12);
+                    float underlineWidth4 = bf.GetWidthPoint(totalHours, 12);
                     cb1.MoveTo(title4ValuePositionX, textPositionY_2 - 2);
                     cb1.LineTo(title4ValuePositionX + underlineWidth4, textPositionY_2 - 2);
                     cb1.Stroke();
@@ -1518,7 +1527,7 @@ namespace LEAP.Controllers
 
         //    return ;
         //}
-        public FileResult NotesConsumerReport(string _uci)
+        public FileResult NotesConsumerReport(string _uci, string _date = null)
         {
             FileResult result = null;
             try
@@ -1537,6 +1546,14 @@ namespace LEAP.Controllers
                 List<ReportsModel> NotesconsumerList = new List<ReportsModel>();
                 consumerList = _ReportsModel.GetList_Reports_RPTNotesConsumer(_uci);
                 NotesconsumerList = _ReportsModel.Get_NotesXConsumer(_uci);
+                // Reporte por visita: el consumer puede tener varias visitas y cada una debe
+                // imprimirse por separado, asi que si viene _date se filtra a esa unica visita
+                // en vez de imprimir todas juntas en el mismo PDF.
+                DateTime visitDate;
+                if (!string.IsNullOrEmpty(_date) && DateTime.TryParse(_date, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out visitDate))
+                {
+                    NotesconsumerList = NotesconsumerList.Where(n => n.Date == visitDate).ToList();
+                }
                 string TableNotes = "";
                 string TableService = "";
                 int _ContarService = 1;
@@ -1554,9 +1571,9 @@ namespace LEAP.Controllers
                     TableNotes += "</tr>";
                     _ContarService++;
                 }
-                if (_ContarService < 11)
+                if (_ContarService < 10)
                 {
-                    int CountReal = 11 - _ContarService;
+                    int CountReal = 10 - _ContarService;
                     for (int i = 0; i < CountReal; i++)
                     {
                         TableService += "<tr style='border: solid 1px black;'>";
@@ -1573,15 +1590,40 @@ namespace LEAP.Controllers
                 _htmlString = _htmlString.Replace("[[DatePrint]]", DateTime.Now.ToString("MM/dd/yyyy"));
                 string NameConsumer = "";
                 int contador_imagen = 0;
+                // TimesWk/ParentName/TotalHours del formulario impreso salen de las
+                // visitas reales (NotesconsumerList -> leap_api ReportController::notesByConsumer),
+                // no de consumerList (Get_Reports_RPTConsumer, que no trae esos
+                // datos) - antes salian siempre en blanco o con el dato fijo del
+                // Consumer en vez del ingresado en la visita.
+                var latestNote = NotesconsumerList.LastOrDefault();
+                // [[TotalHours]] no debe repetir el total historico de TODAS las visitas del
+                // consumer que trae Get_NotesXConsumer (asi lo calcula la API sobre la lista
+                // completa) - una vez filtrado a la(s) visita(s) de este reporte, se recalcula
+                // sumando solo lo que quedo en NotesconsumerList. Se deja como suma (no un
+                // valor fijo de una sola fila) por si en el futuro un reporte vuelve a incluir
+                // mas de una visita, igual que hacia antes.
+                int _totalHoursSum = 0;
+                foreach (var _n in NotesconsumerList)
+                {
+                    int _h;
+                    var _firstToken = (_n.Duration ?? "").Split(' ').FirstOrDefault();
+                    if (int.TryParse(_firstToken, out _h))
+                    {
+                        _totalHoursSum += _h;
+                    }
+                }
+                string _totalHoursText = NotesconsumerList.Count > 0
+                    ? _totalHoursSum + " " + (_totalHoursSum == 1 ? "hour" : "hours")
+                    : "";
                 foreach (var _Consumer in consumerList)
                 {
                     _htmlString = _htmlString.Replace("[[ConsumerName]]", _Consumer.ConsumerName);
                     _htmlString = _htmlString.Replace("[[RCenter]]", _Consumer.RegionalCenter);
-                    _htmlString = _htmlString.Replace("[[TimesWk]]", _Consumer.TimesxWeek);
+                    _htmlString = _htmlString.Replace("[[TimesWk]]", latestNote?.TimesxWeek ?? "");
                     _htmlString = _htmlString.Replace("[[SpecialistName]]", _Consumer.spe_FullName);
                     _htmlString = _htmlString.Replace("[[SpecialistSignature]]", _Consumer.spe_FullName);
-                    _htmlString = _htmlString.Replace("[[ParentName]]", _Consumer.ParentFullName);
-                    _htmlString = _htmlString.Replace("[[TotalHours]]", _Consumer.TotalHours);
+                    _htmlString = _htmlString.Replace("[[ParentName]]", latestNote?.PresentInSession ?? "");
+                    _htmlString = _htmlString.Replace("[[TotalHours]]", _totalHoursText);
                     NameConsumer = _Consumer.spe_FullName;
                     
                     if (_Consumer.c_image != "")
@@ -2180,7 +2222,19 @@ namespace LEAP.Controllers
                             {
 
                                 var valores2 = worksheet.Cell(_count, (j+2) + 1);
-                                valores2.Value = "";
+                                // Horas brindadas ese dia del mes (columna = dia j+1). Antes esta
+                                // columna quedaba siempre en blanco; ahora se llena con lo que
+                                // trae leap_api (centersByMonth) a partir de las visitas reales,
+                                // para que el SUMATORIA de la fila de mas abajo sume algo.
+                                int _dayHours;
+                                if (item.DayHours != null && item.DayHours.TryGetValue(j + 1, out _dayHours) && _dayHours > 0)
+                                {
+                                    valores2.Value = _dayHours;
+                                }
+                                else
+                                {
+                                    valores2.Value = "";
+                                }
                                 valores2.Style.Font.Bold = true;
                                 valores2.Style.Font.FontColor = XLColor.Black;
                                 valores2.Style.Fill.BackgroundColor = XLColor.LightGray;
@@ -2270,7 +2324,17 @@ namespace LEAP.Controllers
                         }
                     }
                     var footer3 = worksheet.Cell(TotalCeldasGlobal, 34);
-                    footer3.Value = "";
+                    // Fila TOTAL (justo debajo del ultimo consumer): suma los subtotales por
+                    // consumer de la columna AH (filas 4 a TotalCeldasGlobal-1, ya que los
+                    // consumers arrancan en la fila 4).
+                    if (TotalCeldasGlobal > 4)
+                    {
+                        footer3.FormulaA1 = "=SUM(AH4:AH" + (TotalCeldasGlobal - 1) + ")";
+                    }
+                    else
+                    {
+                        footer3.Value = "";
+                    }
                     footer3.Style.Font.Bold = true;
                     footer3.Style.Font.FontColor = XLColor.Black;
                     footer3.Style.Fill.BackgroundColor = XLColor.LightGreen;

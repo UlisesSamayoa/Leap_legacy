@@ -2429,6 +2429,150 @@ namespace LEAP.Controllers
                 return workStream;
             }
         }
+
+        // Reporte de visitas por CDS: mismo enfoque que CenterReport (grilla de
+        // dias del mes x consumer, con las horas brindadas cada dia), pero
+        // agrupado por CDS (specialist1) en vez de por Regional Center, y sin las
+        // columnas extra de ese reporte (MaxHours, bloque de especialistas, etc).
+        public FileStreamResult CDSVisitsReport(string cds, int month, int year)
+        {
+            var data = _ReportsModel._Rpt_Data_CDSVisitsByMonth(month, year, cds);
+            string nombreMes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
+            var reporte = Crear_RptCDSVisitsExcel(data, nombreMes, year.ToString());
+
+            return new FileStreamResult(reporte, "application/vnd.ms-excel")
+            {
+                FileDownloadName = "RPT_CDS_Visits.xls"
+            };
+        }
+
+        public MemoryStream Crear_RptCDSVisitsExcel(List<ReportsModel> _data, string month, string year)
+        {
+            MemoryStream workStream = new MemoryStream();
+            try
+            {
+                // Columnas: A = Customer, B..AF = dias 1-31, AG = total.
+                const int firstDayColumn = 2;
+                const int lastDayColumn = 32;
+                const int totalColumn = 33;
+                const int firstDataRow = 4;
+
+                var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Reporte");
+
+                var imagePath = Server.MapPath("~/Content/Images/logoN.png");
+                worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell(1, 1)).Scale(0.5);
+                worksheet.Row(1).Height = 50;
+                worksheet.Row(2).Height = 35;
+
+                var titulo = worksheet.Range(1, firstDayColumn, 1, totalColumn).Merge().Cell(1, 1);
+                titulo.Value = "CDS and Customer Visits by month: " + month;
+                StyleTitle(titulo, XLColor.Black, 14);
+
+                string cdsName = _data.Select(d => d.CDS_name).FirstOrDefault(n => !string.IsNullOrEmpty(n)) ?? "";
+                var cdsTitulo = worksheet.Range(2, firstDayColumn, 2, totalColumn).Merge().Cell(1, 1);
+                cdsTitulo.Value = cdsName;
+                StyleTitle(cdsTitulo, XLColor.Black, 14);
+
+                var customerHeader = worksheet.Cell(3, 1);
+                customerHeader.Value = "Customer";
+                StyleHeader(customerHeader);
+                worksheet.Column(1).Width = 30;
+                for (int day = 1; day <= 31; day++)
+                {
+                    var dayHeader = worksheet.Cell(3, firstDayColumn + day - 1);
+                    dayHeader.Value = day;
+                    StyleHeader(dayHeader);
+                    worksheet.Column(firstDayColumn + day - 1).Width = 5;
+                }
+                var totalHeader = worksheet.Cell(3, totalColumn);
+                totalHeader.Value = "total";
+                StyleHeader(totalHeader);
+                worksheet.Column(totalColumn).Width = 10;
+
+                int row = firstDataRow;
+                foreach (var item in _data)
+                {
+                    var nameCell = worksheet.Cell(row, 1);
+                    nameCell.Value = item.ConsumerName;
+                    StyleData(nameCell);
+
+                    for (int day = 1; day <= 31; day++)
+                    {
+                        var cell = worksheet.Cell(row, firstDayColumn + day - 1);
+                        int hours;
+                        if (item.DayHours != null && item.DayHours.TryGetValue(day, out hours) && hours > 0)
+                        {
+                            cell.Value = hours;
+                        }
+                        else
+                        {
+                            cell.Value = "";
+                        }
+                        StyleData(cell);
+                    }
+
+                    var rowTotal = worksheet.Cell(row, totalColumn);
+                    rowTotal.FormulaA1 = "=SUM(B" + row + ":AF" + row + ")";
+                    StyleData(rowTotal);
+                    row++;
+                }
+
+                int totalRow = row;
+                var totalLabel = worksheet.Range(totalRow, 1, totalRow, lastDayColumn).Merge().Cell(1, 1);
+                totalLabel.Value = "TOTAL";
+                StyleHeader(totalLabel);
+
+                var grandTotal = worksheet.Cell(totalRow, totalColumn);
+                if (totalRow > firstDataRow)
+                {
+                    grandTotal.FormulaA1 = "=SUM(AG" + firstDataRow + ":AG" + (totalRow - 1) + ")";
+                }
+                else
+                {
+                    grandTotal.Value = 0;
+                }
+                StyleHeader(grandTotal);
+
+                workbook.SaveAs(workStream);
+                workStream.Position = 0;
+            }
+            catch (Exception)
+            {
+                return workStream;
+            }
+            return workStream;
+        }
+
+        private static void StyleTitle(IXLCell cell, XLColor color, int fontSize)
+        {
+            cell.Style.Font.Bold = true;
+            cell.Style.Font.FontColor = color;
+            cell.Style.Font.FontSize = fontSize;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+        }
+
+        private static void StyleHeader(IXLCell cell)
+        {
+            cell.Style.Font.Bold = true;
+            cell.Style.Font.FontColor = XLColor.Black;
+            cell.Style.Fill.BackgroundColor = XLColor.LightGreen;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            cell.Style.Border.OutsideBorderColor = XLColor.Black;
+        }
+
+        private static void StyleData(IXLCell cell)
+        {
+            cell.Style.Font.FontColor = XLColor.Black;
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            cell.Style.Border.OutsideBorderColor = XLColor.Black;
+        }
+
         public FileResult CdsReport(string cds, int month, int year)
         {
             FileResult result = null;

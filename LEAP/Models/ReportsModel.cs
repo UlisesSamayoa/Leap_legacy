@@ -274,6 +274,24 @@ namespace LEAP.Models
             var sortedlist = list.OrderBy(x => x.ConsumerName).ToList();
             return sortedlist;
         }
+
+        // Igual que _Rpt_Data_CentersByMonth pero agrupado por CDS (specialist1) en
+        // vez de por Regional Center (leap_api ReportController::cdsVisitsByMonth) -
+        // mismo criterio de "activos hoy" (Archive=1) sin filtrar por mes.
+        public List<ReportsModel> _Rpt_Data_CDSVisitsByMonth(int month, int year, string _cds)
+        {
+            List<ReportsModel> list = new List<ReportsModel>();
+            try
+            {
+                list = ApiClient.Get<List<ReportsModel>>("reports/cds-visits-by-month?cds=" + _cds + "&month=" + month + "&year=" + year);
+            }
+            catch (Exception _error)
+            {
+                throw;
+            }
+            var sortedlist = list.OrderBy(x => x.ConsumerName).ToList();
+            return sortedlist;
+        }
         public List<ReportsModel> _NewConsumerXDate(DateTime _From, DateTime _To)
         {
             var productos = new List<ReportsModel>();

@@ -5,8 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Security;
 
 namespace LEAP.Data
 {
@@ -43,8 +41,7 @@ namespace LEAP.Data
         {
             get
             {
-                var identity = HttpContext.Current?.User?.Identity as FormsIdentity;
-                return identity?.Ticket?.UserData;
+                return AuthContext.Current?.Token;
             }
         }
 

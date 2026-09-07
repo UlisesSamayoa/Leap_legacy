@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [AdminOnly]
     public class LanguajesController : Controller
     {
         LanguajesModel _LanguajesModel = new LanguajesModel();

@@ -15,6 +15,12 @@ namespace LEAP.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Type_User { get; set; }
+
+        // La API devuelve la columna cruda "specialist_id" (snake_case, no la
+        // transforma) - sin el JsonProperty, Newtonsoft no la bindea a esta
+        // propiedad PascalCase al leer Get_UsersById.
+        [JsonProperty("specialist_id")]
+        public int? SpecialistId { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string UserC { get; set; }
         public DateTime? DateC { get; set; }
@@ -56,7 +62,7 @@ namespace LEAP.Models
         // "_Frase" era la clave en texto plano (con un Base64 sin efecto real
         // en el original) — ahora viaja tal cual por HTTPS y leap_api la
         // guarda hasheada con bcrypt, nunca en texto plano.
-        public bool AddUsers(string _Name, string _LastName, DateTime _DOB, string _UserName, string _Phone, string _Email, string _Type, string _Frase, string _User)
+        public bool AddUsers(string _Name, string _LastName, DateTime _DOB, string _UserName, string _Phone, string _Email, string _Type, string _Frase, string _User, int? _SpecialistId = null)
         {
             bool response = false;
             try
@@ -71,6 +77,7 @@ namespace LEAP.Models
                     Email = _Email,
                     Type_User = _Type,
                     password = _Frase,
+                    specialist_id = _SpecialistId,
                 });
                 response = true;
                 _log._logAction("Create User", "Create a new user, name:" + _Name, "AddUser", "UsersModel", _UserName);
@@ -83,7 +90,7 @@ namespace LEAP.Models
             return response;
         }
 
-        public bool UpdateUsers(string id, string _Name, string _LastName, DateTime _DOB, string _UserName, string _Phone, string _Email, string _Type, string _User)
+        public bool UpdateUsers(string id, string _Name, string _LastName, DateTime _DOB, string _UserName, string _Phone, string _Email, string _Type, string _User, int? _SpecialistId = null)
         {
             bool response = false;
             try
@@ -97,6 +104,7 @@ namespace LEAP.Models
                     Phone = _Phone,
                     Email = _Email,
                     Type_User = _Type,
+                    specialist_id = _SpecialistId,
                 });
                 response = true;
                 _log._logAction("Create User", "Create a new user, name:" + _Name, "AddUser", "UsersModel", _UserName);

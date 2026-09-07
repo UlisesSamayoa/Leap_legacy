@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [AdminOnly]
     public class SpecialistController : Controller
     {
         SpecialistModel _SpecialistModel = new SpecialistModel();

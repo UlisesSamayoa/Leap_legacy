@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using LEAP.Data;
 
 namespace LEAP
 {
@@ -34,6 +35,31 @@ namespace LEAP
             {
                 base.HandleUnauthorizedRequest(filterContext);
             }
+        }
+    }
+
+    // Veta el controller completo para un usuario Operador (Type_User = "2",
+    // ver AuthContext.IsOperador) — usado en UsersController/SpecialistController,
+    // que quedan reservados a admin. Corre despues de AjaxAwareAuthorizeAttribute,
+    // asi que el usuario ya esta autenticado cuando se evalua esto.
+    public class AdminOnlyAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (AuthContext.IsOperador)
+            {
+                if (filterContext.HttpContext.Request.IsAjaxRequest())
+                {
+                    filterContext.Result = new HttpStatusCodeResult(403);
+                }
+                else
+                {
+                    filterContext.Result = new RedirectResult("~/Home/Index");
+                }
+                return;
+            }
+
+            base.OnActionExecuting(filterContext);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [AdminOnly]
     public class UsersController : Controller
     {
         UsersModel _UsersModel = new UsersModel();
@@ -23,7 +24,7 @@ namespace LEAP.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool valid = _UsersModel.AddUsers(_Users.Name, _Users.LastName, _Users.DateOfBirth,_Users.UserName,_Users.Phone, _Users.Email,_Users.Type_User,_Users.Password,User.Identity.Name);
+                bool valid = _UsersModel.AddUsers(_Users.Name, _Users.LastName, _Users.DateOfBirth,_Users.UserName,_Users.Phone, _Users.Email,_Users.Type_User,_Users.Password,User.Identity.Name, _Users.SpecialistId);
                 if (valid)
                 {
                     return RedirectToAction("Index", "Users");
@@ -64,7 +65,7 @@ namespace LEAP.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UpdateUser(string id, UsersModel _Users)
         {
-            var valid = _UsersModel.UpdateUsers(id, _Users.Name, _Users.LastName, _Users.DateOfBirth,_Users.UserName, _Users.Phone, _Users.Email, _Users.Type_User, User.Identity.Name);
+            var valid = _UsersModel.UpdateUsers(id, _Users.Name, _Users.LastName, _Users.DateOfBirth,_Users.UserName, _Users.Phone, _Users.Email, _Users.Type_User, User.Identity.Name, _Users.SpecialistId);
             if (valid)
             {
                 return RedirectToAction("Index", "Users");

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [AdminOnly]
     public class ServiceCoordinatorController : Controller
     {
         ServiceCoordinatorModel _ServiceCModel = new ServiceCoordinatorModel();

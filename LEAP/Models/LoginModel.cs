@@ -12,14 +12,39 @@ namespace LEAP.Models
         public string username { get; set; }
         public string Pass_word { get; set; }
 
-        // Token que devuelve leap_api al loguearse — LoginController lo guarda
-        // en el FormsAuthenticationTicket para adjuntarlo en llamadas futuras.
-        public string ApiToken { get; private set; }
+        // Datos que LoginController guarda (serializados) en el
+        // FormsAuthenticationTicket para adjuntarlos/leerlos en llamadas
+        // futuras — token para ApiClient, Type_User/specialist para AuthContext.
+        public string TicketData { get; private set; }
 
         private class ApiLoginResponse
         {
             [JsonProperty("token")]
             public string Token { get; set; }
+
+            [JsonProperty("user")]
+            public ApiUserResponse User { get; set; }
+        }
+
+        private class ApiUserResponse
+        {
+            [JsonProperty("Type_User")]
+            public string TypeUser { get; set; }
+
+            [JsonProperty("specialist_id")]
+            public int? SpecialistId { get; set; }
+
+            [JsonProperty("specialist")]
+            public ApiSpecialistResponse Specialist { get; set; }
+        }
+
+        private class ApiSpecialistResponse
+        {
+            [JsonProperty("Name")]
+            public string Name { get; set; }
+
+            [JsonProperty("LastName")]
+            public string LastName { get; set; }
         }
 
         public bool ValidateLogin(string _user, string _pwd)
@@ -32,8 +57,21 @@ namespace LEAP.Models
                     password = _pwd,
                 }, token: null);
 
-                ApiToken = response?.Token;
-                return !string.IsNullOrEmpty(ApiToken);
+                if (string.IsNullOrEmpty(response?.Token))
+                {
+                    return false;
+                }
+
+                TicketData = JsonConvert.SerializeObject(new AuthTicketData
+                {
+                    Token = response.Token,
+                    TypeUser = response.User?.TypeUser,
+                    SpecialistId = response.User?.SpecialistId,
+                    SpecialistName = response.User?.Specialist != null
+                        ? (response.User.Specialist.Name + " " + response.User.Specialist.LastName).Trim()
+                        : null,
+                });
+                return true;
             }
             catch (ApiException)
             {

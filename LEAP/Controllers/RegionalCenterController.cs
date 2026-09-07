@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [AdminOnly]
     public class RegionalCenterController : Controller
     {
         RegionalCenterModel _RCenter_Model = new RegionalCenterModel();

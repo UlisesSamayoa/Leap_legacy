@@ -215,6 +215,8 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Data\ApplicationDbContext.cs" />
     <Compile Include="Data\ApiClient.cs" />
+    <Compile Include="Data\AuthContext.cs" />
+    <Compile Include="Data\AuthTicketData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

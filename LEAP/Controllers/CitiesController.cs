@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [AdminOnly]
     public class CitiesController : Controller
     {
         CitiesModel _CitiesModel = new CitiesModel();

@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims;
+@using LEAP.Data;
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,31 +74,37 @@
                         <i class="bi bi-person-vcard-fill fs-6"></i> Consumer R4A
                     </a>
                 </li>
-                <li class="active">
-                    <a href="@Url.Action("/Index","RegionalCenter")" class="nav_menu">
-                        <i class="bi bi-house-gear-fill fs-6"></i> RegionalCenter
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="@Url.Action("/Index","Languajes")" class="nav_menu">
-                        <i class="bi bi-translate fs-6"></i> Languages
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="@Url.Action("/Index","Cities")" class="nav_menu">
-                        <i class="bi bi-globe-americas fs-6"></i> Cities
-                    </a>
-                </li>
+                @if (!AuthContext.IsOperador)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("/Index","RegionalCenter")" class="nav_menu">
+                            <i class="bi bi-house-gear-fill fs-6"></i> RegionalCenter
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="@Url.Action("/Index","Languajes")" class="nav_menu">
+                            <i class="bi bi-translate fs-6"></i> Languages
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="@Url.Action("/Index","Cities")" class="nav_menu">
+                            <i class="bi bi-globe-americas fs-6"></i> Cities
+                        </a>
+                    </li>
+                }
                 <li class="active">
                     <a href="@Url.Action("/Index","Authorization")" class="nav_menu">
                         <i class="bi bi-person-fill-check fs-6"></i> Authorization
                     </a>
                 </li>
-                <li class="active">
-                    <a href="@Url.Action("/Index","ServiceCoordinator")" class="nav_menu">
-                        <i class="bi bi-journal-bookmark-fill fs-6"></i> Coordinators
-                    </a>
-                </li>
+                @if (!AuthContext.IsOperador)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("/Index","ServiceCoordinator")" class="nav_menu">
+                            <i class="bi bi-journal-bookmark-fill fs-6"></i> Coordinators
+                        </a>
+                    </li>
+                }
                 <li class="active">
                     <a href="@Url.Action("/Index","NotesxConsumer")" class="nav_menu">
                         <i class="bi bi-journal-bookmark-fill fs-6"></i> Notes x Consumer
@@ -113,21 +120,27 @@
                         <i class="bi bi-journal-album fs-6"></i>  Archived
                     </a>
                 </li>
-                <li class="active">
-                    <a href="@Url.Action("/Index","Specialist")" class="nav_menu">
-                        <i class="bi bi-person-vcard-fill fs-6"></i> Specialist
-                    </a>
-                </li>
+                @if (!AuthContext.IsOperador)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("/Index","Specialist")" class="nav_menu">
+                            <i class="bi bi-person-vcard-fill fs-6"></i> Specialist
+                        </a>
+                    </li>
+                }
                 <li class="active">
                     <a href="@Url.Action("/Index","EventType")" class="nav_menu">
                         <i class="bi bi-calendar2-range-fill fs-6"></i> EventType
                     </a>
                 </li>
-                <li class="active">
-                    <a href="@Url.Action("/Index","Users")" class="nav_menu">
-                        <i class="bi bi-people-fill fs-6"></i> Users
-                    </a>
-                </li>
+                @if (!AuthContext.IsOperador)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("/Index","Users")" class="nav_menu">
+                            <i class="bi bi-people-fill fs-6"></i> Users
+                        </a>
+                    </li>
+                }
                 <li class="active">
                     <a href="@Url.Action("/Logout","Login")" class="nav_menu">
                         <i class="bi bi-box-arrow-right fs-6"></i> Log out

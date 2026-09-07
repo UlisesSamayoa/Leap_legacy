@@ -26,10 +26,8 @@
 @if (Model != null)
 {
     <div class="card">
-        <form asp-action="Add" asp-controller="NotesxMaestro" method="post">
+        <div>
             <h5 class="card-header bg-dark text-white">Details NotesxMaestro</h5>
-
-            @Html.AntiForgeryToken()
 
             @if (ViewBag.VB_error != null)
             {
@@ -61,29 +59,28 @@
                             @Html.TextBoxFor(m => m.SpecialitName, new { @class = "form-control", placeholder = "SpecialitName input", required = "true", @readonly = "readonly" })
                         </div>
                     </div>
-                    @*Posible 2 o 3 en times, duration y total*@
-                    @*<div class="col-2">
-                            <div class="form-group">
-                                <label asp-for="TimesxWeek">TimesxWeek</label>
-                                @Html.TextBoxFor(m => m.TimesxWeek, new { @type = "text", @class = "form-control", placeholder = "TimesxWeek", required = "true", @readonly = "readonly" })
-                            </div>
-                        </div>*@
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label asp-for="TimesxWeek">Times/wk</label>
+                            @Html.TextBoxFor(m => m.TimesxWeek, new { @type = "text", @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
                     <div class="col-2">
                         <div class="form-group">
                             <label asp-for="Duration">Duration</label>
                             @Html.TextBoxFor(m => m.Duration, new { @type = "text", @class = "form-control", placeholder = "Duration", required = "true", @readonly = "readonly" })
                         </div>
                     </div>
-                    @*<div class="col-2">
-                            <div class="form-group">
-                                <label asp-for="TotalHours">TotalHours</label>
-                                @Html.TextBoxFor(m => m.TotalHours, new { @type = "text", @class = "form-control", placeholder = "TotalHours", required = "true", @readonly = "readonly" })
-                            </div>
-                        </div>*@
                     <div class="col-3">
                         <div class="form-group">
-                            <label asp-for="Date">Date</label>
-                            @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd HH:mm}", new { @type = "datetime-local", @class = "form-control", placeholder = "Date input", required = "true", @readonly = "readonly" })
+                            <label asp-for="Date">Arrival</label>
+                            @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd HH:mm}", new { @type = "datetime-local", @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label asp-for="DepartureDate">Departure</label>
+                            @Html.TextBoxFor(m => m.DepartureDate, "{0:yyyy-MM-dd HH:mm}", new { @type = "datetime-local", @class = "form-control", @readonly = "readonly" })
                         </div>
                     </div>
                     <div class="col-12">
@@ -98,13 +95,26 @@
                             @Html.TextAreaFor(m => m.Notes, new { @class = "expandable-textarea", placeholder = "Notes input", required = "true", @readonly = "readonly" })
                         </div>
                     </div>
+                    <div class="col-12">
+                        <label>Parent/guardian signature</label>
+                        <div>
+                            @if (!string.IsNullOrEmpty(Model.Signature))
+                            {
+                                <img src="@Model.Signature" alt="Signature" style="max-height:160px;border:1px solid #ccc;border-radius:7px;" />
+                            }
+                            else
+                            {
+                                <p class="text-muted">No signature captured.</p>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
                 <a href="@Url.Action("Index","NotesxMaestro")" class="btn btn-danger"><i class="bi bi-x-square-fill"></i> Cancel</a>
             </div>
 
-        </form>
+        </div>
     </div>
 }
 else

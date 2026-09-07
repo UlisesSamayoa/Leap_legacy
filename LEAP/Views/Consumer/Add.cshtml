@@ -454,9 +454,6 @@
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalConsumerNotes">
                         <i class="bi bi-database-fill-add"></i> Add Consumer Note
                     </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalTeacherNotes">
-                        <i class="bi bi-database-fill-add"></i> Add Teacher Note
-                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ModalAuthorization">
                         <i class="bi bi-database-fill-add"></i> Authorization
                     </button>
@@ -506,59 +503,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="ModalTeacherNotes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ModalTeacherNotesLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="ModalTeacherNotesLabel">Add Teacher Note</h5>
-                <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <br />
-                            <label class="form-check-label" for="TeacherSpecialist">Specialist</label>
-                            <select id="TeacherSpecialist" class="form-control">
-                                <option value="1">--------N/A-----------</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <br />
-                            <label class="form-check-label" for="TeacherDate">Date</label>
-                            <input type="date" class="form-control" id="TeacherDate" placeholder="Date" />
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <br />
-                            <label class="form-check-label" for="TeacherDuration">Duration</label>
-                            <input type="text" class="form-control" id="TeacherDuration" placeholder="Duration" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label class="form-check-label" for="TeacherPresentInSession">PresentInSession</label>
-                            <input type="text" class="form-control" id="TeacherPresentInSession" placeholder="PresentInSession" />
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label class="form-check-label" for="TeacherNote">Consumer Note</label>
-                            <textarea class="form-control" id="TeacherNote" asp-for="TeacherNote" placeholder="Teacher Notes" style="max-height:250px; min-height:200px;"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -747,7 +691,6 @@
                         var datos = data[i].split(",");
                         document.getElementById("cds").innerHTML += "<option value='"+datos[0]+"'>" + datos[1] + " " + datos[2] + "</option>";
                         document.getElementById("specialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
-                        document.getElementById("TeacherSpecialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
                         document.getElementById("therapist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
                         document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
 
@@ -908,34 +851,6 @@
         //CONSUMER NOTES
         var _ConsumerActive = $('#ConsumerActive').val();
         var _ConsumerNotes = $('#ConsumerNote').val();
-        //TEACHER NOTES
-        var _TeacherSpecialist = $('#TeacherSpecialist').val();
-        var _TeacherDate = $('#TeacherDate').val();
-        var _TeacherDuration = $('#TeacherDuration').val();
-        var _TeacherPresentInSession = $('#TeacherPresentInSession').val();
-        var _TeacherNote = $('#TeacherNote').val();
-
-        if (_TeacherNote != "") {
-            if (_TeacherSpecialist == 1) {
-                $('#NotesError').text("Select a Specialist in Teacher Notes")
-                return false;
-            } else {
-                if (_TeacherDate == "") {
-                    $('#NotesError').text("Select a Date in Teacher Notes")
-                    return false
-                } else {
-                    if (_TeacherDuration == "") {
-                        $('#NotesError').text("Select a Duration in Teacher Notes")
-                        return false
-                    } else {
-                        if (_TeacherPresentInSession == "") {
-                            $('#NotesError').text("Select a TeacherPresentInSession in Teacher Notes")
-                            return false
-                        }
-                    }
-                }
-            }
-        }
         // ________________________________________NUEVO
         var _AuthNumber = $('#AuthNumber').val();
         var _AuthFrom = $('#AuthFrom').val();
@@ -1004,7 +919,6 @@
                 _initEval: _initEval, _evaldueby: _evaldueby, _Report1: _Report1, _Report2: _Report2, _Report3: _Report3, _Report4: _Report4, _Report5: _Report5, _ReportClose: _ReportClose,
                 _Date: _Date, _ReferredBy: _ReferredBy, _evaluation: _evaluation, _TypeReporte: _TypeReporte, _RegionalID: _RegionalID, _ServiceCoordinator: _ServiceCoordinator,
                 _Archive: _Archive, _Type: _Type, _Action: _Action, _UserC: _UserC, _DateC: _DateC, _UserU: _UserU, _DateU: _DateU, _ConsumerActive: _ConsumerActive, _ConsumerNotes: _ConsumerNotes,
-                _TeacherSpecialist: _TeacherSpecialist, _TeacherDate: _TeacherDate, _TeacherDuration: _TeacherDuration, _TeacherPresentInSession: _TeacherPresentInSession, _TeacherNote: _TeacherNote,
                 // ________________________________________NUEVO
                 _AuthNumber: _AuthNumber, _AuthFrom: _AuthFrom, _AuthTo: _AuthTo, _OTPT: _OTPT, _terminationdate: _terminationdate , _state: state
 

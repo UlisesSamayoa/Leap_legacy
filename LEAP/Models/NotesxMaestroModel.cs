@@ -7,6 +7,12 @@ using System.Web.Mvc;
 
 namespace LEAP.Models
 {
+    // Alimenta el modulo "NotesXTeacher" (nombres de clase/vistas se dejan
+    // igual a proposito para no romper URLs/menus que el staff ya conoce),
+    // pero por debajo ahora habla contra "visit-reports" (leap_client), que
+    // reemplazo a la tabla legacy NotesxMaestro como fuente de esta pantalla
+    // y del reporte de notas por consumer. Creacion queda solo desde la app;
+    // aqui unicamente se puede Ver/Editar/Borrar.
     public class NotesxMaestroModel
     {
         public int? IDNotesxMaestro { get; set; }
@@ -16,9 +22,11 @@ namespace LEAP.Models
         public string RegionalName { get; set; }
         public string TimesxWeek { get; set; }
         public DateTime Date { get; set; }
+        public DateTime DepartureDate { get; set; }
         public string Duration { get; set; }
         public string PresentInSession { get; set; }
         public string Notes { get; set; }
+        public string Signature { get; set; }
         public int SpecialitID { get; set; }
         public string SpecialitName { get; set; }
         public string TotalHours { get; set; }
@@ -31,28 +39,48 @@ namespace LEAP.Models
         public List<SelectListItem> SelectOptions { get; set; }
         LogModel _log = new LogModel();
 
-        private class ApiNote
+        private class ApiVisit
         {
-            public int IDNotesxMaestro;
-            public string UCI;
-            public string PresentInSession;
-            public string Notes;
-            public int? SpecialitID;
-            public DateTime? DateC, DateU, Date;
-            public string UserC, UserU, Duration;
+            public int id;
+            public int specialist_id;
+            public DateTime? session_started_at, session_ended_at;
+            public int? duration_minutes;
+            public string present_in_session, times_per_week, notes, signature;
             public ApiConsumer consumer;
             public ApiSpecialist specialist;
         }
-        private class ApiConsumer { public string Name, LastName; public int RegionalID; }
+        private class ApiConsumer { public string UCI, Name, LastName; public int RegionalID; }
         private class ApiSpecialist { public string Name, LastName; }
 
-        // Replica SP_NotesxMaestro_AllData (join Consumer+Specialist+RegionalCenter).
+        private static string FormatDuration(int? minutes) => minutes.HasValue ? minutes.Value + " min" : "";
+
+        private static NotesxMaestroModel Map(ApiVisit n, string regionalName = null)
+        {
+            return new NotesxMaestroModel
+            {
+                IDNotesxMaestro = n.id,
+                UCI = n.consumer?.UCI,
+                ConsumerName = n.consumer != null ? n.consumer.Name + " " + n.consumer.LastName : "",
+                RegionalName = regionalName,
+                Date = n.session_started_at ?? default(DateTime),
+                DepartureDate = n.session_ended_at ?? default(DateTime),
+                Duration = FormatDuration(n.duration_minutes),
+                PresentInSession = n.present_in_session,
+                TimesxWeek = n.times_per_week,
+                Notes = n.notes,
+                Signature = n.signature,
+                SpecialitID = n.specialist_id,
+                SpecialitName = n.specialist != null ? n.specialist.Name + " " + n.specialist.LastName : "",
+            };
+        }
+
+        // Replica (con otra fuente) SP_NotesxMaestro_AllData.
         public List<NotesxMaestroModel> Get_NotesxMaestro()
         {
             var _NotesxMaestro_Response = new List<NotesxMaestroModel>();
             try
             {
-                var raw = ApiClient.Get<List<ApiNote>>("notes-x-maestros");
+                var raw = ApiClient.Get<List<ApiVisit>>("visit-reports");
                 var centers = ApiClient.Get<List<RegionalCenterModel>>("regional-centers");
                 var centerNames = centers.ToDictionary(c => c.IDRegionalCenter, c => c.RegionalCenter);
 
@@ -63,19 +91,7 @@ namespace LEAP.Models
                     {
                         centerNames.TryGetValue(n.consumer.RegionalID, out regionalName);
                     }
-                    _NotesxMaestro_Response.Add(new NotesxMaestroModel
-                    {
-                        IDNotesxMaestro = n.IDNotesxMaestro,
-                        UCI = n.UCI,
-                        ConsumerName = n.consumer != null ? n.consumer.Name + " " + n.consumer.LastName : "",
-                        RegionalName = regionalName,
-                        Date = n.Date ?? default(DateTime),
-                        Duration = n.Duration,
-                        PresentInSession = n.PresentInSession,
-                        Notes = n.Notes,
-                        SpecialitID = n.SpecialitID ?? 0,
-                        SpecialitName = n.specialist != null ? n.specialist.Name + " " + n.specialist.LastName : "",
-                    });
+                    _NotesxMaestro_Response.Add(Map(n, regionalName));
                 }
             }
             catch (Exception)
@@ -90,16 +106,8 @@ namespace LEAP.Models
             var _NotesxMaestro_Response = new NotesxMaestroModel();
             try
             {
-                var n = ApiClient.Get<ApiNote>("notes-x-maestros/" + _NotesxMaestro);
-                _NotesxMaestro_Response.IDNotesxMaestro = n.IDNotesxMaestro;
-                _NotesxMaestro_Response.UCI = n.UCI;
-                _NotesxMaestro_Response.ConsumerName = n.consumer != null ? n.consumer.Name + " " + n.consumer.LastName : "";
-                _NotesxMaestro_Response.Date = n.Date ?? default(DateTime);
-                _NotesxMaestro_Response.Duration = n.Duration;
-                _NotesxMaestro_Response.PresentInSession = n.PresentInSession;
-                _NotesxMaestro_Response.Notes = n.Notes;
-                _NotesxMaestro_Response.SpecialitID = n.SpecialitID ?? 0;
-                _NotesxMaestro_Response.SpecialitName = n.specialist != null ? n.specialist.Name + " " + n.specialist.LastName : "";
+                var n = ApiClient.Get<ApiVisit>("visit-reports/" + _NotesxMaestro);
+                _NotesxMaestro_Response = Map(n);
                 _NotesxMaestro_Response._ErrorCode = false;
             }
             catch (Exception)
@@ -109,27 +117,15 @@ namespace LEAP.Models
             return _NotesxMaestro_Response;
         }
 
-        public List<NotesxMaestroModel> Get_NotesxMaestro_ByIDList(int _NotesxMaestro)
+        public List<NotesxMaestroModel> Get_NotesxMaestro_ByIDList(int _IDConsumer)
         {
             var _NotesxConsumer_Response = new List<NotesxMaestroModel>();
             try
             {
-                var consumer = ApiClient.Get<ConsumerModel>("consumers/" + _NotesxMaestro);
-                var raw = ApiClient.Get<List<ApiNote>>("notes-x-maestros?uci=" + Uri.EscapeDataString(consumer.UCI ?? ""));
+                var raw = ApiClient.Get<List<ApiVisit>>("visit-reports?consumer_id=" + _IDConsumer);
                 foreach (var n in raw)
                 {
-                    _NotesxConsumer_Response.Add(new NotesxMaestroModel
-                    {
-                        IDNotesxMaestro = n.IDNotesxMaestro,
-                        UCI = n.UCI,
-                        ConsumerName = n.consumer != null ? n.consumer.Name + " " + n.consumer.LastName : "",
-                        Date = n.Date ?? default(DateTime),
-                        Duration = n.Duration,
-                        PresentInSession = n.PresentInSession,
-                        Notes = n.Notes,
-                        SpecialitID = n.SpecialitID ?? 0,
-                        SpecialitName = n.specialist != null ? n.specialist.Name + " " + n.specialist.LastName : "",
-                    });
+                    _NotesxConsumer_Response.Add(Map(n));
                 }
             }
             catch (Exception)
@@ -139,47 +135,22 @@ namespace LEAP.Models
             return _NotesxConsumer_Response;
         }
 
-        public bool AddNotesxMaestro(string _UCI, int _SpecialitID, DateTime? _Date, string _Duration, string _PresentInSession, string _Notes, string _UserName)
+        public bool UpdateNotesxMaestro(string _ID, DateTime _SessionStartedAt, DateTime _SessionEndedAt, string _PresentInSession, string _TimesxWeek, string _Notes, string _Signature, string _UserName)
         {
             bool response = false;
             try
             {
-                ApiClient.Post<object>("notes-x-maestros", new
+                ApiClient.Put<object>("visit-reports/" + _ID, new
                 {
-                    UCI = _UCI,
-                    SpecialitID = _SpecialitID,
-                    Date = _Date,
-                    Duration = _Duration,
-                    PresentInSession = _PresentInSession,
-                    Notes = _Notes,
+                    session_started_at = _SessionStartedAt,
+                    session_ended_at = _SessionEndedAt,
+                    present_in_session = _PresentInSession,
+                    times_per_week = _TimesxWeek,
+                    notes = _Notes,
+                    signature = _Signature,
                 });
                 response = true;
-                _log._logAction("Create NotesxMaestro", "Create a new NotesxMaestro, UCI:" + _UCI, "AddNotesxMaestro", "NotesxMaestroModel", _UserName);
-            }
-            catch (Exception _error)
-            {
-                response = false;
-                _log._logError(_error.Message, _error.StackTrace, "AddNotesxMaestro", "NotesxMaestroModel", _UserName);
-            }
-            return response;
-        }
-
-        public bool UpdateNotesxMaestro(string _IDNotesxMaestro, string _UCI, int _SpecialitID, string _Duration, DateTime _Date, string _PresentInSession, string _Notes, string _UserName)
-        {
-            bool response = false;
-            try
-            {
-                ApiClient.Put<object>("notes-x-maestros/" + _IDNotesxMaestro, new
-                {
-                    UCI = _UCI,
-                    SpecialitID = _SpecialitID,
-                    Date = _Date,
-                    Duration = _Duration,
-                    PresentInSession = _PresentInSession,
-                    Notes = _Notes,
-                });
-                response = true;
-                _log._logAction("Update NotesxMaestro", "Update NotesxMaestro, ID:" + _IDNotesxMaestro, "UpdateNotesxMaestro", "NotesxMaestroModel", _UserName);
+                _log._logAction("Update VisitReport", "Update VisitReport (NotesXTeacher), ID:" + _ID, "UpdateNotesxMaestro", "NotesxMaestroModel", _UserName);
             }
             catch (Exception _error)
             {
@@ -194,9 +165,9 @@ namespace LEAP.Models
             bool response = false;
             try
             {
-                ApiClient.Delete("notes-x-maestros/" + _IDNotesxMaestro);
+                ApiClient.Delete("visit-reports/" + _IDNotesxMaestro);
                 response = true;
-                _log._logAction("Delete NotesxMaestro", "Delete NotesxMaestro, id:" + _IDNotesxMaestro, "DeleteNotesxMaestro", "NotesxMaestroModel", _UserName);
+                _log._logAction("Delete VisitReport", "Delete VisitReport (NotesXTeacher), id:" + _IDNotesxMaestro, "DeleteNotesxMaestro", "NotesxMaestroModel", _UserName);
             }
             catch (Exception _error)
             {

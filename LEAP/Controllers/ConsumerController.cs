@@ -23,7 +23,6 @@ namespace LEAP.Controllers
         SpecialistModel _specialist = new SpecialistModel();
         LanguajesModel _lang = new LanguajesModel();
         NotesxConsumerModel _note_c = new NotesxConsumerModel();
-        NotesxMaestroModel _note_t = new NotesxMaestroModel();
         AuthorizationModel _Auth = new AuthorizationModel();
         ServiceCoordinatorModel _service = new ServiceCoordinatorModel();
         //private ApplicationDbContext db = new ApplicationDbContext();
@@ -53,7 +52,6 @@ namespace LEAP.Controllers
         DateTime _initEval, DateTime _evaldueby, DateTime _Report1, DateTime _Report2, DateTime _Report3, DateTime _Report4, DateTime _Report5, DateTime _ReportClose,
         DateTime _Date, int _ReferredBy, string _evaluation, string _TypeReporte, int _RegionalID, string _ServiceCoordinator,
         int _Archive, string _Type, int _Action, string _UserC, DateTime _DateC, string _UserU, DateTime _DateU, bool _ConsumerActive, string _ConsumerNotes,
-        string _TeacherSpecialist, DateTime? _TeacherDate, string _TeacherDuration, string _TeacherPresentInSession, string _TeacherNote,
         int? _AuthNumber, DateTime? _AuthFrom, DateTime? _AuthTo, bool _OTPT, DateTime _terminationdate, string _state)
         {
             string salida = "";
@@ -74,14 +72,6 @@ namespace LEAP.Controllers
                 else
                 {
                     _note_c.AddNotesxConsumer(_UCI, _ConsumerNotes, Convert.ToBoolean(_ConsumerActive), _UserC);
-                }
-                if (_TeacherNote == "")
-                {
-
-                }
-                else
-                {
-                    _note_t.AddNotesxMaestro(_UCI, Convert.ToInt32(_TeacherSpecialist), _TeacherDate, _TeacherDuration, _TeacherPresentInSession, _TeacherNote, _UserC);
                 }
                 if (_AuthNumber == 0)
                 {

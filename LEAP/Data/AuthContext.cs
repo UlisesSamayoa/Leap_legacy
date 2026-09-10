@@ -36,9 +36,23 @@ namespace LEAP.Data
             }
         }
 
-        public static bool IsOperador
+        // Type_User: "1" Admin (acceso total, incluida gestion de Users), "3"
+        // Operador (acceso total EXCEPTO gestionar Users), "2" CDS (solo su
+        // propia data). Cualquier otro valor (legacy libre como "Admin"/"Staff"
+        // o vacio) se trata como Admin - mismo criterio de leap_api (User.php).
+        public static bool IsCds
         {
             get { return Current?.TypeUser == "2"; }
+        }
+
+        public static bool IsOperador
+        {
+            get { return Current?.TypeUser == "3"; }
+        }
+
+        public static bool IsAdmin
+        {
+            get { return !IsCds && !IsOperador; }
         }
     }
 }

@@ -74,7 +74,7 @@
                         <i class="bi bi-person-vcard-fill fs-6"></i> Consumer R4A
                     </a>
                 </li>
-                @if (!AuthContext.IsOperador)
+                @if (!AuthContext.IsCds)
                 {
                     <li class="active">
                         <a href="@Url.Action("/Index","RegionalCenter")" class="nav_menu">
@@ -97,7 +97,7 @@
                         <i class="bi bi-person-fill-check fs-6"></i> Authorization
                     </a>
                 </li>
-                @if (!AuthContext.IsOperador)
+                @if (!AuthContext.IsCds)
                 {
                     <li class="active">
                         <a href="@Url.Action("/Index","ServiceCoordinator")" class="nav_menu">
@@ -105,11 +105,14 @@
                         </a>
                     </li>
                 }
-                <li class="active">
-                    <a href="@Url.Action("/Index","NotesxConsumer")" class="nav_menu">
-                        <i class="bi bi-journal-bookmark-fill fs-6"></i> Notes x Consumer
-                    </a>
-                </li>
+                @if (!AuthContext.IsCds)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("/Index","NotesxConsumer")" class="nav_menu">
+                            <i class="bi bi-journal-bookmark-fill fs-6"></i> Notes x Consumer
+                        </a>
+                    </li>
+                }
                 <li class="active">
                     <a href="@Url.Action("/Index","notesxmaestro")" class="nav_menu">
                         <i class="bi bi-journal-bookmark-fill fs-6"></i> Notes x Teacher
@@ -120,7 +123,7 @@
                         <i class="bi bi-journal-album fs-6"></i>  Archived
                     </a>
                 </li>
-                @if (!AuthContext.IsOperador)
+                @if (!AuthContext.IsCds)
                 {
                     <li class="active">
                         <a href="@Url.Action("/Index","Specialist")" class="nav_menu">
@@ -133,7 +136,7 @@
                         <i class="bi bi-calendar2-range-fill fs-6"></i> EventType
                     </a>
                 </li>
-                @if (!AuthContext.IsOperador)
+                @if (AuthContext.IsAdmin)
                 {
                     <li class="active">
                         <a href="@Url.Action("/Index","Users")" class="nav_menu">

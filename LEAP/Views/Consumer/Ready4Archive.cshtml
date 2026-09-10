@@ -12,7 +12,10 @@
     }
 </style>
 <div class="container">
-    <a href='@Url.Action("Archall","consumer")' class="btn btn-danger" onclick="archived();">Archive all</a>
+    @if (LEAP.Data.AuthContext.IsAdmin)
+    {
+        <a href='@Url.Action("Archall","consumer")' class="btn btn-danger" onclick="archived();">Archive all</a>
+    }
     <div class="card">
         <h5 class="card-header bg-dark text-white">Consumer</h5>
         <div class="card-body">

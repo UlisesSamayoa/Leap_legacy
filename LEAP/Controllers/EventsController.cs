@@ -17,6 +17,7 @@ namespace LEAP.Controllers
             List<EventsModel> List_Event = _EventModel.Get_Events();
             return View(List_Event);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             List<EventTypeModel> _notes = _EventTypeModel.Get_EventType().ToList();
@@ -34,6 +35,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(EventsModel _Event)
         {
             if (ModelState.IsValid)
@@ -53,6 +55,7 @@ namespace LEAP.Controllers
                 return View();
             }
         }
+        [AdminOnly]
         public ActionResult Update(int id, bool? error)
         {
             List<EventTypeModel> _notes = _EventTypeModel.Get_EventType().ToList();
@@ -72,6 +75,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(string id, string Title, DateTime DateEvent, string Description, int IDType)
         {
             bool valid = _EventModel.UpdateEvent(id,Title,DateEvent,Description,IDType, User.Identity.Name);
@@ -85,6 +89,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_Event = _EventModel.Get_Events_ByID(id);
@@ -92,6 +97,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _EventModel.DeleteEvent(id, User.Identity.Name);

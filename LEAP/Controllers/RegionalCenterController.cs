@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
-    [AdminOnly]
+    [NotCdsOnly]
     public class RegionalCenterController : Controller
     {
         RegionalCenterModel _RCenter_Model = new RegionalCenterModel();
@@ -17,12 +17,14 @@ namespace LEAP.Controllers
             List<RegionalCenterModel> List_RCenter = _RCenter_Model.Get_RegionalCenter();
             return View(List_RCenter);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(RegionalCenterModel _RCenter)
         {
             if (ModelState.IsValid)
@@ -43,6 +45,7 @@ namespace LEAP.Controllers
             }
         }
        
+        [AdminOnly]
         public ActionResult Update(int id)
         {
             var List_RCenter = _RCenter_Model.Get_RegionalCenter_ByID(id);
@@ -50,6 +53,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(string id, string RegionalCenter, string Phone, string Address, string City, string State, string ZipCode, string Ext)
         {
             var valid = _RCenter_Model.UpdateRegionalCenter(id,RegionalCenter, Phone, Address, City, State, ZipCode, Ext, User.Identity.Name);
@@ -62,6 +66,7 @@ namespace LEAP.Controllers
                 return View();
             }
         }
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_RCenter = _RCenter_Model.Get_RegionalCenter_ByID(id);
@@ -69,6 +74,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _RCenter_Model.DeleteRegionalCenter(id,User.Identity.Name);

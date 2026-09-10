@@ -7,9 +7,12 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <a href="@Url.Action("Add","ServiceCoordinator")" class="btn btn-success text-white">
-                    <i class="bi bi-database-fill-add"></i> New
-                </a>
+                @if (LEAP.Data.AuthContext.IsAdmin)
+                {
+                    <a href="@Url.Action("Add","ServiceCoordinator")" class="btn btn-success text-white">
+                        <i class="bi bi-database-fill-add"></i> New
+                    </a>
+                }
                 <hr />
                 <table id="table_languajes" class="table table-hover" style="width:100%">
                     <thead class="thead-dark">
@@ -33,10 +36,16 @@
                                     <td>@service.NameC</td>
                                     <td>@service.Tel</td>
                                     <td>
-                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","ServiceCoordinator", new { id = service.IDServiceC })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-primary" href="@Url.Action("Update","ServiceCoordinator", new { id = service.IDServiceC })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        }
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","ServiceCoordinator", new { id = service.IDServiceC })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-danger" href="@Url.Action("Delete","ServiceCoordinator", new { id = service.IDServiceC })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        }
                                     </td>
                                 </tr>
                             }

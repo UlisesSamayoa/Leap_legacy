@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
-    [AdminOnly]
+    [NotCdsOnly]
     public class ServiceCoordinatorController : Controller
     {
         ServiceCoordinatorModel _ServiceCModel = new ServiceCoordinatorModel();
@@ -17,6 +17,7 @@ namespace LEAP.Controllers
             List<ServiceCoordinatorModel> List_servicesC = _ServiceCModel.Get_ServiceC();
             return View(List_servicesC);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             return View();
@@ -38,6 +39,7 @@ namespace LEAP.Controllers
             return salida;
 
         }
+        [AdminOnly]
         public ActionResult Update(int id)
         {
             var List_service = _ServiceCModel.Get_Services_ByID(id);
@@ -46,6 +48,7 @@ namespace LEAP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(int id, string NameC, string Tel, int Regional)
         {
             var valid = _ServiceCModel.UpdateS(id, NameC, Tel, Regional, User.Identity.Name);
@@ -59,6 +62,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult insertS(int regional, string sc, string tel)
         {
             var valid = _ServiceCModel.Create(regional, sc, tel);
@@ -72,6 +76,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_service = _ServiceCModel.Get_Services_ByID(id);
@@ -80,6 +85,7 @@ namespace LEAP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _ServiceCModel.DeleteServiceC(Convert.ToInt32(id), User.Identity.Name);

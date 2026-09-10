@@ -30,6 +30,7 @@ namespace LEAP.Controllers
         // Creacion retirada: una visita nueva solo se crea desde leap_client
         // (captura llegada/salida exactas y firma, que este modulo no reproduce).
         // Aqui solo queda Ver/Editar/Borrar.
+        [AdminOnly]
         public ActionResult Update(int id, int type, bool? r, bool? error)
         {
             var List_NotesC = _NotesConsumerModel.Get_NotesxMaestro_ByID(id);
@@ -42,9 +43,14 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update(string id, DateTime SessionStartedAt, DateTime SessionEndedAt, string PresentInSession, string TimesxWeek, string Notes, string Signature, int type)
+        [AdminOnly]
+        public ActionResult Update(string id, DateTime Date, DateTime DepartureDate, string PresentInSession, string TimesxWeek, string Notes, string Signature, int type)
         {
-            bool valid = _NotesConsumerModel.UpdateNotesxMaestro(id, SessionStartedAt, SessionEndedAt, PresentInSession, TimesxWeek, Notes, Signature, User.Identity.Name);
+            // Los parametros deben llamarse igual que los campos del form en
+            // Update.cshtml (Date/DepartureDate, ver NotesxMaestroModel) - antes se
+            // llamaban SessionStartedAt/SessionEndedAt y el model binder nunca
+            // encontraba esos valores (DateTime no nullable => 500 al editar).
+            bool valid = _NotesConsumerModel.UpdateNotesxMaestro(id, Date, DepartureDate, PresentInSession, TimesxWeek, Notes, Signature, User.Identity.Name);
             if (valid)
             {
                 if (type == 0)
@@ -63,6 +69,7 @@ namespace LEAP.Controllers
             }
 
         }
+        [AdminOnly]
         public ActionResult Delete(int id, int type, bool? r)
         {
             var List_NotesC = _NotesConsumerModel.Get_NotesxMaestro_ByID(id);
@@ -75,6 +82,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id, int type)
         {
             var valid = _NotesConsumerModel.DeleteNotesxMaestro(id, User.Identity.Name);

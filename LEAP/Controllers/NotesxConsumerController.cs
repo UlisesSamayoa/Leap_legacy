@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
+    [NotCdsOnly]
     public class NotesxConsumerController : Controller
     {
         NotesxConsumerModel _NotesConsumerModel = new NotesxConsumerModel();
@@ -31,6 +32,7 @@ namespace LEAP.Controllers
 
             return Json(productos, JsonRequestBehavior.AllowGet);
         }
+        [AdminOnly]
         public ActionResult Add(bool? error)
         {
             if (error == true)
@@ -55,6 +57,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(NotesxConsumerModel _NotesC)
         {
             if (ModelState.IsValid)
@@ -84,6 +87,7 @@ namespace LEAP.Controllers
             }
         }
         [HttpPost]
+        [AdminOnly]
         public string AddFromConsumer(string _uci,bool _ConsumerActive, string _ConsumerNotes)
         {
             if (ModelState.IsValid)
@@ -112,6 +116,7 @@ namespace LEAP.Controllers
                 return "0";
             }
         }
+        [AdminOnly]
         public ActionResult Update(int id,int type, bool? r, bool? error)
         {
             if (error == true)
@@ -139,6 +144,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(string id, string UCI, string Notes, bool Active, int type)
         {
             bool validActive = _NotesConsumerModel.ValidarNotesConsumerActive(Convert.ToInt32(id),UCI, Active, User.Identity.Name);
@@ -167,6 +173,7 @@ namespace LEAP.Controllers
             }
             }
         }
+        [AdminOnly]
         public ActionResult Delete(int id, int type, bool? r)
         {
             var List_NotesC = _NotesConsumerModel.Get_NotesxConsumer_ByID(id);
@@ -179,6 +186,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id, int type)
         {
             var valid = _NotesConsumerModel.DeleteNotesxConsumer(id, User.Identity.Name);

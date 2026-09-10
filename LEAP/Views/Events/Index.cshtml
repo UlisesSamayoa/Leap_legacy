@@ -9,9 +9,12 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <a href="@Url.Action("Add","Events")" class="btn btn-success text-white">
-                    <i class="bi bi-database-fill-add"></i> New
-                </a>
+                @if (LEAP.Data.AuthContext.IsAdmin)
+                {
+                    <a href="@Url.Action("Add","Events")" class="btn btn-success text-white">
+                        <i class="bi bi-database-fill-add"></i> New
+                    </a>
+                }
                 <hr />
                 <table id="table_Events" class="table table-hover" style="width:100%">
                     <thead class="thead-dark">
@@ -38,10 +41,16 @@
                                         <a class="btn btn-outline-success" href="@Url.Action("Details","Events", new { id = Events.IDEvents })"><i class="bi bi-eye-fill"></i> See_more</a>
                                     </td>*@
                                     <td>
-                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","Events", new { id = Event.IDEvent })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-primary" href="@Url.Action("Update","Events", new { id = Event.IDEvent })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        }
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","Events", new { id = Event.IDEvent })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-danger" href="@Url.Action("Delete","Events", new { id = Event.IDEvent })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        }
                                     </td>
                                 </tr>
                             }

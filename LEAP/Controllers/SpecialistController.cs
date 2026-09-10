@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
-    [AdminOnly]
+    [NotCdsOnly]
     public class SpecialistController : Controller
     {
         SpecialistModel _SpecialistModel = new SpecialistModel();
@@ -16,12 +16,14 @@ namespace LEAP.Controllers
             List<SpecialistModel> List_Specialist = _SpecialistModel.Get_Specialist();
             return View(List_Specialist);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(SpecialistModel _Specialist)
         {
             if (ModelState.IsValid)
@@ -42,6 +44,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult Update(int id)
         {
             var List_Specialist = _SpecialistModel.Get_Specialist_ByID(id);
@@ -49,6 +52,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(string id, string Name, string LastName, string Phone, string Email, string Address, string City, string State, string ZipCode, string HourlyRate, string Specialty)
         {
             var valid = _SpecialistModel.UpdateSpecialist(id, Name, LastName, Phone, Email, Address, City, State, ZipCode, HourlyRate, Specialty, User.Identity.Name);
@@ -61,6 +65,7 @@ namespace LEAP.Controllers
                 return View();
             }
         }
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_Specialist = _SpecialistModel.Get_Specialist_ByID(id);
@@ -68,6 +73,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _SpecialistModel.DeleteSpecialist(id, User.Identity.Name);

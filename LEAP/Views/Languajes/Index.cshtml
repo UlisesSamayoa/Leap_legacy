@@ -7,9 +7,12 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <a href="@Url.Action("Add","Languajes")" class="btn btn-success text-white">
-                    <i class="bi bi-database-fill-add"></i> New
-                </a>
+                @if (LEAP.Data.AuthContext.IsAdmin)
+                {
+                    <a href="@Url.Action("Add","Languajes")" class="btn btn-success text-white">
+                        <i class="bi bi-database-fill-add"></i> New
+                    </a>
+                }
                 <hr />
                 <table id="table_languages" class="table table-hover" style="width:100%">
                     <thead class="thead-dark">
@@ -30,10 +33,16 @@
                                     <td>@Languaje.Languaje</td>
                                     <td>@Languaje.Notes</td>
                                     <td>
-                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","Languajes", new { id = Languaje.IDLanguaje })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-primary" href="@Url.Action("Update","Languajes", new { id = Languaje.IDLanguaje })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        }
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","Languajes", new { id = Languaje.IDLanguaje })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-danger" href="@Url.Action("Delete","Languajes", new { id = Languaje.IDLanguaje })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        }
                                     </td>
                                 </tr>
                             }

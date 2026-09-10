@@ -38,24 +38,47 @@ namespace LEAP
         }
     }
 
-    // Veta el controller completo para un usuario Operador (Type_User = "2",
-    // ver AuthContext.IsOperador) — usado en UsersController/SpecialistController,
-    // que quedan reservados a admin. Corre despues de AjaxAwareAuthorizeAttribute,
-    // asi que el usuario ya esta autenticado cuando se evalua esto.
+    // Veta el controller completo salvo para Admin - ni Operador ni CDS pueden
+    // entrar (usado en UsersController, gestionar cuentas queda exclusivo de
+    // Admin). Corre despues de AjaxAwareAuthorizeAttribute, asi que el usuario
+    // ya esta autenticado cuando se evalua esto.
     public class AdminOnlyAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (AuthContext.IsOperador)
+            if (!AuthContext.IsAdmin)
             {
-                if (filterContext.HttpContext.Request.IsAjaxRequest())
-                {
-                    filterContext.Result = new HttpStatusCodeResult(403);
-                }
-                else
-                {
-                    filterContext.Result = new RedirectResult("~/Home/Index");
-                }
+                DenyAccess(filterContext);
+                return;
+            }
+
+            base.OnActionExecuting(filterContext);
+        }
+
+        internal static void DenyAccess(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Request.IsAjaxRequest())
+            {
+                filterContext.Result = new HttpStatusCodeResult(403);
+            }
+            else
+            {
+                filterContext.Result = new RedirectResult("~/Home/Index");
+            }
+        }
+    }
+
+    // Veta el controller completo solo para CDS - Admin y Operador si entran
+    // (usado en Specialist, RegionalCenter, Languajes, Cities,
+    // ServiceCoordinator: catalogos/operativo que Operador si puede
+    // administrar, a diferencia de Users que queda solo para Admin).
+    public class NotCdsOnlyAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (AuthContext.IsCds)
+            {
+                AdminOnlyAttribute.DenyAccess(filterContext);
                 return;
             }
 

@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace LEAP.Controllers
 {
-    [AdminOnly]
+    [NotCdsOnly]
     public class CitiesController : Controller
     {
         CitiesModel _CitiesModel = new CitiesModel();
@@ -16,12 +16,14 @@ namespace LEAP.Controllers
             List<CitiesModel> List_Cities = _CitiesModel.Get_Cities();
             return View(List_Cities);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(CitiesModel _City)
         {
             if (ModelState.IsValid)
@@ -41,6 +43,7 @@ namespace LEAP.Controllers
                 return View();
             }
         }
+        [AdminOnly]
         public ActionResult Update(int id)
         {
             var List_Cities = _CitiesModel.Get_Cities_ByID(id);
@@ -48,6 +51,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(string id, string City, string State)
         {
             var valid = _CitiesModel.UpdateCity(id, City, State, User.Identity.Name);
@@ -60,6 +64,7 @@ namespace LEAP.Controllers
                 return View();
             }
         }
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_Cities = _CitiesModel.Get_Cities_ByID(id);
@@ -67,6 +72,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _CitiesModel.DeleteCity(id, User.Identity.Name);

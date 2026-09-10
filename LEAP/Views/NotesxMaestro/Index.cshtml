@@ -40,10 +40,16 @@
                                 <a class="btn btn-outline-success" href="@Url.Action("Details","NotesxMaestro", new { id = NotesMaestro.IDNotesxMaestro, type = 0 })"><i class="bi bi-eye-fill"></i> See_More</a>
                             </td>
                             <td>
-                                <a class="btn btn-outline-primary" href="@Url.Action("Update","NotesxMaestro", new { id = NotesMaestro.IDNotesxMaestro, type = 0 })"><i class="bi bi-pencil-square"></i> Update</a>
+                                @if (LEAP.Data.AuthContext.IsAdmin)
+                                {
+                                    <a class="btn btn-outline-primary" href="@Url.Action("Update","NotesxMaestro", new { id = NotesMaestro.IDNotesxMaestro, type = 0 })"><i class="bi bi-pencil-square"></i> Update</a>
+                                }
                             </td>
                             <td>
-                                <a class="btn btn-outline-danger" href="@Url.Action("Delete","NotesxMaestro", new { id = NotesMaestro.IDNotesxMaestro, type = 0 })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                @if (LEAP.Data.AuthContext.IsAdmin)
+                                {
+                                    <a class="btn btn-outline-danger" href="@Url.Action("Delete","NotesxMaestro", new { id = NotesMaestro.IDNotesxMaestro, type = 0 })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                }
                             </td>
                         </tr>
                             }

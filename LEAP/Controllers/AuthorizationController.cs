@@ -17,6 +17,7 @@ namespace LEAP.Controllers
             List<AuthorizationModel> List_Auth = _AuthModel.Get_Authorizations();
             return View(List_Auth);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             List<ConsumerModel> _notes = _ConsumerModel.Get_Consumer().ToList();
@@ -34,6 +35,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(AuthorizationModel _Authorization)
         {
             //auth
@@ -70,6 +72,7 @@ namespace LEAP.Controllers
             
         }
         [HttpPost]
+        [AdminOnly]
         public string AddFromConsumer(AuthorizationModel _Authorization)
         {
             if (ModelState.IsValid)
@@ -91,6 +94,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult Update(int id)
         {
             List<ConsumerModel> _notes = _ConsumerModel.Get_Consumer().ToList();
@@ -111,6 +115,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         //public ActionResult Update(string id, string UCI, string auth, DateTime _From, DateTime _To)
         public ActionResult Update(string id, string UCI, string auth, DateTime _From, DateTime _To, int estado, int type)
         //public ActionResult Update(string id, AuthorizationModel _Model)
@@ -129,6 +134,7 @@ namespace LEAP.Controllers
             }
         }
         [HttpPost]
+        [AdminOnly]
         public string UpdateFromConsumer(AuthorizationModel _Authorization)
         {
             if (ModelState.IsValid)
@@ -148,14 +154,16 @@ namespace LEAP.Controllers
                 return "0";
             }
         }
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_Authorization = _AuthModel.Get_Authorizations_ByID(id);
-          
+
             return View(List_Authorization);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _AuthModel.DeleteAuthorization(id, User.Identity.Name);

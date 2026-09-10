@@ -33,6 +33,7 @@ namespace LEAP.Controllers
             return View(consumers);
 
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             return View();
@@ -45,6 +46,7 @@ namespace LEAP.Controllers
         }
 
 
+        [AdminOnly]
         public string datos(string _UCI, int _specialist1, int _specialist2, int _specialist3, string _PresenterName,
         string _Name, string _LastName, DateTime _DateOfBirth, DateTime _adjage, string _Gender, string _Address, string _CityID, string _ZipCode, string _Phone,
         string _EmergencyPhone, string _ParentName, string _ParentLastName, int _LanguajeID, string _Reasonforreferral, int _AuthID,
@@ -247,6 +249,7 @@ namespace LEAP.Controllers
 
         }
     
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_NotesC = _consumer.Get_ConsumerByID(id);
@@ -254,6 +257,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             var valid = _consumer.DeleteConsumer(id, User.Identity.Name);
@@ -267,6 +271,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult Update(int id)
         {
             ConsumerModel consumers = _consumer.Get_ConsumerByID(id);
@@ -275,6 +280,7 @@ namespace LEAP.Controllers
             return View(consumers);
         }
         [HttpPost]
+        [AdminOnly]
         public bool AgregarImagenXConsumer(string _UCI, HttpPostedFileBase C_image)
         {
             if (C_image != null && C_image.ContentLength > 0)
@@ -300,6 +306,7 @@ namespace LEAP.Controllers
       
 
         [HttpPost]
+        [AdminOnly]
         public bool ChangeStatusR4A(string _uci)
         {
             if (_uci != "")
@@ -327,6 +334,7 @@ namespace LEAP.Controllers
             return View(List_NotesC);
         }
         [HttpPost]
+        [AdminOnly]
         public bool ChangeStatusToActive(string _uci)
         {
             if (_uci != "")
@@ -340,6 +348,7 @@ namespace LEAP.Controllers
             }
         }
         [HttpPost]
+        [AdminOnly]
         public bool ChangeStatusToArchive(string _uci)
         {
             if (_uci != "")
@@ -365,6 +374,7 @@ namespace LEAP.Controllers
             return View(List_NotesC);
         }
         [HttpPost]
+        [AdminOnly]
         public bool UpdateImagenXConsumer(string _UCI, HttpPostedFileBase C_image)
         {
             if (C_image != null && C_image.ContentLength > 0)
@@ -384,6 +394,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public string datosUpdate(string _UCI, int? _specialist1, int? _specialist2, int? _specialist3, string _PresenterName,
        string _Name, string _LastName, DateTime _DateOfBirth, DateTime _adjage, string _Gender, string _Address, string _CityID, string _ZipCode, string _Phone,
        string _EmergencyPhone, string _ParentName, string _ParentLastName, int _LanguajeID, string _Reasonforreferral, int _AuthID,
@@ -505,6 +516,7 @@ namespace LEAP.Controllers
             return salida;
 
         }
+        [AdminOnly]
         public ActionResult Archall()
         {
 

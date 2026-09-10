@@ -7,9 +7,12 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <a href="@Url.Action("Add","Authorization")" class="btn btn-success text-white">
-                    <i class="bi bi-database-fill-add"></i> New
-                </a>
+                @if (LEAP.Data.AuthContext.IsAdmin)
+                {
+                    <a href="@Url.Action("Add","Authorization")" class="btn btn-success text-white">
+                        <i class="bi bi-database-fill-add"></i> New
+                    </a>
+                }
                 <hr />
                 <table id="table_Authorization" class="table table-hover" style="width:100%">
                     <thead class="thead-dark">
@@ -55,10 +58,16 @@
                                     <td>@Languaje.regionalC</td>
                                     <td>@(Languaje.estado == 0 ? "Disabled" : "Enabled")</td>
                                     <td>
-                                        <a class="btn btn-outline-primary" href="@Url.Action("Update","Authorization", new { id = Languaje.IDAuth })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-primary" href="@Url.Action("Update","Authorization", new { id = Languaje.IDAuth })"><i class="bi bi-pencil-square"></i> Update</a>
+                                        }
                                     </td>
                                     <td>
-                                        <a class="btn btn-outline-danger" href="@Url.Action("Delete","Authorization", new { id = Languaje.IDAuth })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        @if (LEAP.Data.AuthContext.IsAdmin)
+                                        {
+                                            <a class="btn btn-outline-danger" href="@Url.Action("Delete","Authorization", new { id = Languaje.IDAuth })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                        }
                                     </td>
                                 </tr>
                             }

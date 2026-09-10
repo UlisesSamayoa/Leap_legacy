@@ -16,12 +16,14 @@ namespace LEAP.Controllers
             List<EventTypeModel> List_Event = _EventTypeModel.Get_EventType();
             return View(List_Event);
         }
+        [AdminOnly]
         public ActionResult Add()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Add(EventTypeModel _Event)
         {
             if (ModelState.IsValid)
@@ -41,6 +43,7 @@ namespace LEAP.Controllers
                 return View();
             }
         }
+        [AdminOnly]
         public ActionResult Update(int id, bool? error)
         {
             List<EventTypeModel> _notes = _EventTypeModel.Get_EventType().ToList();
@@ -60,6 +63,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Update(string id, string Title, string Color)
         {
             bool valid = _EventTypeModel.UpdateEventType(id, Title, Color, User.Identity.Name);
@@ -73,6 +77,7 @@ namespace LEAP.Controllers
             }
         }
 
+        [AdminOnly]
         public ActionResult Delete(int id)
         {
             var List_Event = _EventTypeModel.Get_EventType_ByID(id);
@@ -80,6 +85,7 @@ namespace LEAP.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public ActionResult Delete(string id)
         {
             // Antes esto primero borraba "events/" + id (un Event cuyo ID

@@ -17,9 +17,12 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-12">
-                    <a href="@Url.Action("Add","Consumer")" class="btn btn-success text-white">
-                        <i class="bi bi-database-fill-add"></i> New
-                    </a>
+                    @if (LEAP.Data.AuthContext.IsAdmin)
+                    {
+                        <a href="@Url.Action("Add","Consumer")" class="btn btn-success text-white">
+                            <i class="bi bi-database-fill-add"></i> New
+                        </a>
+                    }
                     <hr />
                     <table id="table_regionalCenter" class="table table-hover" style="width:100%">
                         <thead class="thead-dark">
@@ -69,10 +72,23 @@
                                     <td style="text-align:center;">@RCenter.rc</td>
                               
                                 <td><a class="btn btn-warning" href="@Url.Action("ConsumerReport","Reports", new { UCI = RCenter.UCI})"><i class="bi bi-printer-fill"></i> Print</a></td>
-                                <td><a class="btn btn-success" href="@Url.Action("Update","Consumer", new { id = RCenter.IDConsumer})"><i class="bi bi-journal-plus"></i> Read  </a></td>
-                                <td><a class="btn btn-primary" href="@Url.Action("Update","Consumer", new { id = RCenter.IDConsumer})"><i class="bi bi-pencil-square"></i> Update</a></td>
                                 <td>
-                                    <a class="btn btn-danger" href="@Url.Action("Delete","Consumer", new { id = RCenter.IDConsumer })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                    @if (LEAP.Data.AuthContext.IsAdmin)
+                                    {
+                                        <a class="btn btn-success" href="@Url.Action("Update","Consumer", new { id = RCenter.IDConsumer})"><i class="bi bi-journal-plus"></i> Read  </a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (LEAP.Data.AuthContext.IsAdmin)
+                                    {
+                                        <a class="btn btn-primary" href="@Url.Action("Update","Consumer", new { id = RCenter.IDConsumer})"><i class="bi bi-pencil-square"></i> Update</a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (LEAP.Data.AuthContext.IsAdmin)
+                                    {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete","Consumer", new { id = RCenter.IDConsumer })"><i class="bi bi-trash-fill"></i> Delete</a>
+                                    }
                                 </td>
                             </tr>
                                 }

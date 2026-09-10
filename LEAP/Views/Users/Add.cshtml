@@ -50,7 +50,11 @@
                         @Html.DropDownListFor(
                             model => model.Type_User,
                             new SelectList(
-                                new[] { new { Value = "1", Text = "Administrator" }, new { Value = "2", Text = "Operator" } },
+                                new[] {
+                                    new { Value = "1", Text = "Administrator" },
+                                    new { Value = "3", Text = "Operador" },
+                                    new { Value = "2", Text = "CDS" },
+                                },
                                 "Value", "Text"),
                             "Select Type",
                             new { @class = "form-control", id = "Type_User" }

@@ -287,6 +287,7 @@
     <Content Include="Content\Template\rpt_consumer.html" />
     <Content Include="Content\Template\rpt_newconsumer.html" />
     <Content Include="Content\Template\rpt_notesconsumer.html" />
+    <Content Include="Content\Template\rpt_notesconsumer_old_2026.html" />
     <Content Include="Content\Template\user_base.png" />
     <Content Include="Content\Template\verde.png" />
     <Content Include="favicon.ico" />

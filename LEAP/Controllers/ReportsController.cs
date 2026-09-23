@@ -1560,10 +1560,17 @@ namespace LEAP.Controllers
                 foreach (var _Notes in NotesconsumerList)
                 {
 
+                    // Columna "Parent/Caregiver Signature": la firma capturada en
+                    // leap_client (data URI completa) reemplaza al texto libre de
+                    // PresentInSession en el rediseno del PDF (decision confirmada
+                    // con el usuario).
+                    string _signatureCell = !string.IsNullOrEmpty(_Notes.Signature)
+                        ? "<img src='" + _Notes.Signature + "' alt='Signature' style='max-height:35px;max-width:150px;' />"
+                        : "";
                     TableService += "<tr style='border: solid 1px black;'>";
                     TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black; height:40px;' class='text-center'>" + _Notes.Date.ToString("MM-dd-yyyy") + "</td>";
                     TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.Date + "</td>";
-                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.PresentInSession + "</td>";
+                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _signatureCell + "</td>";
                     TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.Duration + "</td>";
                     TableService += "</tr>";
                     TableNotes += "<tr>";
@@ -1618,6 +1625,7 @@ namespace LEAP.Controllers
                 foreach (var _Consumer in consumerList)
                 {
                     _htmlString = _htmlString.Replace("[[ConsumerName]]", _Consumer.ConsumerName);
+                    _htmlString = _htmlString.Replace("[[UCI]]", _Consumer.UCI);
                     _htmlString = _htmlString.Replace("[[RCenter]]", _Consumer.RegionalCenter);
                     _htmlString = _htmlString.Replace("[[TimesWk]]", latestNote?.TimesxWeek ?? "");
                     _htmlString = _htmlString.Replace("[[SpecialistName]]", _Consumer.spe_FullName);

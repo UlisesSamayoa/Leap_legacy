@@ -74,6 +74,9 @@ namespace LEAP.Models
         public string auth { get; set; }
         //NotesxConsumer
         public string NotesConsumer { get; set; }
+        // Firma del padre/tutor capturada en leap_client (data URI completa),
+        // via leap_api ReportController::notesByConsumer.
+        public string Signature { get; set; }
         //REGIONAL CENTER
         public string RegionalCenter { get; set; }
         public string rc_Phone { get; set; }

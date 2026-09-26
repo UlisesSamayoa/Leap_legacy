@@ -23,13 +23,37 @@ namespace LEAP.Models
         public List<SelectListItem> SelectOptions { get; set; }
         LogModel _log = new LogModel();
 
+        // Poblado por Newtonsoft cuando leap_api hace eager-load de la relacion
+        // consumer() (NotesxConsumerController::index/show en leap_api). Reemplaza
+        // el loop de AttachConsumerNames(), que antes hacia una llamada HTTP por
+        // cada UCI distinto (con 33k+ notas / miles de UCIs, la pantalla mas lenta
+        // de la app).
+        public ConsumerRefModel consumer { get; set; }
+
+        public class ConsumerRefModel
+        {
+            public string Name { get; set; }
+            public string LastName { get; set; }
+        }
+
+        private static void ApplyConsumerNames(IEnumerable<NotesxConsumerModel> notes)
+        {
+            foreach (var n in notes)
+            {
+                if (n.consumer != null)
+                {
+                    n.ConsumerName = (n.consumer.Name + " " + n.consumer.LastName).Trim();
+                }
+            }
+        }
+
         public List<NotesxConsumerModel> Get_NotesxConsumer()
         {
             var _NotesxConsumer_Response = new List<NotesxConsumerModel>();
             try
             {
                 _NotesxConsumer_Response = ApiClient.Get<List<NotesxConsumerModel>>("notes-x-consumers");
-                AttachConsumerNames(_NotesxConsumer_Response);
+                ApplyConsumerNames(_NotesxConsumer_Response);
                 _NotesxConsumer_Response = _NotesxConsumer_Response.OrderByDescending(n => n.DateC).ToList();
             }
             catch (Exception)
@@ -39,13 +63,45 @@ namespace LEAP.Models
             return _NotesxConsumer_Response;
         }
 
+        // Forma de respuesta del paginate() de Laravel (leap_api). Newtonsoft
+        // ignora el resto de campos del paginator (links, from, to, etc.) que no
+        // se necesitan aqui.
+        public class PagedResult
+        {
+            public List<NotesxConsumerModel> data { get; set; }
+            public int total { get; set; }
+            public int current_page { get; set; }
+            public int per_page { get; set; }
+        }
+
+        // Usado por el grid principal (NotesxConsumerController.GridData, modo
+        // server-side de DataTables) - con 33k+ notas, traer TODO de una
+        // (Get_NotesxConsumer) hacia que leap_api gastara ~9s solo en
+        // json_encode de filas que la pantalla ni siquiera iba a mostrar.
+        public PagedResult Get_NotesxConsumer_Paged(int page, int perPage, string search, string sort, string dir)
+        {
+            var url = "notes-x-consumers?paginate=1&page=" + page + "&per_page=" + perPage;
+            if (!string.IsNullOrEmpty(sort))
+            {
+                url += "&sort=" + Uri.EscapeDataString(sort) + "&dir=" + Uri.EscapeDataString(dir ?? "desc");
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                url += "&search=" + Uri.EscapeDataString(search);
+            }
+
+            var result = ApiClient.Get<PagedResult>(url);
+            ApplyConsumerNames(result.data);
+            return result;
+        }
+
         public NotesxConsumerModel Get_NotesxConsumer_ByID(int _NotesxConsumer)
         {
             var _NotesxConsumer_Response = new NotesxConsumerModel();
             try
             {
                 _NotesxConsumer_Response = ApiClient.Get<NotesxConsumerModel>("notes-x-consumers/" + _NotesxConsumer);
-                AttachConsumerNames(new List<NotesxConsumerModel> { _NotesxConsumer_Response });
+                ApplyConsumerNames(new List<NotesxConsumerModel> { _NotesxConsumer_Response });
                 _NotesxConsumer_Response._ErrorCode = false;
             }
             catch (Exception)
@@ -62,7 +118,7 @@ namespace LEAP.Models
             {
                 var consumer = ApiClient.Get<ConsumerModel>("consumers/" + _NotesxConsumer);
                 _NotesxConsumer_Response = ApiClient.Get<List<NotesxConsumerModel>>("notes-x-consumers?uci=" + Uri.EscapeDataString(consumer.UCI ?? ""));
-                AttachConsumerNames(_NotesxConsumer_Response);
+                ApplyConsumerNames(_NotesxConsumer_Response);
             }
             catch (Exception)
             {
@@ -153,20 +209,6 @@ namespace LEAP.Models
                 _log._logError(_error.Message, _error.StackTrace, "DeleteNotesxConsumer", "NotesxConsumerModel", _UserName);
             }
             return response;
-        }
-
-        private void AttachConsumerNames(List<NotesxConsumerModel> notes)
-        {
-            var ucis = notes.Select(n => n.UCI).Where(u => !string.IsNullOrEmpty(u)).Distinct();
-            foreach (var uci in ucis)
-            {
-                var match = ApiClient.Get<List<ConsumerModel>>("consumers?uci=" + Uri.EscapeDataString(uci)).FirstOrDefault();
-                if (match == null) continue;
-                foreach (var n in notes.Where(n => n.UCI == uci))
-                {
-                    n.ConsumerName = match.Name + " " + match.LastName;
-                }
-            }
         }
     }
 }

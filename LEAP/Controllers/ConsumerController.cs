@@ -47,14 +47,25 @@ namespace LEAP.Controllers
 
 
         [AdminOnly]
-        public string datos(string _UCI, int _specialist1, int _specialist2, int _specialist3, string _PresenterName,
+        // specialist1/2/3 son int? (no int): si el select llega vacio (ej. el
+        // AJAX de Getspecialist todavia no resuelve al enviar el formulario),
+        // ASP.NET no puede bindear un valor vacio a un int no-nullable y
+        // truena en seco (YSOD) en vez de dejar que el catch de abajo maneje
+        // el error - con int? simplemente queda null (que leap_api ya acepta
+        // como specialist1 'nullable').
+        public string datos(string _UCI, int? _specialist1, int? _specialist2, int? _specialist3, string _PresenterName,
         string _Name, string _LastName, DateTime _DateOfBirth, DateTime _adjage, string _Gender, string _Address, string _CityID, string _ZipCode, string _Phone,
         string _EmergencyPhone, string _ParentName, string _ParentLastName, int _LanguajeID, string _Reasonforreferral, int _AuthID,
         int _HoursxWeek, int _MaxHours, int _TerminationNumber, string _AdditionalEval, bool _InHome, bool _EIWITH, bool _CB,bool _PEP,
         DateTime _initEval, DateTime _evaldueby, DateTime _Report1, DateTime _Report2, DateTime _Report3, DateTime _Report4, DateTime _Report5, DateTime _ReportClose,
         DateTime _Date, int _ReferredBy, string _evaluation, string _TypeReporte, int _RegionalID, string _ServiceCoordinator,
         int _Archive, string _Type, int _Action, string _UserC, DateTime _DateC, string _UserU, DateTime _DateU, bool _ConsumerActive, string _ConsumerNotes,
-        int? _AuthNumber, DateTime? _AuthFrom, DateTime? _AuthTo, bool _OTPT, DateTime _terminationdate, string _state)
+        // _AuthNumber es string (no int?): un numero de autorizacion real puede
+        // superar el rango de int (ej. "14253674596") o traer letras/guiones -
+        // con int? el model binder fallaba en silencio (dejaba el valor en null
+        // sin lanzar excepcion) y la autorizacion se guardaba con auth vacio
+        // aunque las fechas si se hubieran guardado bien.
+        string _AuthNumber, DateTime? _AuthFrom, DateTime? _AuthTo, bool _OTPT, DateTime _terminationdate, string _state)
         {
             string salida = "";
             var usuario=User.Identity.Name;
@@ -75,13 +86,13 @@ namespace LEAP.Controllers
                 {
                     _note_c.AddNotesxConsumer(_UCI, _ConsumerNotes, Convert.ToBoolean(_ConsumerActive), _UserC);
                 }
-                if (_AuthNumber == 0)
+                if (string.IsNullOrWhiteSpace(_AuthNumber))
                 {
 
                 }
                 else
                 {
-                    _Auth.AddAuthorization(_UCI, _AuthNumber.ToString(), _AuthFrom, _AuthTo,1, _UserC);
+                    _Auth.AddAuthorization(_UCI, _AuthNumber, _AuthFrom, _AuthTo,1, _UserC);
                 }
 
 

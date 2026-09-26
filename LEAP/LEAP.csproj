@@ -568,7 +568,6 @@
     <Content Include="Views\NotesxConsumer\Delete.cshtml" />
     <Content Include="Views\NotesxConsumer\Index.cshtml" />
     <Content Include="Views\NotesxConsumer\Update.cshtml" />
-    <Content Include="Views\NotesxMaestro\Add.cshtml" />
     <Content Include="Views\NotesxMaestro\Delete.cshtml" />
     <Content Include="Views\NotesxMaestro\Index.cshtml" />
     <Content Include="Views\NotesxMaestro\Update.cshtml" />

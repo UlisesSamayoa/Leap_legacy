@@ -26,26 +26,40 @@ namespace LEAP.Models
         LogModel _log = new LogModel();
         public string regionalC { get; set; }
 
-        // Replica SP_Authorization_AllData: join con Consumer (+ RegionalCenter)
-        // resuelto client-side, ordenado por ConsumerName igual que el original.
+        // Poblado por Newtonsoft cuando leap_api hace eager-load de consumer (+ su
+        // regionalCenter) - ver AuthorizationController::index/show en leap_api.
+        // Reemplaza las llamadas HTTP separadas a "consumers" (tabla completa) y
+        // "regional-centers" (tabla completa) que antes se armaban a mano en
+        // memoria en cada Get_Authorizations*().
+        public ConsumerRefModel consumer { get; set; }
+
+        public class ConsumerRefModel
+        {
+            public string Name { get; set; }
+            public string LastName { get; set; }
+            public RegionalCenterRefModel regionalCenter { get; set; }
+        }
+
+        public class RegionalCenterRefModel
+        {
+            public string RegionalCenter { get; set; }
+        }
+
+        // Replica SP_Authorization_AllData: join con Consumer (+ RegionalCenter),
+        // ordenado por ConsumerName igual que el original.
         public List<AuthorizationModel> Get_Authorizations()
         {
             var _Auth_Response = new List<AuthorizationModel>();
             try
             {
                 _Auth_Response = ApiClient.Get<List<AuthorizationModel>>("authorizations");
-                var consumers = ApiClient.Get<List<ConsumerModel>>("consumers");
-                var centers = ApiClient.Get<List<RegionalCenterModel>>("regional-centers");
-                var byUci = consumers.Where(c => c.UCI != null).ToDictionary(c => c.UCI, c => c);
-                var centerNames = centers.ToDictionary(c => c.IDRegionalCenter, c => c.RegionalCenter);
 
                 foreach (var a in _Auth_Response)
                 {
-                    if (byUci.TryGetValue(a.UCI, out var c))
+                    if (a.consumer != null)
                     {
-                        a.ConsumerName = c.LastName + " ," + c.Name;
-                        centerNames.TryGetValue(c.RegionalID, out var rc);
-                        a.regionalC = rc;
+                        a.ConsumerName = a.consumer.LastName + " ," + a.consumer.Name;
+                        a.regionalC = a.consumer.regionalCenter?.RegionalCenter;
                     }
                     a._From_s = a._From == default(DateTime) ? "" : a._From.ToString("yyyy-MM-dd");
                     a._To_s = a._To == default(DateTime) ? "" : a._To.ToString("yyyy-MM-dd");
@@ -65,10 +79,9 @@ namespace LEAP.Models
             try
             {
                 _Auth_Response = ApiClient.Get<AuthorizationModel>("authorizations/" + _auth);
-                var match = ApiClient.Get<List<ConsumerModel>>("consumers?uci=" + Uri.EscapeDataString(_Auth_Response.UCI ?? "")).FirstOrDefault();
-                if (match != null)
+                if (_Auth_Response.consumer != null)
                 {
-                    _Auth_Response.ConsumerName = match.Name + " " + match.LastName;
+                    _Auth_Response.ConsumerName = _Auth_Response.consumer.Name + " " + _Auth_Response.consumer.LastName;
                 }
                 _Auth_Response._From_s = _Auth_Response._From.ToString("yyyy-MM-dd");
                 _Auth_Response._To_s = _Auth_Response._To.ToString("yyyy-MM-dd");
@@ -89,12 +102,11 @@ namespace LEAP.Models
             try
             {
                 _Auth_Response = ApiClient.Get<List<AuthorizationModel>>("authorizations?uci=" + _auth);
-                var match = ApiClient.Get<List<ConsumerModel>>("consumers?uci=" + _auth).FirstOrDefault();
                 foreach (var a in _Auth_Response)
                 {
-                    if (match != null)
+                    if (a.consumer != null)
                     {
-                        a.ConsumerName = match.Name + " " + match.LastName;
+                        a.ConsumerName = a.consumer.Name + " " + a.consumer.LastName;
                     }
                     a._From_s = a._From.ToString("yyyy-MM-dd");
                     a._To_s = a._To.ToString("yyyy-MM-dd");

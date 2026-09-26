@@ -14,11 +14,57 @@ namespace LEAP.Controllers
         ConsumerModel _ConsumerModel = new ConsumerModel();
         private readonly ConsumerModel _CosumerPModel;
         private List<SelectListItem> _NotesList;
+
+        // La vista ya no precarga los datos (eran 33k+ filas, ~9s solo en
+        // json_encode del lado de leap_api) - el grid los pide el mismo por
+        // pagina via GridData(), en modo "server-side processing" de DataTables.
         public ActionResult Index()
         {
-            List<NotesxConsumerModel> List_NotesC = _NotesConsumerModel.Get_NotesxConsumer().OrderByDescending(a=>a.DateC).ToList();
-           
-            return View(List_NotesC);
+            return View();
+        }
+
+        // Columnas tal cual las declara el DataTable de Index.cshtml (mismo
+        // orden), para mapear el indice que manda DataTables en
+        // "order[0][column]" al nombre real de columna que entiende leap_api.
+        private static readonly string[] GridSortableColumns = { "UCI", null, null, "Active", "DateC" };
+
+        [HttpGet]
+        public JsonResult GridData(int draw, int start, int length)
+        {
+            string search = Request.QueryString["search[value]"];
+
+            string sort = "IDNotesxConsumer";
+            string dir = "desc";
+            if (int.TryParse(Request.QueryString["order[0][column]"], out int colIndex)
+                && colIndex >= 0 && colIndex < GridSortableColumns.Length
+                && GridSortableColumns[colIndex] != null)
+            {
+                sort = GridSortableColumns[colIndex];
+                dir = Request.QueryString["order[0][dir]"] == "asc" ? "asc" : "desc";
+            }
+
+            int perPage = length > 0 ? length : 50;
+            int page = (start / perPage) + 1;
+
+            var result = _NotesConsumerModel.Get_NotesxConsumer_Paged(page, perPage, search, sort, dir);
+
+            var data = result.data.Select(n => new
+            {
+                n.IDNotesxConsumer,
+                n.UCI,
+                n.ConsumerName,
+                Notes = !string.IsNullOrEmpty(n.Notes) && n.Notes.Length >= 100 ? n.Notes.Substring(0, 100) + "..." : n.Notes,
+                Active = n.Active ? "True" : "False",
+                DateC = n.DateC.HasValue ? n.DateC.Value.ToString("MM/dd/yyyy") : "",
+            });
+
+            return Json(new
+            {
+                draw,
+                recordsTotal = result.total,
+                recordsFiltered = result.total,
+                data,
+            }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Details(int id)
         {

@@ -1565,16 +1565,24 @@ namespace LEAP.Controllers
                     // PresentInSession en el rediseno del PDF (decision confirmada
                     // con el usuario).
                     string _signatureCell = !string.IsNullOrEmpty(_Notes.Signature)
-                        ? "<img src='" + _Notes.Signature + "' alt='Signature' style='max-height:35px;max-width:150px;' />"
+                        ? "<img src='" + _Notes.Signature + "' alt='Signature' style='max-height:70px;max-width:220px;' />"
                         : "";
                     TableService += "<tr style='border: solid 1px black;'>";
+                    // Formato explicito (nunca ToString() implicito): sin esto, .NET usa
+                    // la cultura del servidor y puede imprimir dia/mes invertido (ej.
+                    // "22/9/2026" en vez de la hora esperada). La columna ya es "TIME OF
+                    // SESSION" (la fecha va aparte en "DATE OF SERVICE"), asi que se
+                    // muestra solo hora de inicio - hora de fin (decision confirmada con
+                    // el usuario).
+                    string _arrivalLabel = _Notes.Date.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                    string _departureLabel = _Notes.EndDate.ToString("hh:mm tt", CultureInfo.InvariantCulture);
                     TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black; height:40px;' class='text-center'>" + _Notes.Date.ToString("MM-dd-yyyy") + "</td>";
-                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.Date + "</td>";
+                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _arrivalLabel + " - " + _departureLabel + "</td>";
                     TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _signatureCell + "</td>";
                     TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.Duration + "</td>";
                     TableService += "</tr>";
                     TableNotes += "<tr>";
-                    TableNotes += "<td style='padding: 5px;'>" + _Notes.Date.ToString("MM/dd/yyyyy") + " - " + _Notes.NotesConsumer + "</td>";
+                    TableNotes += "<td style='padding: 5px;'>" + _Notes.Date.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " - " + _Notes.NotesConsumer + "</td>";
                     TableNotes += "</tr>";
                     _ContarService++;
                 }
@@ -1608,19 +1616,21 @@ namespace LEAP.Controllers
                 // completa) - una vez filtrado a la(s) visita(s) de este reporte, se recalcula
                 // sumando solo lo que quedo en NotesconsumerList. Se deja como suma (no un
                 // valor fijo de una sola fila) por si en el futuro un reporte vuelve a incluir
-                // mas de una visita, igual que hacia antes.
-                int _totalHoursSum = 0;
+                // mas de una visita, igual que hacia antes. Duration ahora viene como decimal
+                // real de horas (ej. "1.38", ya no "X hours" - decision confirmada con el
+                // usuario de no redondear a hora entera), asi que se suma como decimal y se
+                // reformatea igual que ReportController::formatDurationInHours en leap_api.
+                double _totalHoursSum = 0;
                 foreach (var _n in NotesconsumerList)
                 {
-                    int _h;
-                    var _firstToken = (_n.Duration ?? "").Split(' ').FirstOrDefault();
-                    if (int.TryParse(_firstToken, out _h))
+                    double _h;
+                    if (double.TryParse(_n.Duration, NumberStyles.Float, CultureInfo.InvariantCulture, out _h))
                     {
                         _totalHoursSum += _h;
                     }
                 }
                 string _totalHoursText = NotesconsumerList.Count > 0
-                    ? _totalHoursSum + " " + (_totalHoursSum == 1 ? "hour" : "hours")
+                    ? _totalHoursSum.ToString("F2", CultureInfo.InvariantCulture)
                     : "";
                 foreach (var _Consumer in consumerList)
                 {
@@ -1777,7 +1787,7 @@ namespace LEAP.Controllers
                     doc.Save(stream);
                     stream.Seek(0, System.IO.SeekOrigin.Begin);
                     result = new FileContentResult(stream.ToArray(), "application/pdf");
-                    result.FileDownloadName = "Rpt_Birthdays_" + DateTime.Now.ToShortDateString() + ".pdf";
+                    result.FileDownloadName = "Rpt_Birthdays_" + DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture) + ".pdf";
                 }
                 doc.Close();
                 return result;
@@ -1894,7 +1904,7 @@ namespace LEAP.Controllers
                     doc.Save(stream);
                     stream.Seek(0, System.IO.SeekOrigin.Begin);
                     result = new FileContentResult(stream.ToArray(), "application/pdf");
-                    result.FileDownloadName = "Rpt_Birthdays_" + DateTime.Now.ToShortDateString() + ".pdf";
+                    result.FileDownloadName = "Rpt_Birthdays_" + DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture) + ".pdf";
                 }
                 doc.Close();
                 return result;
@@ -2722,7 +2732,7 @@ namespace LEAP.Controllers
                     doc.Save(stream);
                     stream.Seek(0, System.IO.SeekOrigin.Begin);
                     result = new FileContentResult(stream.ToArray(), "application/pdf");
-                    result.FileDownloadName = "Rpt_ByCDS_" + DateTime.Now.ToShortDateString() + ".pdf";
+                    result.FileDownloadName = "Rpt_ByCDS_" + DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture) + ".pdf";
                 }
                 doc.Close();
                 return result;
@@ -2880,7 +2890,7 @@ namespace LEAP.Controllers
                     doc.Save(stream);
                     stream.Seek(0, System.IO.SeekOrigin.Begin);
                     result = new FileContentResult(stream.ToArray(), "application/pdf");
-                    result.FileDownloadName = "Rpt_CDS_Consumer_" + DateTime.Now.ToShortDateString() + ".pdf";
+                    result.FileDownloadName = "Rpt_CDS_Consumer_" + DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture) + ".pdf";
                 }
                 doc.Close();
                 return result;
@@ -2989,7 +2999,7 @@ namespace LEAP.Controllers
                     doc.Save(stream);
                     stream.Seek(0, System.IO.SeekOrigin.Begin);
                     result = new FileContentResult(stream.ToArray(), "application/pdf");
-                    result.FileDownloadName = "Rpt_NewConsumer_" + DateTime.Now.ToShortDateString() + ".pdf";
+                    result.FileDownloadName = "Rpt_NewConsumer_" + DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture) + ".pdf";
                 }
                 doc.Close();
                 return result;

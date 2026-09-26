@@ -1,4 +1,3 @@
-﻿@model List<LEAP.Models.NotesxConsumerModel>
 @{
     ViewBag.Title = "NotesxConsumer";
 }
@@ -19,7 +18,6 @@
                         <tr>
                             <th>UCI</th>
                             <th>ConsumerName</th>
-                            @*<th>Coordinator</th>*@
                             <th>Notes</th>
                             <th>Active</th>
                             <th>Date</th>
@@ -28,53 +26,6 @@
                             <th>Delete</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @if (Model != null || Model.Count > 0)
-                        {
-                            foreach (var NotesConsumer in Model.OrderByDescending(n => n.DateC))
-                            {
-                                <tr>
-                                    <td>@NotesConsumer.UCI</td>
-                                    <td>@NotesConsumer.ConsumerName</td>
-                                    @if (NotesConsumer.Notes.Length >= 100)
-                                    {
-                                        <td>@NotesConsumer.Notes.Substring(0, 100)...</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@NotesConsumer.Notes</td>
-                                    }
-
-                                    <td>@NotesConsumer.Active</td>
-                                    <td>@(NotesConsumer.DateC.HasValue ? NotesConsumer.DateC.Value.ToString("MM/dd/yyyy") : "")</td>
-                                    <td>
-                                        <a class="btn btn-outline-success" href="@Url.Action("Details","NotesxConsumer", new { id = NotesConsumer.IDNotesxConsumer, type = 0 })"><i class="bi bi-eye-fill"></i> See_More</a>
-                                    </td>
-                                    <td>
-                                        @if (LEAP.Data.AuthContext.IsAdmin)
-                                        {
-                                            <a class="btn btn-outline-primary" href="@Url.Action("Update","NotesxConsumer", new { id = NotesConsumer.IDNotesxConsumer, type = 0  })"><i class="bi bi-pencil-square"></i> Update</a>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (LEAP.Data.AuthContext.IsAdmin)
-                                        {
-                                            <a class="btn btn-outline-danger" href="@Url.Action("Delete","NotesxConsumer", new { id = NotesConsumer.IDNotesxConsumer, type = 0  })"><i class="bi bi-trash-fill"></i> Delete</a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="2">
-                                    No data available
-                                </td>
-                            </tr>
-
-                        }
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -87,9 +38,61 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 @section scripts {
     <script>
+        // Plantillas de URL resueltas por Razor (respetan el virtual
+        // directory/base path de la app) - __ID__ se reemplaza por el ID real
+        // de cada fila al pintar los botones de accion.
+        var detailsUrlTemplate = '@Url.Action("Details", "NotesxConsumer", new { id = "__ID__", type = 0 })';
+        var updateUrlTemplate = '@Url.Action("Update", "NotesxConsumer", new { id = "__ID__", type = 0 })';
+        var deleteUrlTemplate = '@Url.Action("Delete", "NotesxConsumer", new { id = "__ID__", type = 0 })';
+        var isAdmin = @Html.Raw(Json.Encode(LEAP.Data.AuthContext.IsAdmin));
+
         $(document).ready(function () {
+            // Server-side processing: con 33k+ notas, traer todo de una hacia
+            // que esta pantalla fuera la mas lenta de la app (json_encode de
+            // TODAS las filas en leap_api tomaba ~9s el solas). Ahora DataTables
+            // solo pide la pagina visible via GridData(). Los botones de
+            // Excel/PDF/Print, por lo mismo, ya solo exportan lo cargado en
+            // pantalla (decision confirmada con el usuario).
             $('#table_NotesC').DataTable({
                 "dom": 'Bfrtip',
+                serverSide: true,
+                processing: true,
+                pageLength: 25,
+                order: [[4, 'desc']],
+                ajax: {
+                    url: '@Url.Action("GridData", "NotesxConsumer")',
+                    type: 'GET'
+                },
+                columns: [
+                    { data: 'UCI' },
+                    { data: 'ConsumerName', orderable: false },
+                    { data: 'Notes', orderable: false, searchable: false },
+                    { data: 'Active' },
+                    { data: 'DateC' },
+                    {
+                        data: null, orderable: false, searchable: false,
+                        render: function (row) {
+                            var url = detailsUrlTemplate.replace('__ID__', row.IDNotesxConsumer);
+                            return '<a class="btn btn-outline-success" href="' + url + '"><i class="bi bi-eye-fill"></i> See_More</a>';
+                        }
+                    },
+                    {
+                        data: null, orderable: false, searchable: false,
+                        render: function (row) {
+                            if (!isAdmin) return '';
+                            var url = updateUrlTemplate.replace('__ID__', row.IDNotesxConsumer);
+                            return '<a class="btn btn-outline-primary" href="' + url + '"><i class="bi bi-pencil-square"></i> Update</a>';
+                        }
+                    },
+                    {
+                        data: null, orderable: false, searchable: false,
+                        render: function (row) {
+                            if (!isAdmin) return '';
+                            var url = deleteUrlTemplate.replace('__ID__', row.IDNotesxConsumer);
+                            return '<a class="btn btn-outline-danger" href="' + url + '"><i class="bi bi-trash-fill"></i> Delete</a>';
+                        }
+                    }
+                ],
                 buttons: [
                     {
                         extend: 'excel',

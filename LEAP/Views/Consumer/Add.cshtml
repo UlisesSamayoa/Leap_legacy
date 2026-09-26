@@ -308,7 +308,7 @@
                     <div class="form-group">
                         <label asp-for="Phone">CDS</label>
                         <select id="cds" class="form-control">
-                            <option value="1">--------N/A-----------</option>
+                            <option value="">--------N/A-----------</option>
                         </select>
                     </div>
                 </div>
@@ -316,7 +316,7 @@
                     <div class="form-group">
                         <label asp-for="Phone">Other</label>
                         <select id="specialist" class="form-control">
-                            <option value="1">--------N/A-----------</option>
+                            <option value="">--------N/A-----------</option>
                         </select>
                     </div>
                 </div>
@@ -324,7 +324,7 @@
                     <div class="form-group">
                         <label asp-for="Phone">Therapist</label>
                         <select id="therapist" class="form-control">
-                            <option value="1">--------N/A-----------</option>
+                            <option value="">--------N/A-----------</option>
                         </select>
                     </div>
                 </div>
@@ -332,7 +332,7 @@
                     <div class="form-group">
                         <label asp-for="Phone">Program Presenter</label>
                         <select id="presenter" class="form-control">
-                            <option value="1">--------N/A-----------</option>
+                            <option value="">--------N/A-----------</option>
                         </select>
                     </div>
                 </div>
@@ -523,7 +523,7 @@
                         <div class="form-group">
                             <br />
                             <label class="form-check-label" label-for="AuthNumber">Authorization #</label>
-                            <input type="number" class="form-control" id="AuthNumber" placeholder="Auth #" />
+                            <input type="text" class="form-control" id="AuthNumber" maxlength="20" placeholder="Auth #" />
                         </div>
                     </div>
                     <div class="col-4">
@@ -687,15 +687,37 @@
                 success: function (response) {
                     var data = response.split(";");
                     var haa = data.length - 1;
+                    var naId = null;
                     for (var i = 0; i < haa; i++) {
-                        var datos = data[i].split(",");
+                        // Getspecialist() (server) separa cada registro con ";" + salto de
+                        // linea, asi que menos el primero, todos los "datos[0]" (ID) traen
+                        // un \r\n pegado al inicio. Las comparaciones sueltas con == no lo
+                        // notaban (Number("\r\n147") sigue siendo 147), pero $(...).val(naId)
+                        // compara el string tal cual contra el atributo value ya parseado
+                        // por el navegador (que normaliza el \r\n a \n) - sin el trim(),
+                        // nunca hacian match y el select se quedaba en el placeholder.
+                        var datos = data[i].split(",").map(item => item.trim());
                         document.getElementById("cds").innerHTML += "<option value='"+datos[0]+"'>" + datos[1] + " " + datos[2] + "</option>";
                         document.getElementById("specialist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
                         document.getElementById("therapist").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
                         document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
 
+                        if (naId === null && datos[1] === "N/A") {
+                            naId = datos[0];
+                        }
                     }
 
+                    // Los 4 selects quedan en el especialista "N/A" real de la BD por
+                    // defecto (antes se usaba un placeholder con value="1" que no
+                    // corresponde a ningun specialist real - leap_api rechazaba ese ID
+                    // con "exists:specialists", lo que hacia parecer que el campo era
+                    // obligatorio). Asi nunca se manda null y siempre es un ID valido.
+                    if (naId !== null) {
+                        $('#cds').val(naId);
+                        $('#specialist').val(naId);
+                        $('#therapist').val(naId);
+                        $('#presenter').val(naId);
+                    }
                 }
             });
         }
@@ -852,32 +874,28 @@
         var _ConsumerActive = $('#ConsumerActive').val();
         var _ConsumerNotes = $('#ConsumerNote').val();
         // ________________________________________NUEVO
-        var _AuthNumber = $('#AuthNumber').val();
+        var _AuthNumber = $('#AuthNumber').val().trim();
         var _AuthFrom = $('#AuthFrom').val();
         var _AuthTo = $('#AuthTo').val();
+
+        // Si se captura From/To, el Authorization # ya no puede quedar vacio -
+        // antes se guardaban las fechas igual y la autorizacion quedaba con el
+        // numero en blanco, sin avisar nada (decision confirmada con el usuario).
+        if ((_AuthFrom !== "" || _AuthTo !== "") && _AuthNumber === "") {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Authorization # required',
+                text: 'Enter the Authorization # before saving a consumer with an Authorization From/To date.',
+            });
+            return;
+        }
+
         if (_AuthFrom == ""){
             _AuthFrom = "01/01/1900"
         }
         if (_AuthTo == "") {
             _AuthTo = "01/01/1900"
         }
-        if (_AuthNumber == "") {
-            _AuthNumber = "N/A"
-        }
-
-        //if (_AuthNumber != "") {
-        //    if (_AuthNumber != "" && _AuthFrom == "") {
-        //        $('#NotesError').text("Select a Date in a From Input in Authorization")
-        //        return false;
-        //    } else {
-        //        if (_AuthNumber != "" && _AuthTo == "") {
-        //            $('#NotesError').text("Select a Date in a To in Authorization")
-        //            return false
-        //        }
-        //    }
-        //}
-
-        
 
 
         // ________________________________________NUEVO

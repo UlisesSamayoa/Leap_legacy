@@ -1585,8 +1585,12 @@ else
             success: function (response) {
                 var data = response.split(";");
                 var haa = data.length - 1;
+                var naId = null;
                 for (var i = 0; i < haa; i++) {
                     var datos = data[i].split(",").map(item => item.trim());
+                    if (naId === null && datos[1] === "N/A") {
+                        naId = datos[0];
+                    }
                     if (_base_cds == datos[0]) {
                         document.getElementById("cds").innerHTML += "<option value='" + datos[0] + "' selected>" + datos[1] + " " + datos[2] + "</option>";
                     } else {
@@ -1611,6 +1615,17 @@ else
                         document.getElementById("presenter").innerHTML += "<option value='" + datos[0] + "'>" + datos[1] + " " + datos[2] + "</option>";
                     }
 
+                }
+
+                // Si el consumer no tenia specialist asignado en ese slot (null), en
+                // vez de dejar el placeholder "--------N/A-----------" (value="",
+                // que al guardar no manda un ID real), se deja seleccionado el
+                // specialist "N/A" real de la BD (mismo criterio que Consumer/Add.cshtml).
+                if (naId !== null) {
+                    if (!_base_cds) { $('#cds').val(naId); }
+                    if (!_base_spe) { $('#specialist').val(naId); }
+                    if (!_base_the) { $('#therapist').val(naId); }
+                    if (!_base_pre) { $('#presenter').val(naId); }
                 }
             }
         });

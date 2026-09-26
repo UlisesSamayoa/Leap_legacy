@@ -54,6 +54,9 @@ namespace LEAP.Models
         public DateTime Report5 { get; set; }
         public DateTime ReportClose { get; set; }
         public DateTime Date { get; set; }
+        // Hora de salida de la visita (session_ended_at) - solo para el PDF de
+        // NotesConsumerReport, columna "TIME OF SESSION".
+        public DateTime EndDate { get; set; }
         public int ReferredBy { get; set; }
         public string evaluation { get; set; }
         public string TypeReporte { get; set; }

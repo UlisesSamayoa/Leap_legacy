@@ -14,7 +14,11 @@ namespace LEAP.Controllers
         //private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
-            List<RegionalCenterModel> List_RCenter = _RCenter_Model.Get_RegionalCenter();
+            // Get_RegionalCenter() se comparte con dropdowns de Consumer y
+            // ServiceCoordinator Add/Update (no se reordenan ahi) - fecha de
+            // ingreso mas reciente primero solo para este grid (decision
+            // confirmada con el usuario, aplica a todos los modulos).
+            List<RegionalCenterModel> List_RCenter = _RCenter_Model.Get_RegionalCenter().OrderByDescending(r => r.DateC).ToList();
             return View(List_RCenter);
         }
         [AdminOnly]

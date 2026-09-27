@@ -2243,11 +2243,13 @@ namespace LEAP.Controllers
                                 // Horas brindadas ese dia del mes (columna = dia j+1). Antes esta
                                 // columna quedaba siempre en blanco; ahora se llena con lo que
                                 // trae leap_api (centersByMonth) a partir de las visitas reales,
-                                // para que el SUMATORIA de la fila de mas abajo sume algo.
-                                int _dayHours;
+                                // para que el SUMATORIA de la fila de mas abajo sume algo. Decimal
+                                // real (ej. 1.32), no redondeado a hora entera.
+                                double _dayHours;
                                 if (item.DayHours != null && item.DayHours.TryGetValue(j + 1, out _dayHours) && _dayHours > 0)
                                 {
                                     valores2.Value = _dayHours;
+                                    valores2.Style.NumberFormat.Format = "0.00";
                                 }
                                 else
                                 {
@@ -2518,10 +2520,11 @@ namespace LEAP.Controllers
                     for (int day = 1; day <= 31; day++)
                     {
                         var cell = worksheet.Cell(row, firstDayColumn + day - 1);
-                        int hours;
+                        double hours;
                         if (item.DayHours != null && item.DayHours.TryGetValue(day, out hours) && hours > 0)
                         {
                             cell.Value = hours;
+                            cell.Style.NumberFormat.Format = "0.00";
                         }
                         else
                         {

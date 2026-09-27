@@ -107,6 +107,9 @@
         $(document).ready(function () {
             $('#table_regionalCenter').DataTable({
                 "dom": 'Bfrtip',
+                // Deja el orden por fecha de ingreso que ya trae el servidor en vez
+                // de que DataTables reordene por la 1ra columna al cargar.
+                order: [],
                 buttons: [
                     {
                         extend: 'excel',

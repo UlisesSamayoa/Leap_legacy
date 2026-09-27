@@ -13,7 +13,10 @@ namespace LEAP.Controllers
         CitiesModel _CitiesModel = new CitiesModel();
         public ActionResult Index()
         {
-            List<CitiesModel> List_Cities = _CitiesModel.Get_Cities();
+            // Get_Cities() se comparte con el dropdown de Consumer Add/Update (no se
+            // reordena ahi) - fecha de ingreso mas reciente primero solo para este
+            // grid (decision confirmada con el usuario, aplica a todos los modulos).
+            List<CitiesModel> List_Cities = _CitiesModel.Get_Cities().OrderByDescending(c => c.DateC).ToList();
             return View(List_Cities);
         }
         [AdminOnly]

@@ -108,8 +108,9 @@ namespace LEAP.Models
 
         // CenterReport: horas brindadas por dia del mes (clave = dia del mes, 1-31),
         // solo trae los dias que tuvieron alguna visita registrada - viene de
-        // leap_api ReportController::centersByMonth.
-        public Dictionary<int, int> DayHours { get; set; }
+        // leap_api ReportController::centersByMonth. Decimal real (no redondeado a
+        // hora entera, ej. 79 min -> 1.32), decision confirmada con el usuario.
+        public Dictionary<int, double> DayHours { get; set; }
 
         LogModel _log = new LogModel();
 

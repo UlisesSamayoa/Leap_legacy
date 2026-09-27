@@ -13,7 +13,11 @@ namespace LEAP.Controllers
         SpecialistModel _SpecialistModel = new SpecialistModel();
         public ActionResult Index()
         {
-            List<SpecialistModel> List_Specialist = _SpecialistModel.Get_Specialist();
+            // Get_Specialist() se comparte con los dropdowns de CDS/Other/Therapist
+            // en Consumer Add/Update (no se reordenan ahi) - fecha de ingreso mas
+            // reciente primero solo para este grid (decision confirmada con el
+            // usuario, aplica a todos los modulos).
+            List<SpecialistModel> List_Specialist = _SpecialistModel.Get_Specialist().OrderByDescending(s => s.DateC).ToList();
             return View(List_Specialist);
         }
         [AdminOnly]

@@ -28,7 +28,11 @@ namespace LEAP.Controllers
         //private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
-            List<ConsumerModel> consumers = _consumer.Get_Consumer();
+            // Get_Consumer() se comparte con los dropdowns de otras pantallas (no se
+            // reordena ahi) - fecha de ingreso mas reciente primero solo para este
+            // grid (decision confirmada con el usuario, aplica a todos los modulos
+            // con grid).
+            List<ConsumerModel> consumers = _consumer.Get_Consumer().OrderByDescending(c => c.DateC).ToList();
 
             return View(consumers);
 

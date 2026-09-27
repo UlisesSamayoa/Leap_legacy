@@ -13,7 +13,9 @@ namespace LEAP.Controllers
         UsersModel _UsersModel = new UsersModel();
         public ActionResult Index()
         {
-            List<UsersModel> List_users = _UsersModel.Get_Users();
+            // Fecha de ingreso, mas reciente primero (decision confirmada con el
+            // usuario, aplica a todos los modulos con grid).
+            List<UsersModel> List_users = _UsersModel.Get_Users().OrderByDescending(u => u.DateC).ToList();
             return View(List_users);
         }
         public ActionResult Add()

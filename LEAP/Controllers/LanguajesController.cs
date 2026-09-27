@@ -13,7 +13,11 @@ namespace LEAP.Controllers
         LanguajesModel _LanguajesModel = new LanguajesModel();
         public ActionResult Index()
         {
-            List<LanguajesModel> List_Languajes = _LanguajesModel.Get_Languajes();
+            // Get_Languajes() se comparte con el dropdown de Consumer Add/Update
+            // (no se reordena ahi) - fecha de ingreso mas reciente primero solo
+            // para este grid (decision confirmada con el usuario, aplica a todos
+            // los modulos).
+            List<LanguajesModel> List_Languajes = _LanguajesModel.Get_Languajes().OrderByDescending(l => l.DateC).ToList();
             return View(List_Languajes);
         }
         [AdminOnly]

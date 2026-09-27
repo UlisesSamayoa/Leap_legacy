@@ -13,7 +13,11 @@ namespace LEAP.Controllers
         private List<SelectListItem> _EventTypeList;
         public ActionResult Index()
         {
-            List<EventTypeModel> List_Event = _EventTypeModel.Get_EventType();
+            // Get_EventType() se comparte con el dropdown de Events Add/Update (no
+            // se reordena ahi) - fecha de ingreso mas reciente primero solo para
+            // este grid (decision confirmada con el usuario, aplica a todos los
+            // modulos).
+            List<EventTypeModel> List_Event = _EventTypeModel.Get_EventType().OrderByDescending(e => e.DateC).ToList();
             return View(List_Event);
         }
         [AdminOnly]

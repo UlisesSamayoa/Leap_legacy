@@ -97,6 +97,11 @@
         $(document).ready(function () {
             $('#table_Authorization').DataTable({
                 "dom": 'Bfrtip',
+                // Sin esto, DataTables reordena solo por la 1ra columna (UCI) al
+                // cargar, pisando el orden por fecha de ingreso que ya trae el
+                // servidor. order: [] deja el orden tal cual llega y el usuario
+                // igual puede reordenar clickeando cualquier columna.
+                order: [],
                 buttons: [
                     {
                         extend: 'excel',

@@ -14,7 +14,11 @@ namespace LEAP.Controllers
         private List<SelectListItem> _EventTypeList;
         public ActionResult Index()
         {
-            List<EventsModel> List_Event = _EventModel.Get_Events();
+            // Get_Events() tambien la usa CalendarController (quiere orden
+            // cronologico del evento, no de creacion) - fecha de ingreso mas
+            // reciente primero solo para este grid (decision confirmada con el
+            // usuario, aplica a todos los modulos).
+            List<EventsModel> List_Event = _EventModel.Get_Events().OrderByDescending(e => e.DateC).ToList();
             return View(List_Event);
         }
         [AdminOnly]

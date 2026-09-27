@@ -324,6 +324,9 @@ namespace LEAP.Models
             try
             {
                 productos = ApiClient.Get<List<ConsumerModel>>("consumers?archive=" + status);
+                // Fecha de ingreso, mas reciente primero (decision confirmada con el
+                // usuario, aplica a todos los modulos con grid).
+                productos = productos.OrderByDescending(c => c.DateC).ToList();
             }
             catch (Exception)
             {

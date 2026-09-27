@@ -64,7 +64,9 @@ namespace LEAP.Models
                     a._From_s = a._From == default(DateTime) ? "" : a._From.ToString("yyyy-MM-dd");
                     a._To_s = a._To == default(DateTime) ? "" : a._To.ToString("yyyy-MM-dd");
                 }
-                _Auth_Response = _Auth_Response.OrderBy(a => a.ConsumerName).ToList();
+                // Fecha de ingreso, mas reciente primero (decision confirmada con el
+                // usuario, aplica a todos los modulos con grid).
+                _Auth_Response = _Auth_Response.OrderByDescending(a => a.DateC).ToList();
             }
             catch (Exception)
             {

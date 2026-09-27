@@ -14,7 +14,11 @@ namespace LEAP.Controllers
         RegionalCenterModel _regional = new RegionalCenterModel();
         public ActionResult Index()
         {
-            List<ServiceCoordinatorModel> List_servicesC = _ServiceCModel.Get_ServiceC();
+            // service_coordinators no tiene columna de fecha en la BD - el ID
+            // autoincremental sigue el orden de insercion, asi que ID descendente
+            // equivale a "mas reciente primero" (decision confirmada con el
+            // usuario, aplica a todos los modulos).
+            List<ServiceCoordinatorModel> List_servicesC = _ServiceCModel.Get_ServiceC().OrderByDescending(s => s.IDServiceC).ToList();
             return View(List_servicesC);
         }
         [AdminOnly]

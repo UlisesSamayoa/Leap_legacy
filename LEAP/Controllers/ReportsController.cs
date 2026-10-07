@@ -1527,69 +1527,154 @@ namespace LEAP.Controllers
 
         //    return ;
         //}
+        // Formato oficial "Parent/Caregiver Signature Log" (firmado, ultimo cambio
+        // de formato). Reporte MENSUAL por consumer: 1ro al ultimo dia del mes, no
+        // por visita individual. Si viene _date (la fecha de la visita en la que
+        // se dio click a "Print" desde el grid, que puede listar notas de varios
+        // meses) se detecta A QUE MES pertenece y se cargan TODAS las visitas de
+        // ese mes - asi imprimir una nota de un mes anterior trae ese mes
+        // completo, nunca solo esa fila. Siempre se usa el ultimo dia calendario
+        // del mes (DateTime, nunca "hoy") para no tener que distinguir mes actual
+        // de mes pasado.
         public FileResult NotesConsumerReport(string _uci, string _date = null)
         {
             FileResult result = null;
             try
             {
-                string _dActual = DateTime.Now.ToLongDateString();
                 var filePath2 = Server.MapPath("~/Content/Template/rpt_notesconsumer.html");
-                //string _pathLogo = Server.MapPath("~/Content/Template/logo.png");
                 string _pathUserBase = Server.MapPath("~/Content/Template/user_base.png");
                 string _pathLogo = Server.MapPath("~/Content/Template/azul.png");
                 string _pathLogoAzul = Server.MapPath("~/Content/Template/azul.png");
                 string _pathLogoVerde = Server.MapPath("~/Content/Template/verde.png");
-                string _htmlString = System.IO.File.ReadAllText(filePath2);
+                string _baseHtmlString = System.IO.File.ReadAllText(filePath2);
 
+                List<ReportsModel> consumerList = _ReportsModel.GetList_Reports_RPTNotesConsumer(_uci);
+                List<ReportsModel> NotesconsumerList = _ReportsModel.Get_NotesXConsumer(_uci);
 
-                List<ReportsModel> consumerList = new List<ReportsModel>();
-                List<ReportsModel> NotesconsumerList = new List<ReportsModel>();
-                consumerList = _ReportsModel.GetList_Reports_RPTNotesConsumer(_uci);
-                NotesconsumerList = _ReportsModel.Get_NotesXConsumer(_uci);
-                // Reporte por visita: el consumer puede tener varias visitas y cada una debe
-                // imprimirse por separado, asi que si viene _date se filtra a esa unica visita
-                // en vez de imprimir todas juntas en el mismo PDF.
-                DateTime visitDate;
-                if (!string.IsNullOrEmpty(_date) && DateTime.TryParse(_date, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out visitDate))
+                // Se guarda el mes efectivamente reportado (el de la nota en la que se
+                // dio click a "Print", no necesariamente el mes actual) para usarlo en
+                // el nombre del archivo descargado.
+                DateTime reportMonth = DateTime.Now;
+                if (!string.IsNullOrEmpty(_date) && DateTime.TryParse(_date, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime visitDate))
                 {
-                    NotesconsumerList = NotesconsumerList.Where(n => n.Date == visitDate).ToList();
+                    DateTime monthStart = new DateTime(visitDate.Year, visitDate.Month, 1);
+                    DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                    NotesconsumerList = NotesconsumerList.Where(n => n.Date.Date >= monthStart && n.Date.Date <= monthEnd).ToList();
+                    reportMonth = monthStart;
                 }
-                string TableNotes = "";
-                string TableService = "";
-                int _ContarService = 1;
-                foreach (var _Notes in NotesconsumerList)
-                {
 
-                    // Columna "Parent/Caregiver Signature": la firma capturada en
-                    // leap_client (data URI completa) reemplaza al texto libre de
-                    // PresentInSession en el rediseno del PDF (decision confirmada
-                    // con el usuario).
-                    string _signatureCell = !string.IsNullOrEmpty(_Notes.Signature)
-                        ? "<img src='" + _Notes.Signature + "' alt='Signature' style='max-height:70px;max-width:220px;' />"
-                        : "";
-                    TableService += "<tr style='border: solid 1px black;'>";
-                    // Formato explicito (nunca ToString() implicito): sin esto, .NET usa
-                    // la cultura del servidor y puede imprimir dia/mes invertido (ej.
-                    // "22/9/2026" en vez de la hora esperada). La columna ya es "TIME OF
-                    // SESSION" (la fecha va aparte en "DATE OF SERVICE"), asi que se
-                    // muestra solo hora de inicio - hora de fin (decision confirmada con
-                    // el usuario).
-                    string _arrivalLabel = _Notes.Date.ToString("hh:mm tt", CultureInfo.InvariantCulture);
-                    string _departureLabel = _Notes.EndDate.ToString("hh:mm tt", CultureInfo.InvariantCulture);
-                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black; height:40px;' class='text-center'>" + _Notes.Date.ToString("MM-dd-yyyy") + "</td>";
-                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _arrivalLabel + " - " + _departureLabel + "</td>";
-                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _signatureCell + "</td>";
-                    TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.Duration + "</td>";
-                    TableService += "</tr>";
-                    TableNotes += "<tr>";
-                    TableNotes += "<td style='padding: 5px;'>" + _Notes.Date.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " - " + _Notes.NotesConsumer + "</td>";
-                    TableNotes += "</tr>";
-                    _ContarService++;
-                }
-                if (_ContarService < 10)
+                // TimesWk/ParentName del formulario impreso salen de las visitas reales
+                // (NotesconsumerList -> leap_api ReportController::notesByConsumer), no
+                // de consumerList (Get_Reports_RPTConsumer, que no trae esos datos).
+                var latestNote = NotesconsumerList.LastOrDefault();
+
+                // TOTAL OF HOURS es la suma de TODO el mes filtrado (no solo de la
+                // pagina actual) y se repite igual en cada pagina, igual que
+                // Consumer/UCI/CDS en el header. Duration viene como decimal real de
+                // horas (ej. "1.38", no redondeado a hora entera - decision confirmada
+                // con el usuario), se suma como decimal.
+                double _totalHoursSum = 0;
+                foreach (var _n in NotesconsumerList)
                 {
-                    int CountReal = 10 - _ContarService;
-                    for (int i = 0; i < CountReal; i++)
+                    if (double.TryParse(_n.Duration, NumberStyles.Float, CultureInfo.InvariantCulture, out double _h))
+                    {
+                        _totalHoursSum += _h;
+                    }
+                }
+                string _totalHoursText = NotesconsumerList.Count > 0
+                    ? _totalHoursSum.ToString("F2", CultureInfo.InvariantCulture)
+                    : "";
+
+                // 11 filas usables de visitas por pagina (tabla de 12x4 contando el
+                // encabezado - formato oficial). Si el mes tiene mas de 11 visitas se
+                // generan paginas adicionales, cada una con el mismo
+                // header/footer/TOTAL OF HOURS (igual patron que CdsReport con
+                // MaxRowXPage).
+                const int MaxRowXPage = 11;
+                var pages = new List<List<ReportsModel>>();
+                for (int i = 0; i < NotesconsumerList.Count; i += MaxRowXPage)
+                {
+                    pages.Add(NotesconsumerList.Skip(i).Take(MaxRowXPage).ToList());
+                }
+                if (pages.Count == 0)
+                {
+                    pages.Add(new List<ReportsModel>());
+                }
+
+                PdfPageSize pageSize = PdfPageSize.Letter;
+                PdfPageOrientation pdfPageOrientation = PdfPageOrientation.Portrait;
+                HtmlToPdf converter = new HtmlToPdf();
+                converter.Options.PdfPageSize = pageSize;
+                converter.Options.PdfPageOrientation = pdfPageOrientation;
+                converter.Options.WebPageWidth = 1024;
+                converter.Options.WebPageHeight = 0;
+                converter.Options.PageBreaksEnhancedAlgorithm = true;
+                // Margen de pagina real (a nivel de documento PDF, no CSS dentro del
+                // HTML) - el contenido que le toca empezar una pagina nueva por un
+                // salto de pagina no respeta padding/margin propios (se probo con
+                // padding-top, con un <div> espaciador real y con el algoritmo
+                // enhanced solo, y ninguno cambio nada), asi que el espacio se fuerza
+                // aqui, a nivel de pagina, igual en todas las paginas del documento.
+                converter.Options.MarginTop = 40;
+                SelectPdf.PdfDocument doc = new SelectPdf.PdfDocument();
+                string NameConsumer = "";
+
+                foreach (var pageNotes in pages)
+                {
+                    string TableService = "";
+                    string TableNotes = "";
+
+                    for (int i = 0; i < pageNotes.Count; i++)
+                    {
+                        var _Notes = pageNotes[i];
+
+                        // Columna "Parent/Caregiver Signature": la firma capturada en
+                        // leap_client (data URI completa) reemplaza al texto libre de
+                        // PresentInSession en el rediseno del PDF (decision confirmada
+                        // con el usuario).
+                        string _signatureCell = !string.IsNullOrEmpty(_Notes.Signature)
+                            ? "<img src='" + _Notes.Signature + "' alt='Signature' style='max-height:35px;max-width:110px;' />"
+                            : "";
+                        // Formato explicito (nunca ToString() implicito): sin esto, .NET
+                        // usa la cultura del servidor y puede imprimir dia/mes invertido.
+                        // La columna ya es "TIME OF SESSION" (la fecha va aparte en "DATE
+                        // OF SERVICE"), asi que se muestra solo hora de inicio - hora de
+                        // fin (decision confirmada con el usuario).
+                        string _arrivalLabel = _Notes.Date.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+                        string _departureLabel = _Notes.EndDate.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+
+                        TableService += "<tr style='border: solid 1px black;'>";
+                        TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black; height:40px;' class='text-center'>" + _Notes.Date.ToString("MM-dd-yyyy") + "</td>";
+                        TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _arrivalLabel + " - " + _departureLabel + "</td>";
+                        TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _signatureCell + "</td>";
+                        TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'>" + _Notes.Duration + "</td>";
+                        TableService += "</tr>";
+
+                        // Lista de notas de esta pagina: fecha de visita - notas, con
+                        // espacio entre cada entrada (decision confirmada con el usuario),
+                        // en la misma cantidad que las visitas de esta pagina. El bloque
+                        // completo (spacer + texto) lleva page-break-inside:avoid (no una
+                        // fila de tabla en blanco como separador) - con la tabla, un salto
+                        // de pagina del PDF podia caer a la mitad del texto de una nota y
+                        // perder/cortar contenido al imprimir; asi, si una nota no cabe
+                        // completa en la pagina, el renderizador la mueve entera a la
+                        // siguiente en vez de partirla.
+                        // El spacer de arriba es un <div> con altura real (no padding-top):
+                        // SelectPdf no respetaba el padding-top de un elemento que le toca
+                        // empezar una pagina nueva y la nota quedaba pegada al borde
+                        // superior - un div con contenido (&nbsp;) si se renderiza. El
+                        // espacio de ABAJO (padding-bottom + margin-bottom) queda igual que
+                        // antes - no tocar, ya quedo bien.
+                        TableNotes += "<div style='page-break-inside: avoid; margin-bottom: 10px;'>";
+                        TableNotes += "<div style='height:15px;'>&nbsp;</div>";
+                        TableNotes += "<div style='padding: 0 5px 5px 5px;'>" + _Notes.Date.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " - " + _Notes.NotesConsumer + "</div>";
+                        TableNotes += "</div>";
+                    }
+
+                    // Rellena con filas en blanco hasta 11 (solo visual, para que la
+                    // tabla impresa siempre tenga el mismo tamano que el formato
+                    // oficial, aunque el mes/la ultima pagina tenga menos visitas).
+                    for (int i = pageNotes.Count; i < MaxRowXPage; i++)
                     {
                         TableService += "<tr style='border: solid 1px black;'>";
                         TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black; height:40px' class='text-center'></td>";
@@ -1598,107 +1683,72 @@ namespace LEAP.Controllers
                         TableService += "<td style='padding-top: 10px; padding-bottom: 10px; border-right:solid 1px black;' class='text-center'></td>";
                         TableService += "</tr>";
                     }
-                }
-                _htmlString = _htmlString.Replace("[[TableService]]", TableService);
-                _htmlString = _htmlString.Replace("[[TableNotes]]", TableNotes);
-                //_htmlString = _htmlString.Replace("[[Logo]]", _pathLogo);
-                _htmlString = _htmlString.Replace("[[DatePrint]]", DateTime.Now.ToString("MM/dd/yyyy"));
-                string NameConsumer = "";
-                int contador_imagen = 0;
-                // TimesWk/ParentName/TotalHours del formulario impreso salen de las
-                // visitas reales (NotesconsumerList -> leap_api ReportController::notesByConsumer),
-                // no de consumerList (Get_Reports_RPTConsumer, que no trae esos
-                // datos) - antes salian siempre en blanco o con el dato fijo del
-                // Consumer en vez del ingresado en la visita.
-                var latestNote = NotesconsumerList.LastOrDefault();
-                // [[TotalHours]] no debe repetir el total historico de TODAS las visitas del
-                // consumer que trae Get_NotesXConsumer (asi lo calcula la API sobre la lista
-                // completa) - una vez filtrado a la(s) visita(s) de este reporte, se recalcula
-                // sumando solo lo que quedo en NotesconsumerList. Se deja como suma (no un
-                // valor fijo de una sola fila) por si en el futuro un reporte vuelve a incluir
-                // mas de una visita, igual que hacia antes. Duration ahora viene como decimal
-                // real de horas (ej. "1.38", ya no "X hours" - decision confirmada con el
-                // usuario de no redondear a hora entera), asi que se suma como decimal y se
-                // reformatea igual que ReportController::formatDurationInHours en leap_api.
-                double _totalHoursSum = 0;
-                foreach (var _n in NotesconsumerList)
-                {
-                    double _h;
-                    if (double.TryParse(_n.Duration, NumberStyles.Float, CultureInfo.InvariantCulture, out _h))
+
+                    string _htmlString = _baseHtmlString;
+                    _htmlString = _htmlString.Replace("[[TableService]]", TableService);
+                    _htmlString = _htmlString.Replace("[[TableNotes]]", TableNotes);
+                    _htmlString = _htmlString.Replace("[[DatePrint]]", DateTime.Now.ToString("MM/dd/yyyy"));
+
+                    foreach (var _Consumer in consumerList)
                     {
-                        _totalHoursSum += _h;
+                        _htmlString = _htmlString.Replace("[[ConsumerName]]", _Consumer.ConsumerName);
+                        _htmlString = _htmlString.Replace("[[UCI]]", _Consumer.UCI);
+                        _htmlString = _htmlString.Replace("[[RCenter]]", _Consumer.RegionalCenter);
+                        _htmlString = _htmlString.Replace("[[TimesWk]]", latestNote?.TimesxWeek ?? "");
+                        _htmlString = _htmlString.Replace("[[SpecialistName]]", _Consumer.spe_FullName);
+                        _htmlString = _htmlString.Replace("[[SpecialistSignature]]", _Consumer.spe_FullName);
+                        _htmlString = _htmlString.Replace("[[ParentName]]", latestNote?.PresentInSession ?? "");
+                        _htmlString = _htmlString.Replace("[[TotalHours]]", _totalHoursText);
+                        // Nombre del CONSUMER (antes tomaba spe_FullName por error, el
+                        // nombre del specialist) - usado para el nombre del archivo.
+                        NameConsumer = _Consumer.ConsumerName;
+
+                        if (_Consumer.c_image != "")
+                        {
+                            string base64ImageUri = "data:image/png;base64," + _Consumer.c_image;
+                            _htmlString = _htmlString.Replace("[[ConsumerImage]]", base64ImageUri);
+                        }
+                        else
+                        {
+                            _htmlString = _htmlString.Replace("[[ConsumerImage]]", _pathUserBase);
+                        }
+
+                        if (_Consumer.Type.ToLower().Equals("leap"))
+                        {
+                            _htmlString = _htmlString.Replace("[[Logo]]", _pathLogoAzul);
+                        }
+                        else if (_Consumer.Type.ToLower().Equals("center"))
+                        {
+                            _htmlString = _htmlString.Replace("[[Logo]]", _pathLogoVerde);
+                        }
+                        else
+                        {
+                            _htmlString = _htmlString.Replace("[[Logo]]", _pathLogo);
+                        }
+                    }
+
+                    SelectPdf.PdfDocument sectionDoc = converter.ConvertHtmlString(_htmlString, "");
+                    foreach (SelectPdf.PdfPage page in sectionDoc.Pages)
+                    {
+                        doc.AddPage(page);
                     }
                 }
-                string _totalHoursText = NotesconsumerList.Count > 0
-                    ? _totalHoursSum.ToString("F2", CultureInfo.InvariantCulture)
-                    : "";
-                foreach (var _Consumer in consumerList)
-                {
-                    _htmlString = _htmlString.Replace("[[ConsumerName]]", _Consumer.ConsumerName);
-                    _htmlString = _htmlString.Replace("[[UCI]]", _Consumer.UCI);
-                    _htmlString = _htmlString.Replace("[[RCenter]]", _Consumer.RegionalCenter);
-                    _htmlString = _htmlString.Replace("[[TimesWk]]", latestNote?.TimesxWeek ?? "");
-                    _htmlString = _htmlString.Replace("[[SpecialistName]]", _Consumer.spe_FullName);
-                    _htmlString = _htmlString.Replace("[[SpecialistSignature]]", _Consumer.spe_FullName);
-                    _htmlString = _htmlString.Replace("[[ParentName]]", latestNote?.PresentInSession ?? "");
-                    _htmlString = _htmlString.Replace("[[TotalHours]]", _totalHoursText);
-                    NameConsumer = _Consumer.spe_FullName;
-                    
-                    if (_Consumer.c_image != "")
-                    {
-                        byte[] imageBytes = Convert.FromBase64String(_Consumer.c_image);
-                        string base64ImageUri = "data:image/png;base64," + _Consumer.c_image;
-                        _htmlString = _htmlString.Replace("[[ConsumerImage]]", base64ImageUri);
-                    }
-                    else
-                    {
-                        _htmlString = _htmlString.Replace("[[ConsumerImage]]", _pathUserBase);
-                    }
 
-
-
-                    if (_Consumer.Type.ToLower().Equals("leap"))
-                    {
-                        _htmlString = _htmlString.Replace("[[Logo]]", _pathLogoAzul);
-                    }
-                    else if (_Consumer.Type.ToLower().Equals("center"))
-                    {
-                        _htmlString = _htmlString.Replace("[[Logo]]", _pathLogoVerde);
-                    }
-                    else
-                    {
-                        _htmlString = _htmlString.Replace("[[Logo]]", _pathLogo);
-                    }
-                    contador_imagen++;                }
-                NameConsumer.Replace(" ", "_");
-
-                
-
-
-
-                PdfPageSize pageSize = PdfPageSize.Letter;
-                PdfPageOrientation pdfPageOrientation = PdfPageOrientation.Portrait;
-                int webPageWidth = 1024;
-                int webPageHeight = 0;
-
-                HtmlToPdf converter = new HtmlToPdf();
-                converter.Options.PdfPageSize = pageSize;
-                converter.Options.PdfPageOrientation = pdfPageOrientation;
-                converter.Options.WebPageWidth = webPageWidth;
-                converter.Options.WebPageHeight = webPageHeight;
-                SelectPdf.PdfDocument doc = new SelectPdf.PdfDocument();
-                SelectPdf.PdfDocument sectionDoc = converter.ConvertHtmlString(_htmlString, "");
-                foreach (SelectPdf.PdfPage page in sectionDoc.Pages)
-                {
-                    doc.AddPage(page);
-                }
                 using (var stream = new System.IO.MemoryStream())
                 {
                     doc.Save(stream);
                     stream.Seek(0, System.IO.SeekOrigin.Begin);
                     result = new FileContentResult(stream.ToArray(), "application/pdf");
-                    result.FileDownloadName = "Rpt_NotesConsumer_" + NameConsumer + ".pdf";
+                    // Rpt_Visits_<Consumer>_<Mes del reporte>.pdf (decision confirmada
+                    // con el usuario).
+                    result.FileDownloadName = "Rpt_Visits_" + NameConsumer.Replace(" ", "_") + "_" + reportMonth.ToString("MMMM", CultureInfo.InvariantCulture) + ".pdf";
                 }
+                // Este PDF se regenera en cada request (puede cambiar visita a
+                // visita) - sin esto el navegador puede reusar una respuesta vieja
+                // si se recarga la misma pestana/URL en vez de abrir una nueva.
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetNoStore();
+                Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
                 doc.Close();
                 return result;
             }

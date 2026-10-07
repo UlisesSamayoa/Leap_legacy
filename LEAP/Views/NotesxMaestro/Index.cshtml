@@ -76,6 +76,11 @@
         $(document).ready(function () {
             $('#table_NotesM').DataTable({
                 "dom": 'Bfrtip',
+                // El servidor ya manda esto ordenado por fecha de la visita
+                // descendente (VisitReportController::index en leap_api) - sin
+                // esto, DataTables lo reordenaba solo por la 1ra columna (UCI) al
+                // cargar, agrupando por consumer en vez de mostrar el orden real.
+                order: [],
                 buttons: [
                     {
                         extend: 'excel',

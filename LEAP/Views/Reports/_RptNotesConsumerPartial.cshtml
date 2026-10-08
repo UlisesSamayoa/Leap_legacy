@@ -63,9 +63,12 @@ else
 }
 <script>
     function abrirArchivoEnNuevaPestana(uci, visitDate) {
-        // Genera la URL hacia el método en el controlador con el UCI y la fecha de la visita,
-        // para que el PDF solo incluya esa visita en vez de todas las del consumer.
-        const url = '/Reports/NotesConsumerReport?_uci=' + encodeURIComponent(uci) + '&_date=' + encodeURIComponent(visitDate);
+        // @Url.Action resuelve el virtual path real del sitio en IIS (ej.
+        // /NombreWeb/Reports/...) en vez de asumir que la app vive en la raiz
+        // del dominio - '/Reports/...' a mano daba 404 en IIS cuando el sitio
+        // se publica en una subcarpeta en vez de la raiz.
+        const baseUrl = '@Url.Action("NotesConsumerReport", "Reports")';
+        const url = baseUrl + '?_uci=' + encodeURIComponent(uci) + '&_date=' + encodeURIComponent(visitDate);
 
         // Abre una nueva pestaña con la URL generada
         window.open(url, '_blank');

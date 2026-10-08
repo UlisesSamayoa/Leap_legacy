@@ -1057,9 +1057,10 @@ else
         GetLang()
         $.ajax({
             type: "GET",
-            // @Url.Action resuelve el virtual path real del sitio en IIS - una
-            // ruta a mano como '/Consumer/Getspecialist' asume que la app vive
-            // en la raiz del dominio y da 404 si el sitio esta en subcarpeta.
+            // Url.Action (Razor) resuelve el virtual path real del sitio en
+            // IIS - una ruta a mano como '/Consumer/Getspecialist' asume que
+            // la app vive en la raiz del dominio y da 404 si el sitio esta en
+            // subcarpeta.
             url: '@Url.Action("Getspecialist", "Consumer")',
             data: {},
             contentType: "application/json; charset=utf-8",

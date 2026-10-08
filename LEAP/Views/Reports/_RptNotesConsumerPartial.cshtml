@@ -63,10 +63,10 @@ else
 }
 <script>
     function abrirArchivoEnNuevaPestana(uci, visitDate) {
-        // @Url.Action resuelve el virtual path real del sitio en IIS (ej.
-        // /NombreWeb/Reports/...) en vez de asumir que la app vive en la raiz
-        // del dominio - '/Reports/...' a mano daba 404 en IIS cuando el sitio
-        // se publica en una subcarpeta en vez de la raiz.
+        // Url.Action (Razor) resuelve el virtual path real del sitio en IIS
+        // (ej. /NombreWeb/Reports/...) en vez de asumir que la app vive en la
+        // raiz del dominio - '/Reports/...' a mano daba 404 en IIS cuando el
+        // sitio se publica en una subcarpeta en vez de la raiz.
         const baseUrl = '@Url.Action("NotesConsumerReport", "Reports")';
         const url = baseUrl + '?_uci=' + encodeURIComponent(uci) + '&_date=' + encodeURIComponent(visitDate);
 

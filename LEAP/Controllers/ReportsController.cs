@@ -2069,13 +2069,19 @@ namespace LEAP.Controllers
         //    }
         //}
 
-        public async Task<FileStreamResult> CenterReport(string regional, int month, int year)
+        // DEPRECATED (2026-10): tabla 2 (horas por CDS) tenia los nombres de CDS
+        // hardcodeados a 4 fijos ("DE LA TORRE, MAR", etc.) y las celdas nunca
+        // se llenaban con datos reales (solo encabezados de adorno). Ver
+        // implementacion nueva mas abajo, misma firma/nombre de metodo. Se deja
+        // comentado por si hace falta volver a esto.
+        /*
+        public async Task<FileStreamResult> CenterReport_OLD(string regional, int month, int year)
         {
             var data = _ReportsModel._Rpt_Data_CentersByMonth(month, year, regional);
             string numeroMes = month.ToString();
 
             string nombreMes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(numeroMes));
-            var reporte = Crear_RptExcel(data, nombreMes, year.ToString(),regional);
+            var reporte = Crear_RptExcel_OLD(data, nombreMes, year.ToString(),regional);
 
             var fileStreamResult = new FileStreamResult(reporte, "application/vnd.ms-excel")
             {
@@ -2083,7 +2089,7 @@ namespace LEAP.Controllers
             };
             return fileStreamResult;
         }
-        public MemoryStream Crear_RptExcel(List<ReportsModel> _data,string month,string year,string regional)
+        public MemoryStream Crear_RptExcel_OLD(List<ReportsModel> _data,string month,string year,string regional)
         {
             MemoryStream workStream = new MemoryStream();
             try
@@ -2111,7 +2117,7 @@ namespace LEAP.Controllers
                 worksheet.Row(1).Height = 50;
                 worksheet.Row(2).Height = 50;
                 worksheet.Row(3).Height = 35;
-                
+
 
                 var Titulo2Reporte = worksheet.Range(1, 36, 2, 36).Merge().Cell(1, 1);
                 Titulo2Reporte.Value = "";
@@ -2143,7 +2149,7 @@ namespace LEAP.Controllers
                 }
 
                 var MesActual = worksheet.Range(2, 25, 2, 33).Merge().Cell(1, 1);
-                
+
                 MesActual.Value = month+" ,"+year ;
                 MesActual.Style.Font.Bold = true;
                 MesActual.Style.Font.FontColor = XLColor.White;
@@ -2290,11 +2296,6 @@ namespace LEAP.Controllers
                             {
 
                                 var valores2 = worksheet.Cell(_count, (j+2) + 1);
-                                // Horas brindadas ese dia del mes (columna = dia j+1). Antes esta
-                                // columna quedaba siempre en blanco; ahora se llena con lo que
-                                // trae leap_api (centersByMonth) a partir de las visitas reales,
-                                // para que el SUMATORIA de la fila de mas abajo sume algo. Decimal
-                                // real (ej. 1.32), no redondeado a hora entera.
                                 double _dayHours;
                                 if (item.DayHours != null && item.DayHours.TryGetValue(j + 1, out _dayHours) && _dayHours > 0)
                                 {
@@ -2349,54 +2350,9 @@ namespace LEAP.Controllers
                 {
                     var footer = worksheet.Cell(TotalCeldasGlobal, i + 1);
                     footer.Value = ContraTitulos_Tabla[i];
-                    footer.Style.Font.Bold = true;
-                    footer.Style.Font.FontColor = XLColor.Black;
-                    footer.Style.Fill.BackgroundColor = XLColor.LightGreen;
-                    footer.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    footer.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    footer.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    footer.Style.Border.OutsideBorderColor = XLColor.Black;
-
                     var footerE2 = worksheet.Cell(TotalCeldasGlobal, 36);
                     footerE2.Value = ContraTitulos_Tabla[0];
-                    footerE2.Style.Font.Bold = true;
-                    footerE2.Style.Font.FontColor = XLColor.Black;
-                    footerE2.Style.Fill.BackgroundColor = XLColor.LightGreen;
-                    footerE2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    footerE2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    footerE2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    footerE2.Style.Border.OutsideBorderColor = XLColor.Black;
-                    if (i >= 1) 
-                    {
-                        for (int j = 0; j < 31; j++)
-                        {
-                            var footer2 = worksheet.Cell(TotalCeldasGlobal, (j + 2) + 1);
-                            footer2.Value = "";
-                            footer2.Style.Font.Bold = true;
-                            footer2.Style.Font.FontColor = XLColor.Black;
-                            footer2.Style.Fill.BackgroundColor = XLColor.LightGreen;
-                            footer2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                            footer2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                            footer2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                            footer2.Style.Border.OutsideBorderColor = XLColor.Black;
-                        }
-                        for (int j = 36; j < 42; j++)
-                        {
-                            var footer2 = worksheet.Cell(TotalCeldasGlobal, j + 1);
-                            footer2.Value = "";
-                            footer2.Style.Font.Bold = true;
-                            footer2.Style.Font.FontColor = XLColor.Black;
-                            footer2.Style.Fill.BackgroundColor = XLColor.LightGreen;
-                            footer2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                            footer2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                            footer2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                            footer2.Style.Border.OutsideBorderColor = XLColor.Black;
-                        }
-                    }
                     var footer3 = worksheet.Cell(TotalCeldasGlobal, 34);
-                    // Fila TOTAL (justo debajo del ultimo consumer): suma los subtotales por
-                    // consumer de la columna AH (filas 4 a TotalCeldasGlobal-1, ya que los
-                    // consumers arrancan en la fila 4).
                     if (TotalCeldasGlobal > 4)
                     {
                         footer3.FormulaA1 = "=SUM(AH4:AH" + (TotalCeldasGlobal - 1) + ")";
@@ -2405,91 +2361,20 @@ namespace LEAP.Controllers
                     {
                         footer3.Value = "";
                     }
-                    footer3.Style.Font.Bold = true;
-                    footer3.Style.Font.FontColor = XLColor.Black;
-                    footer3.Style.Fill.BackgroundColor = XLColor.LightGreen;
-                    footer3.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    footer3.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    footer3.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    footer3.Style.Border.OutsideBorderColor = XLColor.Black;
                 }
-                //lo pondre aca
 
                 var TituloReporte = worksheet.Range(2, 1, 2, 10).Merge().Cell(1, 1);
                 TituloReporte.Value = datoR ;
-                TituloReporte.Style.Font.Bold = true;
-                TituloReporte.Style.Font.FontColor = XLColor.White;
-                TituloReporte.Style.Fill.BackgroundColor = XLColor.Black;
-                TituloReporte.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                TituloReporte.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                TituloReporte.Style.Font.FontSize = 26;
 
                 string[] ContraTitulos2_Tabla = { "GRAND TOTAL", "" };
-                Int32 _Cantididad_Contra2Titulos = ContraTitulos2_Tabla.Length;
-                for (int i = 0; i < _Cantididad_Contra2Titulos; i++)
+                for (int i = 0; i < ContraTitulos2_Tabla.Length; i++)
                 {
                     var footer_2 = worksheet.Cell(TotalCeldasGlobal+1, i + 1);
                     footer_2.Value = ContraTitulos2_Tabla[i];
-                    footer_2.Style.Font.Bold = true;
-                    footer_2.Style.Font.FontColor = XLColor.Black;
-                    footer_2.Style.Fill.BackgroundColor = XLColor.Yellow;
-                    footer_2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    footer_2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    footer_2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    footer_2.Style.Border.OutsideBorderColor = XLColor.Black;
-
-                    var footerE_2 = worksheet.Cell(TotalCeldasGlobal + 1, 36);
-                    footerE_2.Value = ContraTitulos2_Tabla[0];
-                    footerE_2.Style.Font.Bold = true;
-                    footerE_2.Style.Font.FontColor = XLColor.Black;
-                    footerE_2.Style.Fill.BackgroundColor = XLColor.Yellow;
-                    footerE_2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    footerE_2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    footerE_2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    footerE_2.Style.Border.OutsideBorderColor = XLColor.Black;
-
-                    if (i >= 1)
-                    {
-                        for (int j = 0; j < 31; j++)
-                        {
-                            var footer_2_2 = worksheet.Cell(TotalCeldasGlobal+1, (j + 2) + 1);
-                            footer_2_2.Value = "";
-                            footer_2_2.Style.Font.Bold = true;
-                            footer_2_2.Style.Font.FontColor = XLColor.Black;
-                            footer_2_2.Style.Fill.BackgroundColor = XLColor.Yellow;
-                            footer_2_2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                            footer_2_2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                            footer_2_2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                            footer_2_2.Style.Border.OutsideBorderColor = XLColor.Black;
-                        }
-                        for (int j = 36; j < 42; j++)
-                        {
-                            var footerE_2_2 = worksheet.Cell(TotalCeldasGlobal + 1, j  + 1);
-                            footerE_2_2.Value = "";
-                            footerE_2_2.Style.Font.Bold = true;
-                            footerE_2_2.Style.Font.FontColor = XLColor.Black;
-                            footerE_2_2.Style.Fill.BackgroundColor = XLColor.Yellow;
-                            footerE_2_2.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                            footerE_2_2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                            footerE_2_2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                            footerE_2_2.Style.Border.OutsideBorderColor = XLColor.Black;
-                        }
-                    }
-                    var footer_2_3 = worksheet.Cell(TotalCeldasGlobal+1, 34);
-                    footer_2_3.Value = "";
-                    footer_2_3.Style.Font.Bold = true;
-                    footer_2_3.Style.Font.FontColor = XLColor.Black;
-                    footer_2_3.Style.Fill.BackgroundColor = XLColor.Yellow;
-                    footer_2_3.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    footer_2_3.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    footer_2_3.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    footer_2_3.Style.Border.OutsideBorderColor = XLColor.Black;
                 }
 
                 worksheet.Column(36).Width = 50;
-                //worksheet.Cell("AQ4").FormulaA1 = "=+B4";
-                //worksheet.Cell("AP4").FormulaA1 = "=+A4";
-                
+
                 workbook.SaveAs(workStream);
                 workStream.Position = 0;
                 return workStream;
@@ -2499,16 +2384,329 @@ namespace LEAP.Controllers
                 return workStream;
             }
         }
+        */
 
+        // Center Report - tabla 1: horas por dia del mes por consumer (igual
+        // que antes). Tabla 2 (nueva, dinamica): horas de cada consumer por
+        // CDS ese mes - antes la lista de CDS era hardcodeada a 4 nombres
+        // fijos y las celdas nunca se llenaban con datos; ahora sale de los
+        // CDS reales de este Regional Center (leap_api
+        // ReportController::centersByMonth) y cada celda es la suma real de
+        // VisitReport.specialist_id para ese consumer+CDS ese mes (un
+        // consumer puede repartir sus horas aprobadas entre varios CDS,
+        // decision confirmada con el usuario). Mismo nombre de metodo que
+        // antes (CenterReport/Crear_RptExcel) - el boton de Reports/Index
+        // sigue funcionando sin cambios.
+        public async Task<FileStreamResult> CenterReport(string regional, int month, int year)
+        {
+            var data = _ReportsModel._Rpt_Data_CentersByMonth(month, year, regional);
+            // Nombre de mes en ingles explicito (nunca CurrentCulture) - mismo
+            // criterio ya aplicado en CDSVisitsReport.
+            string nombreMes = CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(month);
+            var reporte = Crear_RptExcel(data, nombreMes, year.ToString(), regional);
+
+            // Nombre del Regional Center real (viene en la respuesta de
+            // leap_api) para armar el nombre del archivo descargado.
+            string regionalCenterName = data?.Consumers?.FirstOrDefault()?.RegionalCenter ?? regional;
+            string invalidChars = new string(System.IO.Path.GetInvalidFileNameChars());
+            string safeRegional = string.Concat(regionalCenterName.Where(c => invalidChars.IndexOf(c) < 0));
+
+            var fileStreamResult = new FileStreamResult(reporte, "application/vnd.ms-excel")
+            {
+                FileDownloadName = $"RPT_Center_{safeRegional}_{nombreMes}_{year}.xls"
+            };
+            return fileStreamResult;
+        }
+
+        public MemoryStream Crear_RptExcel(ReportsModel.CentersByMonthResult _data, string month, string year, string regional)
+        {
+            MemoryStream workStream = new MemoryStream();
+            try
+            {
+                // Columnas fijas de la tabla 1: A=Consumer name, B=H (MaxHours),
+                // C..AG=dia 1-31, AH=TOTAL. Tabla 2 (dinamica): AJ=Consumer
+                // name, AK=H, AL en adelante = un CDS por columna + TOTAL al
+                // final - el ancho de la tabla 2 varia segun cuantos CDS tenga
+                // este Regional Center.
+                const int colName = 1;
+                const int colHrs = 2;
+                const int colFirstDay = 3;   // C, dia 1
+                const int colTotal1 = 34;    // AH
+                const int colName2 = 36;     // AJ
+                const int colHrs2 = 37;      // AK
+                const int colFirstCds = 38;  // AL
+                const int firstDataRow = 4;
+
+                string ColLetter(int col)
+                {
+                    string s = "";
+                    while (col > 0)
+                    {
+                        int rem = (col - 1) % 26;
+                        s = (char)('A' + rem) + s;
+                        col = (col - 1) / 26;
+                    }
+                    return s;
+                }
+
+                void StyleTotalsCell(IXLCell cell, XLColor bg)
+                {
+                    cell.Style.Font.Bold = true;
+                    cell.Style.Font.FontColor = XLColor.Black;
+                    cell.Style.Fill.BackgroundColor = bg;
+                    cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    cell.Style.Border.OutsideBorderColor = XLColor.Black;
+                }
+
+                void StyleDataCell(IXLCell cell)
+                {
+                    cell.Style.Font.Bold = true;
+                    cell.Style.Font.FontColor = XLColor.Black;
+                    cell.Style.Fill.BackgroundColor = XLColor.LightGray;
+                    cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    cell.Style.Border.OutsideBorderColor = XLColor.Black;
+                    cell.Style.Font.FontSize = 12;
+                }
+
+                var specialists = _data?.Specialists ?? new List<ReportsModel.CenterRefModel>();
+                int specialistCount = specialists.Count;
+                int colTotal2 = colFirstCds + specialistCount;
+                int lastColumn = colTotal2;
+
+                var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Reporte");
+                var imagePath = Server.MapPath("~/Content/Images/logoN.png");
+                worksheet.AddPicture(imagePath).MoveTo(worksheet.Cell(1, 1)).Scale(0.5);
+                worksheet.Row(1).Height = 50;
+                worksheet.Row(2).Height = 50;
+                worksheet.Row(3).Height = 35;
+
+                // Barra negra decorativa (filas 1-2), todo el ancho dinamico
+                // EXCEPTO las columnas de CDS/TOTAL de la tabla 2, que llevan
+                // su propio header fusionado filas 1-3 (ver mas abajo, igual
+                // que el formato original).
+                for (int col = 1; col < colFirstCds; col++)
+                {
+                    foreach (int r in new[] { 1, 2 })
+                    {
+                        var c = worksheet.Cell(r, col);
+                        c.Value = "";
+                        c.Style.Fill.BackgroundColor = XLColor.Black;
+                        c.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                        c.Style.Border.OutsideBorderColor = XLColor.Black;
+                    }
+                }
+
+                var MesActual = worksheet.Range(2, 25, 2, 33).Merge().Cell(1, 1);
+                MesActual.Value = month + " ," + year;
+                MesActual.Style.Font.Bold = true;
+                MesActual.Style.Font.FontColor = XLColor.White;
+                MesActual.Style.Fill.BackgroundColor = XLColor.Black;
+                MesActual.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                MesActual.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                MesActual.Style.Font.FontSize = 26;
+
+                // Encabezados tabla 1 (fila 3)
+                worksheet.Cell(3, colName).Value = "Consumer name";
+                worksheet.Cell(3, colHrs).Value = "H";
+                StyleHeader(worksheet.Cell(3, colName));
+                StyleHeader(worksheet.Cell(3, colHrs));
+                for (int day = 1; day <= 31; day++)
+                {
+                    var dayHeader = worksheet.Cell(3, colFirstDay + day - 1);
+                    dayHeader.Value = day;
+                    StyleHeader(dayHeader);
+                    worksheet.Column(colFirstDay + day - 1).Width = 5;
+                }
+                worksheet.Cell(3, colTotal1).Value = "TOTAL";
+                StyleHeader(worksheet.Cell(3, colTotal1));
+                worksheet.Column(colName).Width = 50;
+
+                // Encabezados tabla 2 (fila 3) - dinamicos segun los CDS reales
+                // de este Regional Center (antes hardcodeados a 4 nombres fijos).
+                worksheet.Cell(3, colName2).Value = "Consumer name";
+                worksheet.Cell(3, colHrs2).Value = "H";
+                StyleHeader(worksheet.Cell(3, colName2));
+                StyleHeader(worksheet.Cell(3, colHrs2));
+                // CDS's + TOTAL fusionados en filas 1-3 (igual que el formato
+                // original, que tambien incluia "TOTAL" dentro del mismo
+                // bloque rotado), texto rotado 90.
+                for (int i = 0; i <= specialistCount; i++)
+                {
+                    int col = colFirstCds + i;
+                    bool isTotalColumn = i == specialistCount;
+                    var range = worksheet.Range(1, col, 3, col);
+                    range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    range.Style.Border.OutsideBorderColor = XLColor.Black;
+                    range.Merge();
+                    var cds = range.Cell(1, 1);
+                    cds.Value = isTotalColumn ? "TOTAL" : specialists[i].Name;
+                    cds.Style.Font.FontColor = XLColor.Black;
+                    cds.Style.Fill.BackgroundColor = XLColor.LightGreen;
+                    cds.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    cds.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    cds.Style.Alignment.TextRotation = 90;
+                    cds.Style.Font.FontSize = 12;
+                    worksheet.Column(col).Width = 10;
+                }
+                worksheet.Column(colName2).Width = 25;
+
+                var consumers = _data?.Consumers ?? new List<ReportsModel>();
+                int row = firstDataRow;
+                string datoR = "";
+                foreach (var item in consumers)
+                {
+                    datoR = item.RegionalCenter;
+
+                    // Tabla 1
+                    var nameCell = worksheet.Cell(row, colName);
+                    nameCell.Value = item.ConsumerName;
+                    StyleDataCell(nameCell);
+                    var hrsCell = worksheet.Cell(row, colHrs);
+                    hrsCell.Value = item.MaxHours;
+                    StyleDataCell(hrsCell);
+                    for (int day = 1; day <= 31; day++)
+                    {
+                        var cell = worksheet.Cell(row, colFirstDay + day - 1);
+                        double dayHours;
+                        if (item.DayHours != null && item.DayHours.TryGetValue(day, out dayHours) && dayHours > 0)
+                        {
+                            cell.Value = dayHours;
+                            cell.Style.NumberFormat.Format = "0.00";
+                        }
+                        StyleDataCell(cell);
+                    }
+                    worksheet.Cell(row, colTotal1).FormulaA1 = $"=SUM(C{row}:AG{row})";
+                    StyleDataCell(worksheet.Cell(row, colTotal1));
+
+                    // Tabla 2 - "Consumer name"/"H" son un espejo de la tabla 1
+                    // (igual que antes), las columnas de CDS son nuevas.
+                    var nameCell2 = worksheet.Cell(row, colName2);
+                    nameCell2.FormulaA1 = $"=+{ColLetter(colName)}{row}";
+                    StyleDataCell(nameCell2);
+                    var hrsCell2 = worksheet.Cell(row, colHrs2);
+                    hrsCell2.FormulaA1 = $"=+{ColLetter(colHrs)}{row}";
+                    StyleDataCell(hrsCell2);
+                    for (int i = 0; i < specialistCount; i++)
+                    {
+                        int col = colFirstCds + i;
+                        var cell = worksheet.Cell(row, col);
+                        double cdsHours;
+                        if (item.HoursBySpecialist != null && item.HoursBySpecialist.TryGetValue(specialists[i].IDSpecialist, out cdsHours) && cdsHours > 0)
+                        {
+                            cell.Value = cdsHours;
+                            cell.Style.NumberFormat.Format = "0.00";
+                        }
+                        StyleDataCell(cell);
+                    }
+                    if (specialistCount > 0)
+                    {
+                        worksheet.Cell(row, colTotal2).FormulaA1 = $"=SUM({ColLetter(colFirstCds)}{row}:{ColLetter(colFirstCds + specialistCount - 1)}{row})";
+                    }
+                    else
+                    {
+                        worksheet.Cell(row, colTotal2).Value = 0;
+                    }
+                    StyleDataCell(worksheet.Cell(row, colTotal2));
+
+                    worksheet.Row(row).Height = 22;
+                    row++;
+                }
+
+                int lastConsumerRow = row - 1;
+
+                // Fila TOTAL: suma real por columna (antes quedaba decorativa,
+                // sin formulas), tanto de los dias (tabla 1) como de cada CDS
+                // (tabla 2).
+                void WriteTotalsRow(int totalsRow, string label, XLColor bg)
+                {
+                    worksheet.Cell(totalsRow, colName).Value = label;
+                    StyleTotalsCell(worksheet.Cell(totalsRow, colName), bg);
+                    StyleTotalsCell(worksheet.Cell(totalsRow, colHrs), bg);
+
+                    for (int day = 1; day <= 31; day++)
+                    {
+                        int col = colFirstDay + day - 1;
+                        var cell = worksheet.Cell(totalsRow, col);
+                        if (lastConsumerRow >= firstDataRow)
+                        {
+                            cell.FormulaA1 = $"=SUM({ColLetter(col)}{firstDataRow}:{ColLetter(col)}{lastConsumerRow})";
+                        }
+                        StyleTotalsCell(cell, bg);
+                    }
+                    var total1Cell = worksheet.Cell(totalsRow, colTotal1);
+                    if (lastConsumerRow >= firstDataRow)
+                    {
+                        total1Cell.FormulaA1 = $"=SUM(AH{firstDataRow}:AH{lastConsumerRow})";
+                    }
+                    StyleTotalsCell(total1Cell, bg);
+
+                    worksheet.Cell(totalsRow, colName2).Value = label;
+                    StyleTotalsCell(worksheet.Cell(totalsRow, colName2), bg);
+                    StyleTotalsCell(worksheet.Cell(totalsRow, colHrs2), bg);
+                    for (int i = 0; i < specialistCount; i++)
+                    {
+                        int col = colFirstCds + i;
+                        var cell = worksheet.Cell(totalsRow, col);
+                        if (lastConsumerRow >= firstDataRow)
+                        {
+                            cell.FormulaA1 = $"=SUM({ColLetter(col)}{firstDataRow}:{ColLetter(col)}{lastConsumerRow})";
+                        }
+                        StyleTotalsCell(cell, bg);
+                    }
+                    var total2Cell = worksheet.Cell(totalsRow, colTotal2);
+                    if (specialistCount > 0 && lastConsumerRow >= firstDataRow)
+                    {
+                        total2Cell.FormulaA1 = $"=SUM({ColLetter(colFirstCds)}{totalsRow}:{ColLetter(colFirstCds + specialistCount - 1)}{totalsRow})";
+                    }
+                    StyleTotalsCell(total2Cell, bg);
+                }
+
+                WriteTotalsRow(row, "TOTAL", XLColor.LightGreen);
+                row++;
+
+                var TituloReporte = worksheet.Range(2, 1, 2, 10).Merge().Cell(1, 1);
+                TituloReporte.Value = datoR;
+                TituloReporte.Style.Font.Bold = true;
+                TituloReporte.Style.Font.FontColor = XLColor.White;
+                TituloReporte.Style.Fill.BackgroundColor = XLColor.Black;
+                TituloReporte.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                TituloReporte.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                TituloReporte.Style.Font.FontSize = 26;
+
+                // GRAND TOTAL: el equipo hace un corte manual del Excel antes de
+                // imprimir - en lo que el sistema genera (sin ese corte), es
+                // igual al TOTAL de arriba (decision confirmada con el
+                // usuario). Misma formula/rango, solo cambia la etiqueta.
+                WriteTotalsRow(row, "GRAND TOTAL", XLColor.Yellow);
+
+                workbook.SaveAs(workStream);
+                workStream.Position = 0;
+                return workStream;
+            }
+            catch (Exception)
+            {
+                return workStream;
+            }
+        }
+
+        // DEPRECATED (2026-10): reemplazado por el formato oficial "MONTHLY
+        // ATTENDANCE SHEET" firmado por el cliente (ver mas abajo). Se deja
+        // comentado en vez de borrarlo por si hace falta volver a esto.
+        /*
         // Reporte de visitas por CDS: mismo enfoque que CenterReport (grilla de
         // dias del mes x consumer, con las horas brindadas cada dia), pero
         // agrupado por CDS (specialist1) en vez de por Regional Center, y sin las
         // columnas extra de ese reporte (MaxHours, bloque de especialistas, etc).
-        public FileStreamResult CDSVisitsReport(string cds, int month, int year)
+        public FileStreamResult CDSVisitsReport_OLD(string cds, int month, int year)
         {
             var data = _ReportsModel._Rpt_Data_CDSVisitsByMonth(month, year, cds);
             string nombreMes = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
-            var reporte = Crear_RptCDSVisitsExcel(data, nombreMes, year.ToString());
+            var reporte = Crear_RptCDSVisitsExcel_OLD(data, nombreMes, year.ToString());
 
             return new FileStreamResult(reporte, "application/vnd.ms-excel")
             {
@@ -2516,7 +2714,7 @@ namespace LEAP.Controllers
             };
         }
 
-        public MemoryStream Crear_RptCDSVisitsExcel(List<ReportsModel> _data, string month, string year)
+        public MemoryStream Crear_RptCDSVisitsExcel_OLD(List<ReportsModel> _data, string month, string year)
         {
             MemoryStream workStream = new MemoryStream();
             try
@@ -2604,6 +2802,270 @@ namespace LEAP.Controllers
                     grandTotal.Value = 0;
                 }
                 StyleHeader(grandTotal);
+
+                workbook.SaveAs(workStream);
+                workStream.Position = 0;
+            }
+            catch (Exception)
+            {
+                return workStream;
+            }
+            return workStream;
+        }
+        */
+
+        // Reporte de visitas por CDS - formato oficial "MONTHLY ATTENDANCE
+        // SHEET" firmado por el cliente (reemplaza al de arriba, comentado).
+        // Un archivo por CDS, consumers agrupados por Regional Center (bloques
+        // con subtotal "TOTAL RC" y total corrido "TOTAL CDS"), columnas HRS
+        // (MaxHours) + dia 1-31 + total primeros 15 dias + total resto del mes
+        // + gran total. Mismo nombre de accion que antes (CDSVisitsReport) -
+        // el boton existente en Reports/Index sigue funcionando sin cambios.
+        public FileStreamResult CDSVisitsReport(string cds, int month, int year)
+        {
+            var data = _ReportsModel._Rpt_Data_CDSVisitsByMonthDetailed(month, year, cds);
+            // Nombre de mes en ingles explicito (nunca CurrentCulture): el
+            // formato oficial firmado dice "DECEMBER,2023", y si el servidor
+            // tiene configurada una cultura en espanol, CurrentCulture da
+            // "diciembre" en vez de "December".
+            string nombreMes = CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(month);
+            var reporte = Crear_RptCDSVisitsExcel(data, nombreMes, year, month);
+
+            return new FileStreamResult(reporte, "application/vnd.ms-excel")
+            {
+                FileDownloadName = "RPT_CDS_Visits.xls"
+            };
+        }
+
+        public MemoryStream Crear_RptCDSVisitsExcel(ReportsModel.CDSVisitsDetailedResult _data, string monthName, int year, int monthNumber)
+        {
+            MemoryStream workStream = new MemoryStream();
+            try
+            {
+                // Columnas fijas (sin importar cuantos dias tenga el mes):
+                // A=Consumer Name, B=HRS, C..Q=dia 1-15, R=TOTAL (1ra mitad),
+                // S..AH=dia 16-fin de mes, AI=TOTAL (2da mitad), AJ=GRAND T.
+                const int colName = 1;
+                const int colHrs = 2;
+                const int colFirstDay = 3;   // C, dia 1
+                const int colTotal1 = 18;    // R
+                const int colSecondDay = 19; // S, dia 16
+                const int colTotal2 = 35;    // AI
+                const int colGrandTotal = 36; // AJ
+                const int firstDataRow = 8;
+
+                int DayColumn(int day) => day <= 15 ? colFirstDay + (day - 1) : colSecondDay + (day - 16);
+                string ColLetter(int col)
+                {
+                    string s = "";
+                    while (col > 0)
+                    {
+                        int rem = (col - 1) % 26;
+                        s = (char)('A' + rem) + s;
+                        col = (col - 1) / 26;
+                    }
+                    return s;
+                }
+
+                // "Fin de mes" real del mes/anio pedido - nunca se asume que el
+                // mes tiene 31 dias (ej. febrero), las columnas de dias que no
+                // existen ese mes quedan en blanco.
+                int daysInMonth = DateTime.DaysInMonth(year, monthNumber);
+                DayOfWeek DowOf(int day) => new DateTime(year, monthNumber, day).DayOfWeek;
+                bool IsWeekend(int day) => day <= daysInMonth && (DowOf(day) == DayOfWeek.Saturday || DowOf(day) == DayOfWeek.Sunday);
+
+                string cdsName = _data?.CDS_name ?? "";
+                string sheetName = string.IsNullOrWhiteSpace(cdsName) ? "Reporte" : cdsName;
+                foreach (char invalid in new[] { '\\', '/', '?', '*', '[', ']', ':' })
+                {
+                    sheetName = sheetName.Replace(invalid, ' ');
+                }
+                if (sheetName.Length > 31) sheetName = sheetName.Substring(0, 31);
+
+                var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add(sheetName);
+
+                void Border(IXLCell cell)
+                {
+                    cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    cell.Style.Border.OutsideBorderColor = XLColor.Black;
+                }
+
+                worksheet.Cell(1, colName).Value = cdsName;
+                worksheet.Cell(2, colName).Value = monthName.ToUpper() + "," + year;
+                Border(worksheet.Cell(1, colName));
+                Border(worksheet.Cell(2, colName));
+
+                // Dia de la semana (3 letras en ingles) y numero de dia por
+                // columna - calculado del DayOfWeek real de ESE mes/anio, nunca
+                // asumido fijo (cada mes empieza un dia distinto de la semana).
+                for (int day = 1; day <= daysInMonth; day++)
+                {
+                    int col = DayColumn(day);
+                    var dowCell = worksheet.Cell(1, col);
+                    var dayCell = worksheet.Cell(2, col);
+                    dowCell.Value = DowOf(day).ToString().Substring(0, 3).ToUpper();
+                    dayCell.Value = day;
+                    Border(dowCell);
+                    Border(dayCell);
+                    if (IsWeekend(day))
+                    {
+                        dowCell.Style.Fill.BackgroundColor = XLColor.Yellow;
+                        dayCell.Style.Fill.BackgroundColor = XLColor.Yellow;
+                    }
+                }
+
+                var titulo = worksheet.Range(5, 10, 5, 20).Merge().Cell(1, 1);
+                titulo.Value = "MONTHLY ATTENDANCE SHEET";
+                StyleTitle(titulo, XLColor.Black, 14);
+
+                var monthLabel = worksheet.Range(6, 9, 6, 11).Merge().Cell(1, 1);
+                monthLabel.Value = "MONTH";
+                monthLabel.Style.Font.Bold = true;
+                monthLabel.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                var monthValue = worksheet.Range(6, 12, 6, 16).Merge().Cell(1, 1);
+                monthValue.Value = monthName.ToUpper() + "," + year;
+                monthValue.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                // "TERMINATED" en el formato oficial firmado es, en la practica,
+                // el fin de semana (no un estado del consumer) - el label se
+                // deja tal cual dice el documento aprobado (decision confirmada
+                // con el usuario). HOLIDAY (asuetos de EUA) se deja fuera por
+                // ahora: mantener al dia un calendario de feriados es carga de
+                // mantenimiento aparte y no afecta ningun total.
+                worksheet.Cell(6, 28).Value = "TERMINATED";
+
+                worksheet.Cell(7, colName).Value = "CONSUMER NAME";
+                worksheet.Cell(7, colHrs).Value = "HRS";
+                for (int day = 1; day <= daysInMonth; day++)
+                {
+                    worksheet.Cell(7, DayColumn(day)).Value = day;
+                }
+                worksheet.Cell(7, colTotal1).Value = "TOTAL";
+                worksheet.Cell(7, colTotal2).Value = "TOTAL";
+                worksheet.Cell(7, colGrandTotal).Value = "GRAND T";
+                for (int col = colName; col <= colGrandTotal; col++)
+                {
+                    StyleHeader(worksheet.Cell(7, col));
+                }
+                for (int day = 1; day <= daysInMonth; day++)
+                {
+                    if (IsWeekend(day))
+                    {
+                        worksheet.Cell(7, DayColumn(day)).Style.Fill.BackgroundColor = XLColor.Yellow;
+                    }
+                }
+
+                worksheet.Column(colName).Width = 30;
+                worksheet.Column(colHrs).Width = 8;
+                for (int col = colFirstDay; col <= colGrandTotal; col++)
+                {
+                    worksheet.Column(col).Width = 6;
+                }
+
+                var consumers = _data?.Consumers ?? new List<ReportsModel>();
+                int row = firstDataRow;
+                int firstConsumerRowOverall = row;
+                int groupFirstRow = row;
+                string currentRC = null;
+
+                // Cierra el bloque del Regional Center actual: fila "TOTAL RC"
+                // (suma solo de este grupo) y fila "TOTAL CDS" (total corrido
+                // desde el primer consumer del CDS hasta aqui). Las columnas de
+                // dia de "TOTAL RC" quedan en blanco a proposito - asi
+                // "TOTAL CDS" puede sumar el rango completo de filas sin contar
+                // dos veces los datos de grupos anteriores.
+                void CloseGroup()
+                {
+                    int lastConsumerRow = row - 1;
+                    if (lastConsumerRow < groupFirstRow) return;
+
+                    int rcRow = row;
+                    worksheet.Cell(rcRow, colName).Value = " TOTAL RC";
+                    worksheet.Cell(rcRow, colTotal1).FormulaA1 = $"=SUM(R{groupFirstRow}:R{lastConsumerRow})";
+                    worksheet.Cell(rcRow, colTotal2).FormulaA1 = $"=SUM(AI{groupFirstRow}:AI{lastConsumerRow})";
+                    worksheet.Cell(rcRow, colGrandTotal).FormulaA1 = $"=SUM(AJ{groupFirstRow}:AJ{lastConsumerRow})";
+                    for (int col = colName; col <= colGrandTotal; col++)
+                    {
+                        StyleHeader(worksheet.Cell(rcRow, col));
+                    }
+                    row = rcRow + 1;
+
+                    int cdsRow = row;
+                    worksheet.Cell(cdsRow, colName).Value = "TOTAL CDS";
+                    for (int day = 1; day <= 31; day++)
+                    {
+                        int col = DayColumn(day);
+                        string letter = ColLetter(col);
+                        worksheet.Cell(cdsRow, col).FormulaA1 = $"=SUM({letter}{firstConsumerRowOverall}:{letter}{rcRow})";
+                    }
+                    worksheet.Cell(cdsRow, colTotal1).FormulaA1 = $"=SUM(C{cdsRow}:Q{cdsRow})";
+                    worksheet.Cell(cdsRow, colTotal2).FormulaA1 = $"=SUM(S{cdsRow}:AH{cdsRow})";
+                    worksheet.Cell(cdsRow, colGrandTotal).FormulaA1 = $"=SUM(R{cdsRow}+AI{cdsRow})";
+                    for (int col = colName; col <= colGrandTotal; col++)
+                    {
+                        StyleHeader(worksheet.Cell(cdsRow, col));
+                    }
+                    row = cdsRow + 2; // +1 fila en blanco de separacion antes del siguiente grupo
+                }
+
+                foreach (var item in consumers)
+                {
+                    if (item.RegionalCenter != currentRC)
+                    {
+                        if (currentRC != null)
+                        {
+                            CloseGroup();
+                        }
+                        currentRC = item.RegionalCenter;
+
+                        // Nombre del Regional Center arriba de cada bloque -
+                        // antes solo se sabia a cual RC pertenecia un grupo de
+                        // filas hasta el final, en el label "TOTAL RC".
+                        var rcLabel = worksheet.Range(row, colName, row, colGrandTotal).Merge().Cell(1, 1);
+                        rcLabel.Value = currentRC;
+                        rcLabel.Style.Font.Bold = true;
+                        rcLabel.Style.Font.FontSize = 12;
+                        rcLabel.Style.Fill.BackgroundColor = XLColor.LightBlue;
+                        rcLabel.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                        Border(rcLabel);
+                        row++;
+                        groupFirstRow = row;
+                    }
+
+                    worksheet.Cell(row, colName).Value = item.ConsumerName;
+                    StyleData(worksheet.Cell(row, colName));
+                    worksheet.Cell(row, colHrs).Value = item.MaxHours;
+                    StyleData(worksheet.Cell(row, colHrs));
+
+                    for (int day = 1; day <= daysInMonth; day++)
+                    {
+                        int col = DayColumn(day);
+                        var cell = worksheet.Cell(row, col);
+                        double hours;
+                        if (item.DayHours != null && item.DayHours.TryGetValue(day, out hours) && hours > 0)
+                        {
+                            cell.Value = hours;
+                            cell.Style.NumberFormat.Format = "0.00";
+                        }
+                        StyleData(cell);
+                        if (IsWeekend(day))
+                        {
+                            cell.Style.Fill.BackgroundColor = XLColor.Yellow;
+                        }
+                    }
+
+                    worksheet.Cell(row, colTotal1).FormulaA1 = $"=SUM(C{row}:Q{row})";
+                    worksheet.Cell(row, colTotal2).FormulaA1 = $"=SUM(S{row}:AH{row})";
+                    worksheet.Cell(row, colGrandTotal).FormulaA1 = $"=SUM(R{row}+AI{row})";
+                    StyleData(worksheet.Cell(row, colTotal1));
+                    StyleData(worksheet.Cell(row, colTotal2));
+                    StyleData(worksheet.Cell(row, colGrandTotal));
+
+                    row++;
+                }
+                CloseGroup();
 
                 workbook.SaveAs(workStream);
                 workStream.Position = 0;

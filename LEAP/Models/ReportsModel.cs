@@ -112,6 +112,11 @@ namespace LEAP.Models
         // hora entera, ej. 79 min -> 1.32), decision confirmada con el usuario.
         public Dictionary<int, double> DayHours { get; set; }
 
+        // CenterReport, tabla 2: horas de este consumer con cada CDS ese mes
+        // (clave = IDSpecialist), para la columna dinamica de ese CDS. Un
+        // consumer puede repartir sus horas aprobadas entre varios CDS.
+        public Dictionary<int, double> HoursBySpecialist { get; set; }
+
         LogModel _log = new LogModel();
 
         // Trae el shape completo desde el endpoint colapsado de leap_api (ver
@@ -259,6 +264,22 @@ namespace LEAP.Models
         }
 
 
+        // Forma de respuesta de leap_api ReportController::centersByMonth: la
+        // lista de CDS's de este Regional Center (columnas dinamicas de la
+        // tabla 2 del Excel, antes hardcodeadas a 4 nombres fijos) + los
+        // consumers con su desglose de horas.
+        public class CenterRefModel
+        {
+            public int IDSpecialist { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class CentersByMonthResult
+        {
+            public List<CenterRefModel> Specialists { get; set; }
+            public List<ReportsModel> Consumers { get; set; }
+        }
+
         // Reporte de customers ACTIVOS HOY (Archive=1) de un centro, con las horas
         // brindadas cada dia del mes/anio pedido (leap_api ReportController::
         // centersByMonth). Un intento anterior de filtrar tambien por consumers.Date
@@ -267,19 +288,19 @@ namespace LEAP.Models
         // ubicar las visitas en la grilla de dias, no para filtrar que consumers
         // aparecen. La firma quedo (int month, int year, string _center) de una
         // migracion anterior; el unico caller es CenterReport en ReportsController.cs.
-        public List<ReportsModel> _Rpt_Data_CentersByMonth(int month, int year, string _center)
+        public CentersByMonthResult _Rpt_Data_CentersByMonth(int month, int year, string _center)
         {
-            List<ReportsModel> list = new List<ReportsModel>();
+            CentersByMonthResult result;
             try
             {
-                list = ApiClient.Get<List<ReportsModel>>("reports/centers-by-month?center=" + _center + "&month=" + month + "&year=" + year);
+                result = ApiClient.Get<CentersByMonthResult>("reports/centers-by-month?center=" + _center + "&month=" + month + "&year=" + year);
             }
-            catch (Exception _error)
+            catch (Exception)
             {
                 throw;
             }
-            var sortedlist = list.OrderBy(x => x.ConsumerName).ToList();
-            return sortedlist;
+            result.Consumers = (result.Consumers ?? new List<ReportsModel>()).OrderBy(x => x.ConsumerName).ToList();
+            return result;
         }
 
         // Igual que _Rpt_Data_CentersByMonth pero agrupado por CDS (specialist1) en
@@ -299,6 +320,31 @@ namespace LEAP.Models
             var sortedlist = list.OrderBy(x => x.ConsumerName).ToList();
             return sortedlist;
         }
+
+        // Forma de respuesta de leap_api ReportController::cdsVisitsByMonthDetailed
+        // (rediseno del CDS Visits Report, formato oficial firmado).
+        public class CDSVisitsDetailedResult
+        {
+            public string CDS_name { get; set; }
+            public List<ReportsModel> Consumers { get; set; }
+        }
+
+        // Igual que _Rpt_Data_CDSVisitsByMonth, pero para el formato nuevo: trae
+        // ademas MaxHours/RegionalCenter por consumer, ya ordenado por Regional
+        // Center (para los bloques "TOTAL RC" del Excel) - no se reordena aqui
+        // como las demas Get_*, el orden del servidor es el que se necesita.
+        public CDSVisitsDetailedResult _Rpt_Data_CDSVisitsByMonthDetailed(int month, int year, string _cds)
+        {
+            try
+            {
+                return ApiClient.Get<CDSVisitsDetailedResult>("reports/cds-visits-by-month-detailed?cds=" + _cds + "&month=" + month + "&year=" + year);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public List<ReportsModel> _NewConsumerXDate(DateTime _From, DateTime _To)
         {
             var productos = new List<ReportsModel>();

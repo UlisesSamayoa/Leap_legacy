@@ -74,10 +74,10 @@ namespace LEAP.Models
             public int per_page { get; set; }
         }
 
-        // Usado por el grid principal (NotesxConsumerController.GridData, modo
-        // server-side de DataTables) - con 33k+ notas, traer TODO de una
-        // (Get_NotesxConsumer) hacia que leap_api gastara ~9s solo en
-        // json_encode de filas que la pantalla ni siquiera iba a mostrar.
+        // Ya sin uso (el grid principal volvio a client-side processing via
+        // GetAll()/Get_NotesxConsumer(), ahora que leap_api filtra a solo
+        // consumers Active). Se deja sin borrar por si hace falta paginado
+        // server-side para alguna otra pantalla a futuro.
         public PagedResult Get_NotesxConsumer_Paged(int page, int perPage, string search, string sort, string dir)
         {
             var url = "notes-x-consumers?paginate=1&page=" + page + "&per_page=" + perPage;

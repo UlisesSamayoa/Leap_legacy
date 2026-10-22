@@ -83,24 +83,18 @@ namespace LEAP.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool validActive = _NotesConsumerModel.ValidarNotesConsumerActive(0,_NotesC.UCI,_NotesC.Active, User.Identity.Name);
-                if (validActive)
+                // leap_api ahora hace swap automatico (desactiva las demas notas
+                // del mismo UCI al activar esta) en vez de rechazar - ya no hace
+                // falta validar conflicto antes de llamar Add.
+                bool valid = _NotesConsumerModel.AddNotesxConsumer(_NotesC.UCI, _NotesC.Notes, _NotesC.Active, User.Identity.Name);
+                if (valid)
                 {
-                    return RedirectToAction("Add", "NotesxConsumer", new { error = true });
+                    return RedirectToAction("Index", "NotesxConsumer");
                 }
                 else
                 {
-                    bool valid = _NotesConsumerModel.AddNotesxConsumer(_NotesC.UCI, _NotesC.Notes, _NotesC.Active, User.Identity.Name);
-                    if (valid)
-                    {
-                        return RedirectToAction("Index", "NotesxConsumer");
-                    }
-                    else
-                    {
-                        return View();
-                    }
+                    return View();
                 }
-               
             }
             else
             {
@@ -113,24 +107,15 @@ namespace LEAP.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool validActive = _NotesConsumerModel.ValidarNotesConsumerActive(0, _uci, _ConsumerActive, User.Identity.Name);
-                if (validActive)
+                bool valid = _NotesConsumerModel.AddNotesxConsumer(_uci, _ConsumerNotes, _ConsumerActive, User.Identity.Name);
+                if (valid)
                 {
-                    return "2";
+                    return "1";
                 }
                 else
                 {
-                    bool valid = _NotesConsumerModel.AddNotesxConsumer(_uci, _ConsumerNotes, _ConsumerActive, User.Identity.Name);
-                    if (valid)
-                    {
-                        return "1";
-                    }
-                    else
-                    {
-                        return "0";
-                    }
+                    return "0";
                 }
-
             }
             else
             {
@@ -168,30 +153,24 @@ namespace LEAP.Controllers
         [AdminOnly]
         public ActionResult Update(string id, string UCI, string Notes, bool Active, int type)
         {
-            bool validActive = _NotesConsumerModel.ValidarNotesConsumerActive(Convert.ToInt32(id),UCI, Active, User.Identity.Name);
-            if (validActive)
-            {
-                return RedirectToAction("Update", "NotesxConsumer", new {id = id ,type = type,error = true });
-            }
-            else
-            {
-            var valid = _NotesConsumerModel.UpdateNotesxConsumer(id, UCI, Notes,Active, User.Identity.Name);
+            // leap_api ahora hace swap automatico (desactiva las demas notas del
+            // mismo UCI al activar esta) en vez de rechazar - ya no hace falta
+            // validar conflicto antes de llamar Update.
+            var valid = _NotesConsumerModel.UpdateNotesxConsumer(id, UCI, Notes, Active, User.Identity.Name);
             if (valid)
             {
-                    if (type == 0)
-                    {
-                        return RedirectToAction("Index", "NotesxConsumer");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Update", "NotesxConsumer", new { id = id, type = type, r = true });
-                    }
-                
+                if (type == 0)
+                {
+                    return RedirectToAction("Index", "NotesxConsumer");
+                }
+                else
+                {
+                    return RedirectToAction("Update", "NotesxConsumer", new { id = id, type = type, r = true });
+                }
             }
             else
             {
                 return View();
-            }
             }
         }
         [AdminOnly]

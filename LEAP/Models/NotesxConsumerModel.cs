@@ -144,10 +144,10 @@ namespace LEAP.Models
             return response;
         }
 
-        // La regla "una nota activa por UCI" ya se aplica de forma atomica en
-        // leap_api al crear/actualizar; aqui se replica el mismo chequeo de
-        // solo-lectura que hacia la SP original, para que el flujo del
-        // Controller (que llama esto ANTES de Add/Update) no cambie.
+        // Ya sin uso: leap_api hace swap automatico (desactiva las demas notas
+        // del UCI al activar una) en vez de rechazar, asi que el Controller ya
+        // no necesita validar esto antes de llamar Add/Update. Se deja sin
+        // borrar por si hace falta este chequeo de solo-lectura a futuro.
         public bool ValidarNotesConsumerActive(int? _ID, string _UCI, bool _Active, string _UserName)
         {
             bool response = false;

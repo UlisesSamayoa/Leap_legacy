@@ -1296,17 +1296,17 @@ else
                 $('#DivAddAuth').empty();
                 if (response.length > 0) {
                     $.each(response, function (index, item) {
-                        var _ToBase = moment(item._To).format('MM/DD/YYYY')
-                        var _FromBase = moment(item._From).format('MM/DD/YYYY')
+                        var _ToBase = moment.utc(item._To).format('MM/DD/YYYY')
+                        var _FromBase = moment.utc(item._From).format('MM/DD/YYYY')
                         var _ToCast = ""
                         var _FromCast = ""
                         if (_ToBase.toString() !== "01/01/1900" && _ToBase.toString() !== "01/01/0001") {
-                            _ToCast = moment(item._To).format('MM/DD/YYYY')
+                            _ToCast = moment.utc(item._To).format('MM/DD/YYYY')
                         } else {
                             _ToCast = "--/--/--"
                         }
                         if (_FromBase.toString() !== "01/01/1900" && _FromBase.toString() !== "01/01/0001") {
-                            _FromCast = moment(item._From).format('MM/DD/YYYY')
+                            _FromCast = moment.utc(item._From).format('MM/DD/YYYY')
                         } else {
                             _FromCast = "--/--/--"
                         }
@@ -1350,17 +1350,17 @@ else
                 $('#DivAddAuth').empty();
                 if (response.length > 0) {
                     $.each(response, function (index, item) {
-                        var _ToBase = moment(item._To).format('MM/DD/YYYY')
-                        var _FromBase = moment(item._From).format('MM/DD/YYYY')
+                        var _ToBase = moment.utc(item._To).format('MM/DD/YYYY')
+                        var _FromBase = moment.utc(item._From).format('MM/DD/YYYY')
                         var _ToCast = ""
                         var _FromCast = ""
                         if (_ToBase.toString() !== "01/01/1900" && _ToBase.toString() !== "01/01/0001") {
-                            _ToCast = moment(item._To).format('MM/DD/YYYY')
+                            _ToCast = moment.utc(item._To).format('MM/DD/YYYY')
                         } else {
                             _ToCast = "--/--/--"
                         }
                         if (_FromBase.toString() !== "01/01/1900" && _FromBase.toString() !== "01/01/0001") {
-                            _FromCast = moment(item._From).format('MM/DD/YYYY')
+                            _FromCast = moment.utc(item._From).format('MM/DD/YYYY')
                         } else {
                             _FromCast = "--/--/--"
                         }
@@ -1388,7 +1388,7 @@ else
                         //NUEVO PROCESO DE AUTORIZACIÓN
 
                         $('#DivAddAuth').append(string_append);
-                        //var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-9">Authorization #: ' + item.auth + '   From: ' + moment(item._From).format('MM/DD/YY') + " To:" + moment(item._To).format('MM/DD/YY') + ' </div><div class="col-3"> <a class="btn btn-outline-success" target="_blank" href="/Authorization/Update?id=' + item.IDAuth + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/Authorization/Delete?id=' + item.IDAuth + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
+                        //var string_append = '<div class="col-12" style="border-bottom:1px solid black; margin-bottom:12px;"><div class="row"><div class="col-9">Authorization #: ' + item.auth + '   From: ' + moment.utc(item._From).format('MM/DD/YY') + " To:" + moment.utc(item._To).format('MM/DD/YY') + ' </div><div class="col-3"> <a class="btn btn-outline-success" target="_blank" href="/Authorization/Update?id=' + item.IDAuth + '&type=1"><i class="bi bi-search"></i></a>  <a class="btn btn-outline-danger" target="_blank" href="/Authorization/Delete?id=' + item.IDAuth + '&type=1"><i class="bi bi-trash3-fill"></i></a></div></div></div>';
                         //$('#DivAddAuth').append(string_append);
 
                     });
@@ -1981,17 +1981,17 @@ else
                 $('#auth_to_new').val('')
                 $('#auth_status').val('')
                 $.each(response, function (index, item) {
-                    var _ToBase = moment(item._To).format('MM/DD/YYYY')
-                    var _FromBase = moment(item._From).format('MM/DD/YYYY')
+                    var _ToBase = moment.utc(item._To).format('MM/DD/YYYY')
+                    var _FromBase = moment.utc(item._From).format('MM/DD/YYYY')
                     var _ToCast = ""
                     var _FromCast = ""
                     if (_ToBase.toString() !== "01/01/1900" && _ToBase.toString() !== "01/01/0001") {
-                        _ToCast = moment(item._To).format('MM/DD/YYYY')
+                        _ToCast = moment.utc(item._To).format('MM/DD/YYYY')
                     } else {
                         _ToCast = "--/--/--"
                     }
                     if (_FromBase.toString() !== "01/01/1900" && _FromBase.toString() !== "01/01/0001") {
-                        _FromCast = moment(item._From).format('MM/DD/YYYY')
+                        _FromCast = moment.utc(item._From).format('MM/DD/YYYY')
                     } else {
                         _FromCast = "--/--/--"
                     }

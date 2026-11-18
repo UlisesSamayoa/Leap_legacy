@@ -9,6 +9,7 @@
                     <tr>
                         <th>UCI</th>
                         <th>ConsumerName</th>
+                        <th>CDS</th>
                         <th>Date</th>
                         <th>Length of Session</th>
                         <th>Notes</th>
@@ -24,6 +25,7 @@
                             <tr>
                                 <td>@NotesConsumer.UCI</td>
                                 <td>@NotesConsumer.ConsumerName</td>
+                                <td>@NotesConsumer.spe_FullName</td>
                                 <td>@NotesConsumer.Date.ToString("MM/dd/yyyy")</td>
                                 <td>@NotesConsumer.Duration</td>
                                 @if (NotesConsumer.NotesConsumer.Length >= 100)
@@ -36,7 +38,7 @@
                                 }
                                 <td>@NotesConsumer.Active</td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm" onclick="abrirArchivoEnNuevaPestana('@NotesConsumer.UCI', '@NotesConsumer.Date.ToString("o")')"><i class="bi bi-printer-fill"></i> Print</button>
+                                    <button class="btn btn-warning btn-sm" onclick="abrirArchivoEnNuevaPestana('@NotesConsumer.UCI', '@NotesConsumer.Date.ToString("o")', '@NotesConsumer.SpecialistID')"><i class="bi bi-printer-fill"></i> Print</button>
                                 </td>
                             </tr>
                         }
@@ -44,7 +46,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 No data available
                             </td>
                         </tr>
@@ -62,13 +64,14 @@ else
     </div>
 }
 <script>
-    function abrirArchivoEnNuevaPestana(uci, visitDate) {
+    function abrirArchivoEnNuevaPestana(uci, visitDate, cds) {
         // Url.Action (Razor) resuelve el virtual path real del sitio en IIS
         // (ej. /NombreWeb/Reports/...) en vez de asumir que la app vive en la
         // raiz del dominio - '/Reports/...' a mano daba 404 en IIS cuando el
         // sitio se publica en una subcarpeta en vez de la raiz.
         const baseUrl = '@Url.Action("NotesConsumerReport", "Reports")';
-        const url = baseUrl + '?_uci=' + encodeURIComponent(uci) + '&_date=' + encodeURIComponent(visitDate);
+        // _cds: solo se imprimen las visitas del CDS dueno de la nota (ademas del mes).
+        const url = baseUrl + '?_uci=' + encodeURIComponent(uci) + '&_date=' + encodeURIComponent(visitDate) + '&_cds=' + encodeURIComponent(cds);
 
         // Abre una nueva pestaña con la URL generada
         window.open(url, '_blank');

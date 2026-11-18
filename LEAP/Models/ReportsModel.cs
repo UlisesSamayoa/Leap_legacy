@@ -89,6 +89,8 @@ namespace LEAP.Models
         public string spe_Name { get; set; }
         public string spe_LastName { get; set; }
         public string spe_FullName { get; set; }
+        // CDS (specialist) que hizo la visita - viene de leap_api ReportController::notesByConsumer.
+        public int SpecialistID { get; set; }
         //public int Duration { get; set; }
         public string Duration { get; set; }
         public string PresentInSession { get; set; }

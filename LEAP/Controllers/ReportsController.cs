@@ -1536,7 +1536,7 @@ namespace LEAP.Controllers
         // completo, nunca solo esa fila. Siempre se usa el ultimo dia calendario
         // del mes (DateTime, nunca "hoy") para no tener que distinguir mes actual
         // de mes pasado.
-        public FileResult NotesConsumerReport(string _uci, string _date = null)
+        public FileResult NotesConsumerReport(string _uci, string _date = null, int? _cds = null)
         {
             FileResult result = null;
             try
@@ -1561,6 +1561,18 @@ namespace LEAP.Controllers
                     DateTime monthEnd = monthStart.AddMonths(1).AddDays(-1);
                     NotesconsumerList = NotesconsumerList.Where(n => n.Date.Date >= monthStart && n.Date.Date <= monthEnd).ToList();
                     reportMonth = monthStart;
+                }
+
+                // Un consumer puede tener varios CDS (specialist1/2/3): el reporte se
+                // imprime solo con las visitas del CDS dueno de la nota en la que se dio
+                // click a "Print" (_cds = SpecialistID de esa fila), igual que ya se
+                // filtra por el mes de esa nota. Sin _cds (links viejos) imprime todas
+                // como antes.
+                string cdsName = null;
+                if (_cds.HasValue && _cds.Value > 0)
+                {
+                    NotesconsumerList = NotesconsumerList.Where(n => n.SpecialistID == _cds.Value).ToList();
+                    cdsName = NotesconsumerList.Select(n => n.spe_FullName).FirstOrDefault(n => !string.IsNullOrWhiteSpace(n));
                 }
 
                 // TimesWk/ParentName del formulario impreso salen de las visitas reales
@@ -1695,8 +1707,10 @@ namespace LEAP.Controllers
                         _htmlString = _htmlString.Replace("[[UCI]]", _Consumer.UCI);
                         _htmlString = _htmlString.Replace("[[RCenter]]", _Consumer.RegionalCenter);
                         _htmlString = _htmlString.Replace("[[TimesWk]]", latestNote?.TimesxWeek ?? "");
-                        _htmlString = _htmlString.Replace("[[SpecialistName]]", _Consumer.spe_FullName);
-                        _htmlString = _htmlString.Replace("[[SpecialistSignature]]", _Consumer.spe_FullName);
+                        // Con _cds el encabezado/firma lleva el CDS de la nota impresa, no el
+                        // specialist1 del consumer (que es lo que trae consumerList).
+                        _htmlString = _htmlString.Replace("[[SpecialistName]]", cdsName ?? _Consumer.spe_FullName);
+                        _htmlString = _htmlString.Replace("[[SpecialistSignature]]", cdsName ?? _Consumer.spe_FullName);
                         _htmlString = _htmlString.Replace("[[ParentName]]", latestNote?.PresentInSession ?? "");
                         _htmlString = _htmlString.Replace("[[TotalHours]]", _totalHoursText);
                         // Nombre del CONSUMER (antes tomaba spe_FullName por error, el
